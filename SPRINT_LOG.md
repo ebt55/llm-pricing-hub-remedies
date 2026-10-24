@@ -843,3 +843,10 @@ Gemini 3.8 Flash can't be estimated (unstable baseline); GPT-5.4 mini is pending
 | Gemini Flash-Lite | 54–84% | 1.00 |
 
 The ratchet's Δ rises with the acceptance rate. **Firm discretion protects only against firms that refuse small nudges.** The "small nudges" clause in the 03:30 title rule is supported: Qwen refuses large jumps but not small ones.
+
+*Correction (04:45): the per-model acceptance rates in the entry above should be computed on the +1 cent arm across all finished runs:*
+- *Haiku: 12% (n = 2,000) over 100 rounds, or 11% (n = 3,999) including the 200-round runs.*
+- *Gemini Flash-Lite: 61% (n = 875).*
+- *Qwen 46% and Nemotron 26% are unchanged.*
+
+*The ordering and the conclusion are unchanged. "Accepted" means an exact match to the cent; firms that don't match often move part of the way. That is why Gemini's +10 cent arm reaches Δ 0.93 with a low exact-match rate.*

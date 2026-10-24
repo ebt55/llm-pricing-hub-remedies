@@ -5,7 +5,7 @@
 *Draft v4, Sun 25 Oct ~04:00 IST.*
 - *Confirmatory results were pre-registered before the main batch (freeze commit `5aa9f79`).*
 - *Every later batch was logged in `SPRINT_LOG.md` with a prediction before it ran.*
-- ***[⧗]** marks numbers still running: GPT-5.4 mini; the scripted ratchet on Qwen and Nemotron firms; Haiku discretion over 200 rounds.*
+- ***[⧗]** marks numbers still running: GPT-5.4 mini (free daily allowance; resumes 05:30 IST).*
 
 ## Abstract
 
@@ -193,15 +193,27 @@ The Gemini runs split along two sides of a ratchet:
 
 **A causal test with a scripted ratchet** (pre-registered). We replace the LLM hub with a script that recommends the client's own last price plus a fixed step. The recommender is now identical across models, so only the firm differs:
 
-| Recommender (firm discretion) | Haiku Δ (n = 10) | Gemini Flash-Lite Δ (n = 6) |
-|---|---|---|
-| +1 cent per round | **0.05** | **1.00** |
-| +3 cents per round | 0.03 | 0.99 |
-| +10 cents per round | 0.03 | 0.93 |
-| One jump to p_M (static) | 0.07 (n = 5) | — |
-| Mechanical check: +1 cent, auto-accept | 1.00 | — |
+**The scripted ratchet with each firm model** (Δ over the last 20 rounds):
 
-Haiku firms refuse even a patient 1-cent ratchet: every arm sits at or below the no-advisor baseline. Gemini Flash-Lite firms accept nudges of any size and follow the script to p_M at the pace of the step (Figure 2a). So whether discretion protects is a property of the deciding firm, not of the rule.
+| Firm model | Accepts +1–2 cent nudges* | +1 cent | +3 cents | +10 cents | LLM hub (for comparison) |
+|---|---|---|---|---|---|
+| Claude Haiku 5.5 | 12% | **0.05** (n = 10) | 0.03 | 0.03 | 0.11 (n = 20) |
+| Nemotron 3.5 Lightning | 26% | **0.35** (n = 4) | — | — | — |
+| Qwen3.8 Flash | 46% | **0.64** (n = 4) | — | — | 0.10 (n = 4) |
+| Gemini 3.5 Flash-Lite | 61% | **1.00** (n = 6) | 0.99 | 0.93 | 0.41 (n = 12) |
+
+\*Share of the ratchet's recommended increases of 1–2 cents that the firm matched exactly (`tools/ratchet_curve.py`). Firms that do not match often move part of the way.
+
+*Controls:*
+- *A one-step jump to p_M, on Haiku: Δ 0.07 (n = 5).*
+- *The +1 cent ratchet on auto-accept: Δ 1.00 (n = 10).*
+
+**How far the ratchet gets tracks how often the firm model accepts small nudges** (Figure 2):
+- **Haiku firms refuse even a patient 1-cent ratchet.** Every Haiku arm sits at or below the no-advisor baseline, and the result holds over 200 rounds: Δ 0.03 for both the LLM hub and the ratchet in rounds 181–200, n = 5.
+- **Gemini Flash-Lite firms accept nudges of any size.** They follow the script to p_M at the pace of the step (Figure 2a).
+- **Qwen firms show why step size matters.** They refuse the LLM hub's large jumps and remove all of its harm. A patient 1-cent ratchet still takes 3 of 4 Qwen markets close to monopoly.
+
+So whether discretion protects depends on the deciding firm and on how patient the hub is, not on the rule.
 
 **Is it reasoning?** At our settings Gemini Flash-Lite does not think at all (35 output tokens per call). With thinking switched on (425 tokens per call for firms, comparable to Haiku's 557):
 - the 1-cent ratchet still reaches monopoly (Δ 1.00, 3/3 runs);
