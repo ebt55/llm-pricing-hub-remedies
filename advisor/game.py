@@ -11,6 +11,7 @@ import json
 import math
 import os
 import random
+import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass
 from typing import List, Optional
@@ -46,10 +47,21 @@ def ask(provider, system: str, user: str, role: str, max_retries: int) -> dict:
     plus the model's reasoning text (written to the run's .thoughts.jsonl sidecar, not the main file)."""
     usage_total = {"tokens_in": 0, "tokens_out": 0, "cache_hit": 0, "usd": 0.0, "latency_s": 0.0}
     failures, refusals, api_model = [], 0, None
-    for attempt in range(1, max_retries + 2):
+    rate_waits = 0
+    attempt = 0
+    while attempt < max_retries + 1:
+        attempt += 1
         try:
             text, usage = provider.complete(system, user)
-        except Refusal as e:
+        except Exception as e:  # noqa: BLE001
+            # spend/rate limits (e.g. Gemini Tier 1: $10 per 10 minutes) clear with time: wait, don't fail the run
+            if ("429" in str(e) or "RateLimit" in type(e).__name__) and rate_waits < 30:
+                rate_waits += 1
+                attempt -= 1
+                time.sleep(60)
+                continue
+            if not isinstance(e, Refusal):
+                raise
             refusals += 1
             failures.append(f"refusal: {e}")
             continue

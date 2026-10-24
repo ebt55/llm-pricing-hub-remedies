@@ -464,3 +464,11 @@ There is no pre-registered test of a monotone trend: "capability" is not measure
 - **ProPublica (Oct 2022):** "as many as 90%" of recommendations were adopted, according to former employees.
 - **Private MDL plaintiffs:** allege acceptance "upwards of 80–90%". (Source: the M.D. Tenn. opinion of Dec 2023, summarising the complaint.)
 - None of these sources is a DOJ finding of 80–90%.
+
+### 2026-10-25 02:18: Gemini Argon dropped; Gemini Flash resumed
+
+- **What happened:** both Gemini batches died at about 02:06 on Google's Tier 1 spend-rate limit ($10 per 10 minutes). Argon and Flash running in parallel exceeded it.
+- **Argon dropped** at the user's request, on cost. Its 8 partial runs, all under 100 rounds, are excluded and unanalysed.
+- **Fix:** rate-limit errors (429) now wait 60 s and retry, up to 30 times, instead of failing the run.
+- **Gemini 3.8 Flash resumed alone with 6 workers.** 5 runs were finished; the partial runs resume deterministically with the same config.
+- **Gemini 3.5 Flash-Lite is complete** (20 runs).
