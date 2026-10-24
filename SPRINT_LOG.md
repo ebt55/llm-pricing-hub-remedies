@@ -355,3 +355,10 @@ All contrasts are two-sided, with Holm correction within this batch.
 - **Concept renamed:** "compliant collusion" is now **data-compliant coordination**.
 - **Repository:** renamed to `ebt55/llm-pricing-hub-remedies`. GitHub redirects the earlier names, and the push history is kept.
 - **Caveat:** the title's second half depends on the adherence dose-response running now. If partial overriding doesn't work, the title will be adjusted.
+
+### 2026-10-25 01:17: blocked by the Anthropic workspace spend limit
+
+- **What happened:** the follow-up batch (`configs/followup.toml`) failed on its first calls with HTTP 400 "You have reached your specified workspace API usage limits. You will regain access on 2026-11-01."
+- **Spend so far:** about $40 of Haiku across smoke, diagnostics, pilot, main, triopoly, robustness and the detection monitor.
+- **State of the runs:** all 60 follow-up runs stopped at round 0, with no data. Their files hold only the header and warm-up, so they resume cleanly once the limit is raised.
+- **Waiting on:** the user, to raise the workspace limit.
