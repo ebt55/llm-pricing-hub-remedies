@@ -262,3 +262,81 @@ def fig_cross_model():
 
 if __name__ == "__main__":
     fig_cross_model()
+
+
+RATCHET_FIRMS = [("ratchet", "main", "Claude Haiku 5.5", SLOT[0]),
+                 ("ladder-gem-lite", "ladder-gem-lite", "Gemini 3.5 Flash-Lite, no thinking", SLOT[1]),
+                 ("ladder-gem-lite-hi", "ladder-gem-lite-hi", "Gemini 3.5 Flash-Lite, thinking on", SLOT[2])]
+
+
+def fig_ratchet():
+    """(a) Same scripted +1 cent ratchet, different firms: mean market price per round under discretion.
+    (b) Delta by recommender (scripted ratchet of 1/3/10 cents, the LLM hub) and firm model; dots are runs."""
+    p_n, p_m = 1.4729, 1.9250
+    firms = [(finished(kt), finished(ht), label, color) for kt, ht, label, color in RATCHET_FIRMS]
+    firms = [f for f in firms if len(f[0].get("K1-d", [])) >= 2]
+    mech = finished("ratchet").get("K1-a", [])
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(9.4, 3.6), gridspec_kw={"width_ratios": [1.05, 1]})
+
+    if mech:
+        m = np.mean([np.array([np.mean(r["prices"]) for r in play]) for _, play in mech], axis=0)
+        ax.plot(np.arange(1, len(m) + 1), m, color=INK2, lw=1.2, ls="--", zorder=2)
+        ax.annotate("every nudge accepted", xy=(30, m[29]), xytext=(52, 1.66), color=INK2, fontsize=6.8,
+                    arrowprops={"arrowstyle": "-", "color": INK2, "lw": 0.6})
+    ends = []
+    for k, _, label, color in firms:
+        paths = [np.array([np.mean(r["prices"]) for r in play]) for _, play in k["K1-d"]]
+        for p in paths:
+            ax.plot(np.arange(1, len(p) + 1), p, color=color, lw=0.6, alpha=0.25, zorder=2)
+        m = np.mean(paths, axis=0)
+        ax.plot(np.arange(1, len(m) + 1), m, color=color, lw=2, zorder=3)
+        ends.append([m[-1], f"{label}\n(n = {len(paths)})", color])
+    ends.sort(key=lambda e: -e[0])
+    for i in range(1, len(ends)):
+        ends[i][0] = min(ends[i][0], ends[i - 1][0] - 0.075)
+    for y, label, color in ends:
+        ax.plot([100.5, 102.5], [y, y], color=color, lw=2)
+        ax.text(103.5, y, label, color=INK2, fontsize=6.8, va="center")
+    for y, lab in ((p_n, "Nash"), (p_m, "monopoly")):
+        ax.axhline(y, color=MUTED, lw=0.8, ls=":")
+        ax.text(1, y + 0.008, lab, color=INK2, fontsize=6.8)
+    ax.set_xlim(0, 140)
+    ax.set_ylim(1.40, 2.0)
+    ax.set_xticks([0, 25, 50, 75, 100])
+    ax.set_xlabel("round of play", fontsize=8)
+    ax.set_ylabel("mean market price")
+    ax.set_title("(a) Scripted hub: +1 cent per round, firms decide", fontsize=8.5, color=INK, loc="left")
+    ax.grid(axis="y", color=GRID, lw=0.6)
+    ax.set_axisbelow(True)
+
+    cols = [("K1-d", "ratchet\n+1 cent"), ("K3-d", "ratchet\n+3 cents"), ("K10-d", "ratchet\n+10 cents"),
+            ("M2-d", "LLM hub")]
+    width = 0.8 / max(len(firms), 1)
+    rng = np.random.default_rng(3)
+    for j, (k, h, label, color) in enumerate(firms):
+        xs, ms = [], []
+        for i, (arm, _) in enumerate(cols):
+            src = h if arm == "M2-d" else k
+            vals = [s["delta_lastk"] for s, _ in src.get(arm, [])]
+            if not vals:
+                continue
+            x = i + (j - (len(firms) - 1) / 2) * width
+            bx.scatter(x + rng.uniform(-0.03, 0.03, len(vals)), vals, s=8, color=color, alpha=0.45, linewidths=0, zorder=2)
+            xs.append(x), ms.append(np.mean(vals))
+        bx.scatter(xs, ms, s=36, color=color, edgecolors="#fcfcfb", linewidths=1.0, zorder=4, label=label)
+    for y, lab in ((0, "competitive"), (1, "joint monopoly")):
+        bx.axhline(y, color=MUTED, lw=0.8, ls=":")
+    bx.set_xticks(range(len(cols)), [c for _, c in cols], fontsize=7.5)
+    bx.set_xlim(-0.6, len(cols) - 0.4)
+    bx.set_ylim(-0.2, 1.12)
+    bx.set_ylabel("Profit gain \u0394 (last 20 rounds)")
+    bx.set_title("(b) Firm discretion, by recommender and firm model", fontsize=8.5, color=INK, loc="left")
+    bx.grid(axis="y", color=GRID, lw=0.6)
+    bx.set_axisbelow(True)
+    bx.legend(frameon=False, fontsize=7, loc="center left", bbox_to_anchor=(0.0, 0.62))
+    fig.tight_layout()
+    save(fig, "fig2_ratchet")
+
+
+if __name__ == "__main__":
+    fig_ratchet()
