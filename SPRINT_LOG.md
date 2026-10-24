@@ -217,3 +217,7 @@ An independent review (a Claude Fable 5.1 subagent, given the facts and none of 
 
 - The project is now called **Better Call Saul?** (codename Saul): the study asks whether the law's remedies stop an LLM pricing hub from running a hub-and-spoke cartel.
 - The GitHub repository was renamed from `ebt55/advisor-remedies` to `ebt55/better-call-saul`. GitHub redirects the old URL, and the push history is kept.
+
+### 2026-10-24 23:45: title refined
+
+**Better Call SAUL? Shared Advisors Under Legal Remedies.** The backronym states the research object (shared advisors) and the intervention (legal remedies). Alternative kept on file: *Los POLLOS Hermanos: Pricing Oligopolies under LLM-Led Optimisation Software* (shared software turns rivals into 'hermanos').

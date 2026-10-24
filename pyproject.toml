@@ -1,7 +1,7 @@
 [project]
 name = "better-call-saul"
 version = "0.1.0"
-description = "Better Call Saul? Do the RealPage remedies stop an LLM pricing hub? (Apart AI Collusion Research Sprint, Oct 2026)"
+description = "Better Call SAUL? Shared Advisors Under Legal Remedies: do the RealPage remedies stop an LLM pricing hub? (Apart AI Collusion Research Sprint, Oct 2026)"
 requires-python = ">=3.11"
 dependencies = [
     "anthropic>=1.0",
