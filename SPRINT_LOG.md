@@ -850,3 +850,30 @@ The ratchet's Δ rises with the acceptance rate. **Firm discretion protects only
 - *Qwen 46% and Nemotron 26% are unchanged.*
 
 *The ordering and the conclusion are unchanged. "Accepted" means an exact match to the cent; firms that don't match often move part of the way. That is why Gemini's +10 cent arm reaches Δ 0.93 with a low exact-match rate.*
+
+### 2026-10-25 05:04: final title and draft v5 (decided by a Fable 5.1 review)
+
+**The decision was delegated to a Fable 5.1 reviewer** (read-only; it applied the 03:05 and 03:30 rules to every result above).
+
+- **Title:** "An LLM Pricing Hub Survives Data Limits on Some Models; Firm Discretion Works Only When Firms Refuse Small Nudges".
+- **Subtitle:** "Pre-registered tests of the RealPage Final Judgment's remedies (data bans, stale data, parameterised auto-accept, firm discretion) on LLM pricing advisors from six labs".
+- **Justification:**
+  - The second clause is the 03:30 rule's wording verbatim. P2 and P3 held, and Qwen's 1-cent result supports the "small nudges" qualifier.
+  - The prefix replaces the one claim the old title got wrong: a data ban removes 69–92% of the harm on three models.
+  - Guardrails are left out of the title because they were tested on Haiku only.
+- **Runner-up:** "Model-Dependent Remedies for an LLM Pricing Hub: Firm Discretion Works Only When Firms Refuse Small Nudges".
+
+**Draft v5 applies the reviewer's abstract (≤ 250 words), its 15 edits and its cuts:**
+- Four supplementary tables and the adherence figure move to Appendix F (`report/appendix-tables.md`).
+- Related work is compressed, and references are added.
+- Appendix D states the pre-existing-code position.
+- The figures are renumbered to the paper's order: Fig 1 the remedy ladder, Fig 2 cross-model, Fig 3 the ratchet; A1–A3 in the appendix.
+- **Checks the reviewer asked for:**
+  - "4 of 12 Gemini runs reach monopoly" becomes "end near monopoly (Δ 0.89–1.00)".
+  - CI 27–84 at n = 12 is confirmed.
+  - DeepSeek CIs are added: data ban 10% (1–21), stale data 2% (0–6).
+  - Fig 2 now shows CIs for every arm with n ≥ 4.
+
+**Length:** about 6.9 pages of text plus about 0.9 pages of figures (`tools/render_pdf.py`, Letter, 11pt Arial). The renderer shows 9 pages because figures jump to the next page; in the Docs template, place the figures to fill those gaps.
+
+**Reviewer's score estimate after the edits:** impact 4.3, execution 4.1, presentation 4.2. Its biggest remaining weakness: the discretion claim rests on four firm models at n = 4–10, and the "disposition, not reasoning budget" reading rests on 2–3 runs.

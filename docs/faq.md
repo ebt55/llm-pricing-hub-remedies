@@ -50,14 +50,20 @@ That connects the paper to the sprint's detection track as well as the markets t
 
 ## Why this title?
 
-**Data Limits and Guardrails Don't Stop an LLM Pricing Hub; Only Firm Discretion Does** states the three main findings directly:
-- **Data limits**, the RealPage settlement's data rules (stale data only, no current competitor data, aggregation), leave most of an AI hub's harm in place.
-- **Guardrails** don't help either. The settlement still allows auto-accept within limits each landlord sets, such as a 3% daily cap. Under that rule the hub reached near-monopoly prices by round 8 instead of round 4.
-- **Only firm discretion works.** When firms set every price themselves, with the hub's advice optional, almost all the harm goes away.
+**An LLM Pricing Hub Survives Data Limits on Some Models; Firm Discretion Works Only When Firms Refuse Small Nudges** states the two findings that held up across models:
+- **Data limits on some models.** A ban on rival data removes most of the hub's harm for three models (Nemotron 92%, Qwen 85%, Haiku 69%), but almost none for two (DeepSeek 10%, Gemini Flash-Lite 8%). So the rule's effect depends on the model, not the rule.
+- **Firm discretion only when firms refuse small nudges.** The hub raises prices in small steps (a "ratchet"). Discretion stops it only if the shop's AI says no to small nudges. Haiku's shops do. Qwen's refuse big jumps but let a patient 1-cent ratchet through. Gemini Flash-Lite's accept nudges of any size, even with thinking switched on.
 
-We call the residual harm **data-compliant coordination**: the hub obeys every data restriction, but prices still move toward joint monopoly, because the hub's *objective* drives them.
+**Guardrails** (auto-accept within ±1–3% per round) are not in the title, because we tested them on Haiku only. There they removed none of the harm and only delayed monopoly.
 
-Earlier titles were changed during the sprint. "S'all Good, Man?" was dropped after a simulated judge review found it unclear. "…Only Ending Auto-Accept Stops…" was dropped because the settlement restricts auto-accept rather than ending it.
+**How it was chosen.** The wording follows rules logged before the results (SPRINT_LOG 03:05 and 03:30), with the final wording set by an independent Fable 5.1 review (SPRINT_LOG 05:04).
+
+**Earlier titles:**
+- "S'all Good, Man?" was dropped as unclear.
+- "…Only Ending Auto-Accept Stops…" was dropped because the settlement restricts auto-accept rather than ending it.
+- "Data Limits and Guardrails Don't Stop an LLM Pricing Hub; Only Firm Discretion Does" was dropped when data limits turned out to work on three models and firm discretion failed on Gemini.
+
+We call the harm that survives the data rules **data-compliant coordination**.
 
 ## What is firm discretion, and how does it hold the AIs off collusion?
 

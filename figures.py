@@ -101,8 +101,8 @@ def fig_ladder():
 
 
 def fig_paths(tag="main", arms=(("B0", "No advisor"), ("M2-a", "Hub, current data"), ("M1-a", "Hub, stale data"),
-                                ("M0-a", "Hub, no rival data"), ("M2-d", "Hub, advice optional")),
-              name="fig2_price_paths", title=None):
+                                ("M0-a", "Hub, no rival data"), ("M2-d", "Hub, firm discretion")),
+              name="figA2_price_paths", title=None):
     data = finished(tag)
     fig, ax = plt.subplots(figsize=(7.2, 3.4))
     ends = []
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     fig_ladder()
     fig_paths()
     fig_paths("robust-long", (("B0", "No advisor"), ("M1-a", "Hub, stale data"), ("M0-a", "Hub, no rival data")),
-              "figA_long_horizon")
+              "figA3_long_horizon")
     print("wrote", sorted(os.listdir(OUT)))
 
 
@@ -205,7 +205,7 @@ def fig_dose():
     bx.grid(axis="y", color=GRID, lw=0.6)
     bx.set_axisbelow(True)
     fig.tight_layout()
-    save(fig, "fig3_adherence_dose")
+    save(fig, "figA1_adherence_dose")
 
 
 if __name__ == "__main__":
@@ -220,7 +220,7 @@ CROSS_MODELS = [("main", "Claude\nHaiku 5.5"), ("replicate-openai", "GPT-5.4\nmi
 def fig_cross_model():
     """Price index (0 = Nash, 1 = joint monopoly, > 1 = above monopoly) for the hub under each data rule, per model.
     The price index is used instead of Delta because Delta falls on both sides of the monopoly price and would
-    hide overshooting hubs. Error bars (t 95% CI) only where n >= 8; dots are individual runs."""
+    hide overshooting hubs. Error bars (t 95% CI) where n >= 4; dots are individual runs."""
     arms = [("B0", "no advisor"), ("M2-a", "hub, current data"), ("M1-a", "hub, stale data"), ("M0-a", "hub, no rival data")]
     p_n, p_m = 1.4729, 1.9250
 
@@ -240,7 +240,7 @@ def fig_cross_model():
             ax.scatter(x + rng.uniform(-0.025, 0.025, len(vals)), vals, s=7, color=ARM_COLOR[arm], alpha=0.4,
                        linewidths=0, zorder=2)
             m, h = ci(vals)
-            if len(vals) >= 8:
+            if len(vals) >= 4:
                 ax.errorbar([x], [m], yerr=[h], fmt="none", ecolor=ARM_COLOR[arm], elinewidth=1.2, capsize=2, zorder=3)
             xs.append(x), ms.append(m)
         ax.scatter(xs, ms, s=34, color=ARM_COLOR[arm], edgecolors="#fcfcfb", linewidths=1.0, zorder=4, label=label)
@@ -257,7 +257,7 @@ def fig_cross_model():
     ax.grid(axis="y", color=GRID, lw=0.6)
     ax.set_axisbelow(True)
     ax.legend(frameon=False, fontsize=7.5, loc="upper left", bbox_to_anchor=(0.0, 1.16), ncol=4)
-    save(fig, "fig4_cross_model")
+    save(fig, "fig2_cross_model")
 
 
 if __name__ == "__main__":
@@ -338,7 +338,7 @@ def fig_ratchet():
     h, l = bx.get_legend_handles_labels()
     fig.legend(h, l, frameon=False, fontsize=7.5, loc="upper center", ncol=5, bbox_to_anchor=(0.5, 0.0))
     fig.tight_layout()
-    save(fig, "fig2_ratchet")
+    save(fig, "fig3_ratchet")
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 [project]
 name = "llm-pricing-hub-remedies"
 version = "0.1.0"
-description = "Data Limits and Guardrails Don't Stop an LLM Pricing Hub; Only Firm Discretion Does. Testing the RealPage remedies (stale data, data bans, parameterised auto-accept) on LLM pricing advisors (Apart AI Collusion Research Sprint, Oct 2026)"
+description = "An LLM Pricing Hub Survives Data Limits on Some Models; Firm Discretion Works Only When Firms Refuse Small Nudges. Pre-registered tests of the RealPage remedies on LLM pricing advisors (Apart AI Collusion Research Sprint, Oct 2026)"
 requires-python = ">=3.11"
 dependencies = [
     "anthropic>=1.0",
