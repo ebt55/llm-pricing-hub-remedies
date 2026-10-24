@@ -495,3 +495,9 @@ The ladder is extended with three cheap models, each pinned to one full-precisio
 
 **Reported descriptively**, with the other models: the share of harm the data ban removes, and each model's baseline.
 - **02:28 update:** at the user's request, only two OpenRouter models are run: **Qwen3.8 Flash** (Alibaba, a lab not yet covered) and **Nemotron 3.5 Lightning** (NVIDIA, open-weight and small). MiniMax M3.1 Flash is dropped; it is a second Chinese flash model and adds the least. Expected spend is about $2.60.
+- **02:35 update: reasoning budget for the OpenRouter models.**
+  - **What happened:** OpenRouter did not enforce `reasoning.effort = low` for Qwen3.8 Flash or Nemotron 3.5 Lightning. On the full advisor prompt, thinking ran past 100 s per call.
+  - **Change:** low effort is now a **thinking budget of 1,024 tokens** (`reasoning.max_tokens`), close to Haiku 5.5's measured ~900 tokens at low effort.
+  - **Measured:** Qwen 21 s and $0.0008 per call; Nemotron 14 s and $0.0005 per call. Both give valid answers.
+  - **Decision:** thinking-off mode was tested but not used, so these stay reasoning models like the others.
+  - The watcher that launched with the old setting was stopped before any run started.

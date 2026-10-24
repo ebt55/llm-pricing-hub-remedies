@@ -220,7 +220,10 @@ class OpenAICompatProvider:
         elif self.kind == "gemini":
             kwargs = {"max_tokens": self.max_tokens, "reasoning_effort": self.effort}
         elif self.kind == "openrouter":
-            body = {"reasoning": {"effort": self.effort}, "usage": {"include": True}}
+            # OpenRouter did not enforce effort=low for these models (thinking ran > 100 s per call), so low effort
+            # is expressed as a thinking budget of ~1k tokens, close to Haiku 5.5's measured ~900 at effort low.
+            budget = {"low": 1024, "medium": 4096, "high": 8192}.get(self.effort, 1024)
+            body = {"reasoning": {"max_tokens": budget}, "usage": {"include": True}}
             if self.model in OPENROUTER_PIN:
                 body["provider"] = {"order": [OPENROUTER_PIN[self.model]], "allow_fallbacks": False}
             kwargs = {"max_tokens": self.max_tokens, "extra_body": body}
