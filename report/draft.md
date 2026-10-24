@@ -2,204 +2,225 @@
 
 *Testing the RealPage settlement's remedies on LLM pricing advisors*
 
-> **Under revision (01:40):** a methods red-team found overstatements and confounds (see SPRINT_LOG 01:35). Pending re-tests:
-> - a noisy-demand market;
-> - high hub effort;
-> - asymmetric adoption;
-> - the adherence dose-response.
->
-> The abstract and the claims about the data ban, stale data and ending auto-accept will be rewritten once those results land. The rational-hub benchmark (J arms) reframes the data-ban result as a bounded-rationality effect.
+*Draft v2, Sun 25 Oct ~02:30 IST, rewritten after the methods red-team and the judge simulation. Section markers say which results are **confirmatory** (pre-registered before the main batch, freeze commit `5aa9f79`) and which are **exploratory** (added later, each logged in SPRINT_LOG before its results). The model-ladder and OpenAI numbers are filled in when those runs finish. Target: ≤ 8 pages on the Apart template.*
 
-*Draft v1, Sun 25 Oct ~01:15 IST. Haiku numbers are final (main batch, frozen design). Items marked [pending] wait on the DeepSeek extension and the OpenAI replication. Paste into the official Apart template at the end: ≤ 8 pages, abstract 150–250 words.*
+## Abstract
 
-## Abstract (draft; ~230 words)
+Shared pricing software can align competitors' prices without any agreement between them. That is the theory of the US case against RealPage. Its settlement bars the software from using competitors' current non-public data at runtime, limits model training to data at least a year old, and restricts reporting to coarse aggregates; the complaints also targeted auto-accepting the software's recommendations. We test whether these remedies still work when the advisor is a large language model whose objective is aligned with the whole market, which is the incentive alleged against RealPage.
 
-Shared pricing software can coordinate competitors' prices without any agreement between them. That is the theory behind the US case against RealPage, whose settlement:
-- bans the use of competitors' current non-public data at runtime;
-- allows such data only once it is old or aggregated;
-- follows complaints that targeted auto-accepting the software's recommendations.
+In a repeated logit Bertrand duopoly that starts from competitive prices, a market-aligned LLM hub (Claude Haiku 5.5) drives prices to joint monopoly (profit gain Δ = 0.99, n = 20). Giving it only competitor data that is ten rounds old removes just 21% of this harm, and a market-wide average removes none. Removing competitor data entirely removes 69% for Haiku but only 10% for DeepSeek V4.1 Flash. A scripted rational hub with no data still reaches Δ = 0.82, so data bans bind only hubs that under-optimise their own objective. Ending auto-accept removes 95% of the harm. Partial adherence does not: at 50%, 80% and 90% acceptance, 73%, 90% and 94% of the harm remains.
 
-We ask whether these remedies still work when the advisor is a large language model. In a repeated logit Bertrand duopoly, LLM firms set prices, and each firm's LLM advisor recommends a price. We vary the advisor's competitor data and whether firms must follow it. Every run starts from competitive pre-adoption history.
+Without any instruction to coordinate, realistic "avoid a race to the bottom" guidance also raises prices (Δ 0.45 vs 0.06), and ending auto-accept again removes the rise. The results hold under demand noise, without the prompt's price ceiling, and at higher reasoning effort. We conclude that remedies for LLM pricing software should target its objective and firms' adherence, not only its data.
 
-An advisor that maximises only its own client's profit is pro-competitive (profit gain Δ = −0.01 vs 0.06 with no advisor). A market-aligned hub, the RealPage concern, drives prices to joint monopoly (Δ = 0.99, n = 20, Claude Haiku 5.5). Against this hub:
-- stale competitor data removes only **21%** of the harm (95% CI 14–29%);
-- a full ban on competitor data removes **69%** (55–82%), but the ban delays rather than prevents: at 200 rounds, some hubs reach cartel prices from their own sales data;
-- market-wide aggregated data removes **none** (three-firm market);
-- making the advice optional removes **95%** (88–102%).
-
-A second model family (DeepSeek V4.1 Flash) is even less constrained: its hub reaches cartel prices without any competitor data [n pending].
-
-We call the residual harm **data-compliant coordination**: data remedies leave it largely intact because the hub's objective, not its data, drives coordination. Classic variance screens miss these cartels. Reasoning monitors catch the hub's intent, but also flag honest advisors that merely watch rivals.
+*(~250 words. Add the ladder sentence once Gemini lands; trim to fit.)*
 
 ## 1. Introduction
 
-**Hook.** Can an AI pricing hub that follows the RealPage data remedies to the letter still coordinate prices? We find that largely it can. We call this *data-compliant coordination*: the hub obeys every data restriction, yet prices still move most of the way to joint monopoly, because its objective, not its data, drives them.
+**The premise, stated plainly.** We study a pricing advisor whose objective is aligned with the whole market rather than with its own client. This is the incentive alleged against RealPage: one vendor serving competing landlords, rewarded when rents rise across its clients. We do not claim that LLM advisors adopt this objective on their own. We ask a policy question conditional on it: if such a hub exists, do the remedies regulators actually imposed stop it?
 
-**The case.**
-- RealPage sold revenue-management software that pooled landlords' non-public rent and occupancy data.
-- The DOJ and states alleged this let competitors coordinate rents.
-- The settlement restricts runtime use of competitors' current non-public data, allows only data at least 12 months old for model training, and bars reporting narrower than state level.
-- Complaints also targeted auto-accept.
-- About $360M in MDL settlements were approved on 16 Oct 2026.
-
-**The gap.** These remedies were written for rule-based software. LLM advisors reason from whatever they are given, and may infer what they are denied.
+**The remedies.** In the RealPage settlement, the software may not use competitors' current non-public data at runtime, models may be trained only on data at least 12 months old, and reporting must not be narrower than state level. The complaints also targeted auto-accept, which applies recommendations without review. About $360M in MDL settlements were approved in October 2026 [cite].
 
 **Contributions.**
-1. **A testbed.** It maps each remedy onto a controlled arm, against an explicit harm case, with mechanical and behavioural positive controls.
-2. **Remedy effects with uncertainty**, reported as the share of harm removed, across horizons and model families.
-3. **A mechanism.** Hub coordination is driven by the objective. Data mostly *confirms* that the rival has followed.
-4. **A detection test.** Classic cartel screens and reasoning monitors, scored against ground-truth labels.
+1. **A remedy testbed.** It maps each remedy onto a controlled arm, against an explicit harm case, with mechanical and behavioural positive controls.
+2. **A finding about data remedies.** Data remedies leave most of the hub's harm in place. A scripted rational benchmark shows why: a joint-profit objective makes raising prices optimal even without rival data. Only hubs that under-optimise their objective are constrained, and that varies by model.
+3. **A finding about adherence.** Only *ending* auto-accept removes the harm. Even the acceptance rate the DOJ alleged leaves most of it.
+4. **A propensity probe.** Realistic revenue-management guidance, with no coordination instruction, also raises prices.
+5. **A detection test.** Classic cartel screens and a reasoning monitor, scored against ground truth.
 
-**Concurrent work.** zerocommcartel (2026) studies what firms are told about rivals' advisors in a one-shot Cournot game. We instead vary the advisor's data access and firms' adherence (the decree's remedies) in a repeated Bertrand market.
+**Concurrent work.** zerocommcartel (2026) studies what firms are told about rivals' advisors in a one-shot Cournot game. We vary the advisor's data access and firms' adherence (the settlement's remedies) in a repeated Bertrand market.
 
 ## 2. Related work
 
-- **Algorithmic collusion:** Calvano et al. (2020).
-- **LLM pricing agents:** Fish et al. (2024); Riemer et al. (2026, llm-cartel); Keppo et al. (2026).
-- **Shared advisors and monoculture:** Cao & Hu (2026); Hillenbrand.
-- **Remedies:** the RealPage complaint and decree; the hotel cases (Gibson; Cornish-Adebiyi).
-- **Audits and deviations:** Tran & Yu (2026).
+*(Write as prose; ~½ page.)*
+
+- **Algorithmic collusion:** Calvano et al. (2020); Assad et al. (2024) on German gasoline.
+- **LLM pricing agents:** Fish et al. (2024); Riemer et al. (2026, whose llm-cartel code we build on); Keppo et al. (2026).
+- **Shared algorithms and monoculture:** Cao & Hu (2026); hub-and-spoke doctrine.
+- **Remedies and cases:** the RealPage complaint and settlement; the hotel cases (Gibson; Cornish-Adebiyi).
+- **Deviation audits:** Tran & Yu (2026).
 - **Focal caps:** Dhanda (2026).
 - **Cartel screens:** Abrantes-Metz et al. (2006); Harrington.
-- **CoT monitoring:** Baker et al. (2025); Korbak et al. (2025).
-- **Concurrent:** zerocommcartel (verify numbers on the day).
+- **Reasoning monitors:** Baker et al. (2025); Korbak et al. (2025).
+- **Concurrent:** zerocommcartel.
 
 ## 3. Setup
 
 **Market.**
-- Logit Bertrand duopoly with Calvano parameters (a = 2, μ = 0.25, c = 1): Nash price 1.4729, joint-monopoly price 1.9250.
-- Profit gain Δ = (π − π_N) / (π_M − π_N), averaged over the last 20 of 100 rounds.
-- Each run starts with **10 rounds of competitive pre-adoption history** (Nash ± 0.05).
+- Logit Bertrand duopoly with Calvano et al.'s parameters (a = 2, μ = 0.25, c = 1): Nash price 1.4729, joint-monopoly price 1.9250.
+- **Profit gain** Δ = (π − π_N)/(π_M − π_N), averaged over the last 20 of 100 rounds. The **unit of analysis is the run.**
+- Every run starts with 10 rounds of competitive pre-adoption history (Nash ± 0.05).
+- **Why that start:** in diagnostics, firms given no history and not told a rival exists priced at the midpoint of cost and the stated price ceiling, which happens to be ≈ p_M.
 
 **Firms.**
-- The P0 pricing prompt (Fish et al. via llm-cartel), plus one neutral sentence: the firm competes with one other firm whose prices and sales it doesn't observe.
-- Firms see only their own records, plus the software's recommendation in advisor arms.
+- llm-cartel's P0 prompt, plus one neutral sentence: the firm competes with one other firm whose prices and sales it does not observe.
+- Firms see only their own price, quantity and profit, and, in advisor arms, the software's recommendation for this round and its past recommendations.
 
 **Advisors.**
 - One call per firm per round.
 - The *client* objective maximises the client's long-run profit.
-- The *market-aligned hub* objective maximises "the combined profit of all firms in your client's market". This is otherwise the same prompt. The hub is never told that it advises the rival.
+- The *market-aligned hub* objective maximises "the combined profit of all firms in your client's market". The prompt is otherwise identical, and never says the hub advises the rival.
 
 **Arms (Table 1).**
 
-| Arm | Setting | Maps to |
-|---|---|---|
-| B0 | No advisor | Baseline |
-| R2-a | Client advisor, current competitor data (through t−1), auto-accept | Advisor without a market objective |
-| M2-a | Hub, current data, auto-accept | **The alleged harm** |
-| M1-a | Hub, competitor data ≥ 10 rounds old | Stale-data remedy |
-| M0-a | Hub, no competitor data | Runtime data ban |
-| M2-d | Hub, current data; the firm decides | No auto-accept |
-| M3-3a vs M2-3a | Triopoly hub, market average vs per-firm data | Aggregation |
-| S-mono-a, D-BR-a | Static monopoly price; best-response rule, both auto-accepted | Mechanical controls |
-| S-nash, S-mono, R0-d, B0-cold | Static numbers, discretionary; client advisor without data; 1-round warm-up | Further controls |
+| Arm | Advisor and data | Adherence | Maps to |
+|---|---|---|---|
+| B0 | none | — | baseline |
+| R2-a | client objective; rival's price and quantity through t−1 | auto | advisor without a market objective |
+| **M2-a** | **hub; rival data through t−1** | **auto** | **the alleged harm** |
+| M1-a | hub; rival data ≥ 10 rounds old | auto | the 12-month rule (a runtime analogue of a *training*-data rule) |
+| M0-a | hub; no rival data | auto | the runtime data ban |
+| M2-d | hub; rival data through t−1 | the firm decides | ending auto-accept |
+| M2-q50/80/90 | hub; rival data through t−1 | auto with probability q | partial adherence *(exploratory)* |
+| M3-3a vs M2-3a | triopoly hub; market average vs per-firm data | auto | aggregation *(stretch)* |
+| V2-a, V0-a, V2-d | vendor guidance; current / no rival data | auto / decides | propensity probe *(exploratory)* |
+| J2-a, J1-a, J0-a | scripted rational joint-profit hub | auto | benchmark *(exploratory, $0)* |
+| S-mono-a, D-BR-a | static monopoly price; best-response rule | auto | mechanical controls |
 
 **Models.**
-- Claude Haiku 5.5: adaptive thinking at effort low; the API allows no sampling control.
-- Replications on DeepSeek V4.1 Flash (thinking, low effort) and GPT-5.4 mini (reasoning low).
+- Claude Haiku 5.5, with adaptive thinking at low effort; the API allows no sampling control.
+- Replications on DeepSeek V4.1 Flash, GPT-5.4 mini, and Gemini 3.5 Flash-Lite, 3.8 Flash and 4 Argon.
 - The model ID the API returns is logged on every call.
 
-**Pre-registration.** The gates, the model-selection rule, the hypotheses and the frozen configs are committed with timestamps before each batch (design freeze commit `5aa9f79`). N was set from pilot variance: n = 20 for primary arms, 5 for controls.
+**Statistics.**
+- Welch t intervals and tests, plus Mann-Whitney, with Holm correction within stage.
+- Harm removed = (M2-a − X)/(M2-a − B0), with a bootstrap 95% CI.
+- The minimum detectable effect is reported for every contrast.
+- N was raised after the pilot, from the planned 10 to 20 for primary arms.
 
 ## 4. Results
 
-### 4.1 Controls and harness
+### 4.1 Controls *(confirmatory)*
 
-- **Mechanical controls:** S-mono-a Δ = 1.00 and D-BR-a Δ = 0.01.
-- **Baseline:** B0 Δ = 0.06 (n = 20).
-- **Behavioural positive control:** M2-a exceeds B0 by ≥ 0.3 in 20/20 runs.
-- **Harness:** 41,000 Haiku calls with 0 parse failures and 0 refusals; $21.7 for the main batch.
+- **Mechanical controls:** S-mono-a gives Δ = 1.00 and D-BR-a gives 0.01.
+- **Baseline:** B0 gives 0.06 (n = 20).
+- **Harness:** 41,000 calls with 0 parse failures and 0 refusals.
+- **Behavioural positive control:** M2-a exceeds B0 by at least 0.3 in 20/20 runs.
 
-### 4.2 Advisors without a market objective are pro-competitive
+### 4.2 Advisors without a market objective are pro-competitive *(confirmatory)*
 
-R2-a: Δ = −0.01 vs B0's 0.06 (difference −0.07, p < .001). A client advisor that sees the rival's current prices best-responds, so pooled data alone doesn't produce harm.
+The client advisor with the rival's current data (R2-a) gives Δ = −0.01, against 0.06 for B0 (p < .001). Pooled data alone does not cause harm; the advisor best-responds.
 
-### 4.3 The market-aligned hub, and the remedies (Figure 1, Figure 2)
+### 4.3 The hub, and the data remedies *(confirmatory; Figure 1)*
 
-The hub drives prices to joint monopoly: M2-a Δ = 0.99 (SD 0.01).
+The market-aligned hub reaches joint monopoly: M2-a Δ = 0.99 (SD 0.01). Against it:
 
-**Share of harm removed, (M2-a − X)/(M2-a − B0), with bootstrap 95% CIs:**
+| Remedy | Δ | Harm removed |
+|---|---|---|
+| Stale data (M1-a) | 0.79 | **21%** (CI 14–29%) |
+| No competitor data (M0-a) | 0.35, bimodal | **69%** (CI 55–82%) |
+| Ending auto-accept (M2-d) | 0.11 | **95%** (CI 88–102%) |
 
-| Remedy | Arm | Δ | Harm removed |
-|---|---|---|---|
-| Stale data | M1-a | 0.79 | **21%** (14–29%) |
-| Data ban | M0-a | 0.35, bimodal | **69%** (55–82%) |
-| No auto-accept | M2-d | 0.11 | **95%** (88–102%) |
-| Aggregation (triopoly, n = 10) | M3-3a | 0.98 vs per-firm 0.92 | **none** |
+- Contrasts H2–H4 have Holm-adjusted p < .001.
+- **Aggregation (stretch, triopoly, n = 10):** the hub given only the market average (M3-3a, Δ 0.98) is no less harmful than with per-firm data (M2-3a, 0.92). With two symmetric rivals, the average hides little, so this is a weak test of state-level aggregation.
 
-Contrasts H2–H4 have Holm-adjusted p < .001. (H4c, client advisor with optional advice: p = .03. H5, static numbers: not significant, MDE 0.20.)
+### 4.4 Why the data remedies fail *(exploratory)*
 
-### 4.4 Mechanism: data confirms, the objective drives
+**A rational benchmark.** A scripted hub that maximises joint profit, given the rival price it can see, gives:
 
-From the hub's reasoning:
-- With competitor data, current or stale, the hub raises prices early, reasoning from its estimate of the joint-monopoly price. It then holds them once the data confirms the rival is high.
-- Data that is ten rounds old confirms a stable rival just as well as current data. That is why the stale-data rule fails once prices have settled.
-- Without data, the hub hesitates ("deviating upward risks losing volume to a competitor"). Over longer horizons some hubs infer the rival's behaviour from their own quantities and climb.
-  - **Horizon check** (200 rounds, n = 5): M0-a reaches 0.44 (bimodal: 0.97 and 0.91 in two runs) and M1-a reaches 0.87.
+| Scripted hub | Δ |
+|---|---|
+| Current data | 1.00 |
+| Stale data | 1.00 |
+| No data (assumes the rival stays at Nash) | 0.82 |
 
-### 4.5 Do firms follow advice?
+So under a joint objective, raising the price is optimal even without rival information, and data restrictions only delay a rational hub.
 
-- Firms follow recommendations close to their own recent prices: follow rate 0.84 for R0-d and 0.70 for S-nash.
-- They reject high ones: 0.02 for S-mono and 0.37 for M2-d.
-- So a static cartel-level number has no effect when firms are free to choose (S-mono vs S-nash: +0.02, n.s.). The harm runs through auto-accept.
+**The models differ.**
+- Haiku's no-data hub hesitates ("deviating upward risks losing volume to a competitor") and reaches 0.35.
+- It stays there at high reasoning effort (0.29, n = 10), so the restraint is a trait of the model, not an effort artefact.
+- DeepSeek's no-data hub reaches **0.91** (n = 8; it removes 10% of the harm, CI 1–21%), close to the rational benchmark.
+- Stale data removes 2% for DeepSeek. *[Model ladder: Gemini Flash-Lite, 3.8 Flash, 4 Argon, and GPT-5.4 mini. Figure 4.]*
 
-### 4.6 Robustness
+**Mechanism, from the reasoning traces.**
+- With data, the hub raises prices from its estimate of the monopoly price, then holds once data confirms the rival is high.
+- Data that is ten rounds old confirms a stable rival as well as current data does.
+- Over 200 rounds, 2 of 5 no-data Haiku hubs inferred the rival's behaviour from their own quantities and climbed.
 
-- **Willingness-to-pay cue removed** (n = 10). The hub reads the prompt's "no customer would pay more than $2.89" as a demand choke price. Without it:
-  - M2-a stays at 0.99;
-  - stale data removes 34% (20–50%);
-  - the ban removes 77% (60–92%).
-  - The cue helps the stale-data hub coordinate a little, but doesn't cause the effect.
-- **Second model family: DeepSeek V4.1 Flash** [n = 3, extension to 8 pending].
-  - B0 0.19, M2-a 1.00, M1-a 0.96, M0-a 0.85.
-  - Stale data removes 5%, the ban 18%.
-  - The no-data hub computes the joint-monopoly price and posts it.
-- **Third model family: GPT-5.4 mini** [pending].
+### 4.5 Adherence: only *ending* auto-accept works *(dose-response exploratory; Figure 3)*
 
-### 4.7 Can screens or monitors detect it? (exploratory)
+| Probability the firm's price is the recommendation | Harm retained |
+|---|---|
+| 0 | 5% |
+| 0.5 | 73% |
+| 0.8 | 90% |
+| 0.9 | 94% |
+| 1 | 100% |
 
-200 LLM runs, scored against ground-truth labels:
+- **For calibration:** the DOJ complaint alleges that final prices were within 1% of RealPage's recommendation for 40–50% of new leases. Former employees and private plaintiffs put acceptance at 80–90%.
+- **Caveat: firm stickiness.**
+  - When the recommendation would move the price by more than $0.05, Haiku firms with optional advice follow it 6% of the time.
+  - So "ending auto-accept" works partly because the firms stay where they are.
+  - Once some rounds are set by the hub, the same stickiness holds the high price.
+  - *[DeepSeek M2-d replication.]*
 
-| Detector | AUROC | TPR at 5% FPR | Notes |
-|---|---|---|---|
-| Price screen | 0.90 | 0.72 | Catches outcomes; misses hubs that a remedy held back |
-| Variance screen (Abrantes-Metz et al. 2006) | **0.36** | — | **Fails** |
-| Reasoning monitor (Haiku judge) | 0.99 | 0.96 | Same result from the one-line stated reasons alone |
+### 4.6 Without any coordination instruction: vendor guidance *(exploratory)*
 
-Two caveats about the reasoning monitor:
-- The hub *states* its joint-profit objective, so this is the easy case.
-- The monitor flags honest client advisors that watch the rival, which score 55–66 out of 100 against about 10–18 for the baselines.
+The advisor maximises its client's profit and follows "avoid a race to the bottom" guidance: don't chase volume with price cuts, don't match discounts. This paraphrases the RealPage complaints.
+
+| Arm | Δ | vs B0 |
+|---|---|---|
+| V0-a (no rival data) | **0.45** | +0.39 ± 0.23, p = .004 |
+| V2-a (current rival data) | 0.21 | +0.15, p = .11 |
+| V2-d (optional advice) | 0.09 | n.s. |
+
+- Realistic guidance raises prices without any joint objective.
+- With no rival data the guidance ratchets prices up unchecked, so here **a data ban may backfire** (V0-a − V2-a = +0.24, p = .09).
+- Ending auto-accept again removes the rise.
+
+### 4.7 Robustness *(exploratory)*
+
+**Demand noise** (log-normal shocks, sd 0.1, so own quantities no longer reveal the rival's price): the ordering survives.
+
+| Arm | Δ | Harm removed |
+|---|---|---|
+| B0 | −0.06 | — |
+| M2-a | 0.96 | — |
+| M1-a | 0.71 | 24% |
+| M0-a | 0.43 | 52% |
+
+**No price-ceiling cue** ("No customer would pay more than $2.89" removed): M2-a 0.99; stale data removes 34% and the ban 77%. The cue modestly helps hubs coordinate, but doesn't create the effect.
+
+**Horizon (200 rounds):** M1-a reaches 0.87 and M0-a reaches 0.44, so the 100-round "harm removed" figures are upper bounds.
+
+**Asymmetric adoption** (only one firm uses the hub):
+- The hub prices its client at 1.88; the plain rival best-responds at 1.64.
+- The hub's client loses (gain −0.09) and the rival gains (+1.46).
+- So the harm needs both firms on the hub, which is the hub-and-spoke structure.
+
+### 4.8 Detection *(exploratory; 200 LLM runs)*
+
+**Screens catch outcomes.**
+- The price-level screen: AUROC 0.90; it detects 72% of hubs at a 5% false-positive rate. It misses hubs that a remedy held back.
+- The variance screen (Abrantes-Metz et al. 2006) is **inverted**: AUROC 0.36.
+
+**Monitors catch stated intent.**
+- A reasoning monitor (Haiku judge) reaches AUROC 0.99, even from the one-line stated reasons alone. It flags hubs whose prices stayed competitive: M2-d scores 91 while its Δ is 0.11.
+- This is the easy case: the hub's objective is written in its notes.
+- The monitor also flags honest client advisors that watch the rival: they score 55–66, against 10–18 for baselines.
 
 ## 5. Discussion
 
-**Data-compliant coordination.**
-- When the advisor's objective is market-aligned, the data remedies leave most of the harm in place:
-  - stale and aggregated data barely help;
-  - a data ban helps for one model and delays coordination for another.
-- The remedy that works across our settings is the one that breaks the transmission: firms that are free not to follow high recommendations.
+**Data-compliant coordination.** A hub that obeys every data restriction can still move prices most of the way to joint monopoly, because its objective drives the prices and data mostly confirms that the rival has followed.
 
-**Policy implication.** Remedies for LLM pricing software should:
-- target the **objective** the software optimises, with auditable alignment to the individual client;
-- target **adherence**, with no auto-accept and with logged overrides;
-- not rely on **data access** alone.
+**Two implications for remedies on LLM pricing software:**
+1. **Constrain the objective.** Require auditable alignment to the individual client. Data remedies bind only hubs that under-optimise, and stronger models undo them.
+2. **End auto-accept fully.** Partial overrides leave most of the harm, including at the acceptance rate the DOJ alleged.
 
-**Detection.**
-- Outcome screens catch only cartels that succeed.
-- Text monitors catch intent, but only when it is stated, and they confuse watching the rival with coordinating.
+**Detection.** Outcome screens and intent monitors are complements. Neither handles a hub whose objective is implicit.
 
 ## 6. Limitations
 
-See `appendix-limitations-dual-use.md`. Additions from the results:
-- **The hub's objective is a modelling assumption.** We test remedies conditional on a market-aligned hub.
-- **Our firms are cautious.** That likely overstates the effect of removing auto-accept, since real landlords reportedly followed RealPage most of the time.
-- **The stale lag is in rounds, not months.**
-- **Aggregation is market-level** in a three-firm market.
-- **DeepSeek and OpenAI replications are small.**
+See `appendix-limitations-dual-use.md`. Key items:
+- **The market-aligned objective is an assumption,** stated as the premise.
+- **Our firms are cautious and sticky.**
+- **Remedy mappings are analogues:** rounds for months, a runtime lag for a training-data rule, a market average for state-level reporting.
+- **Most robustness checks are on Haiku**, and the replications are small.
+- **Results are for one market model** and 100–200 rounds.
 
 ## Appendix
 
 - Prompts (verbatim).
-- Per-arm tables (`results/*/summary.md`).
-- Costs (about $45 in total).
-- SPRINT_LOG excerpt: provenance and independence.
+- Per-arm tables.
+- Costs (to tally).
+- SPRINT_LOG excerpt: provenance, independence, and what was pre-registered when.
 - Limitations and dual use.
