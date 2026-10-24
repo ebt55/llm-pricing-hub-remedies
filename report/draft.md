@@ -5,7 +5,7 @@
 *Draft v4, Sun 25 Oct ~04:00 IST.*
 - *Confirmatory results were pre-registered before the main batch (freeze commit `5aa9f79`).*
 - *Every later batch was logged in `SPRINT_LOG.md` with a prediction before it ran.*
-- ***[⧗]** marks numbers still running: Qwen firm discretion, Nemotron and GPT-5.4 mini.*
+- ***[⧗]** marks numbers still running: GPT-5.4 mini; the scripted ratchet on Qwen and Nemotron firms; Haiku discretion over 200 rounds.*
 
 ## Abstract
 
@@ -14,7 +14,7 @@ Shared pricing software can align competitors' prices without any agreement betw
 We test these remedies on a large-language-model pricing hub told to maximise its clients' combined profit. The market is a repeated logit Bertrand duopoly that starts at competitive prices. We ran 666 runs on seven models from six labs, and pre-registered the main batch.
 
 - **The hub causes the harm.** With Claude Haiku 5.5, it drives the market to joint monopoly: profit gain Δ 0.99 against 0.06 with no advisor (n = 20).
-- **Data limits help unevenly.** A data ban removes 85% of the harm for Qwen3.8 Flash, 69% for Haiku, and at most 10% for DeepSeek and Gemini Flash-Lite. Stale data removes 21% for Haiku.
+- **Data limits help unevenly.** A data ban removes 69–92% of the harm for three models (Nemotron, Qwen, Haiku) and at most 10% for two (DeepSeek, Gemini Flash-Lite). Stale data removes 21% for Haiku.
 - **Guardrails remove none of it.** Auto-accept within ±1–3% per round only delays monopoly, from round 4 to rounds 8–19.
 - **The hub works as a ratchet.** Each recommendation is a small step up from the client's current price.
 - **Firm discretion breaks the ratchet only when firms push back.** A scripted recommender that adds 1 cent per round leaves Haiku firms competitive (Δ 0.05, n = 10). It walks Gemini 3.5 Flash-Lite firms to monopoly (Δ 1.00, n = 6), with or without thinking (n = 3).
@@ -144,17 +144,17 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 | Model (n per arm) | Data ban | Stale data |
 |---|---|---|
 | Claude Haiku 5.5 (20) | **69%** (55–82) | **21%** (14–29) |
-| Qwen3.8 Flash (4) | 85% (54–130) | 84% |
+| Nemotron 3.5 Lightning (4) | 92% (85–98) | 74% (66–84) |
+| Qwen3.8 Flash (4) | 85% (54–130) | 84% (39–131) |
 | DeepSeek V4.1 Flash (3–8) | 10% | 2% |
 | Gemini 3.5 Flash-Lite (5) | 8% (−21 to 37) | prices exceed p_M |
-| Nemotron 3.5 Lightning (4) | **[⧗]** | **[⧗]** |
 | GPT-5.4 mini (3) | **[⧗]** | **[⧗]** |
 
 **Gemini 3.8 Flash is excluded from this table.** Its firms reach monopoly without any advisor in 2 of 4 baseline runs (B0: 0.98, 1.00, 0.02, 0.02), so its harm-removed shares cannot be estimated. Its hub reaches monopoly under every data regime.
 
 - **Aggregation.** In the triopoly (n = 10), a market-average feed removes nothing: Δ 0.98 vs 0.92 with per-firm data.
 - **Rational benchmark.** A scripted joint-profit hub reaches Δ 1.00 with current or stale data, and 0.82 with none. Under a joint objective, raising one's own price is profitable even without information about the rival.
-- **A hypothesis for the spread.** The data ban binds hubs that hesitate to act on their objective without information. Haiku's no-data hub writes "deviating upward risks losing volume to a competitor" and stays at Δ 0.29, even when its thinking budget is raised (median output 778 → 1,319 tokens). The DeepSeek and Gemini Flash-Lite hubs price at or above p_M within a few rounds. This rests on few models and we state it as a hypothesis.
+- **A hypothesis for the spread.** The data ban binds hubs that hesitate to act on their objective without information. Haiku's no-data hub writes "deviating upward risks losing volume to a competitor" and stays at Δ 0.29, even when its thinking budget is raised (median output 778 → 1,319 tokens). The DeepSeek and Gemini Flash-Lite hubs price at or above p_M within a few rounds. The spread does not track reasoning budget: DeepSeek's hub thinks as much as Haiku's (median 928 vs 778 output tokens) and Nemotron's far more (6,376), yet they sit at opposite ends. This rests on five models and we state it as a hypothesis.
 
 ### 4.3 Guardrails and partial adherence keep the harm *(Haiku; Figure 3)*
 
@@ -174,7 +174,9 @@ Both sit where most of the harm remains in our model.
 
 ### 4.4 Firm discretion works only when firms push back: the ratchet *(Figure 2)*
 
-**The replication that failed.** We pre-registered that firm discretion would remove ≥ 80% of the hub's harm on two other models. On Gemini 3.5 Flash-Lite it removes **57%** (27–84; n = 12), and 4 of 12 runs still reach monopoly. Qwen3.8 Flash: **[⧗]**.
+**A replication that half failed.** We pre-registered that firm discretion would remove ≥ 80% of the hub's harm on two other models:
+- **Qwen3.8 Flash:** removes all of it (Δ 0.10 vs B0 0.15 and auto-accept 0.97; n = 4). The prediction holds.
+- **Gemini 3.5 Flash-Lite:** removes only **57%** (27–84; n = 12), and 4 of 12 runs still reach monopoly. The prediction fails.
 
 **How the hub raises prices.** Under discretion, the hub's recommendation is anchored on the client's current price, and each step is small. Across all discretionary decisions, by the size of the recommended increase:
 
