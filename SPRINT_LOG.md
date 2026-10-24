@@ -776,3 +776,37 @@ Results with thinking on (firms: median 425 output tokens per call; Haiku's are 
 If P10 fails, the paper says Haiku's discretion "delays the hub by more than 100 rounds" instead of "stops it".
 
 *Note (03:59): the headings of the last five entries were corrected to their commit times. Some had been written 2–25 minutes later than the commit; no content changed. From here on, headings use the commit time.*
+
+### 2026-10-25 04:16: Qwen firm discretion and the Nemotron ladder (pre-registered at 03:20 and 02:25)
+
+**Qwen3.8 Flash M2-d** (n = 4, $0.94, 0.6% parse retries): Δ **0.095**, against B0 0.150 and M2-a 0.968.
+- Firm discretion removes **107%** of the harm (bootstrap 95% CI 89–158). The 03:20 prediction (≥ 80%) holds for Qwen.
+- Firms' accepted share of recommended increases from the LLM hub:
+
+  | Step | Accepted |
+  |---|---|
+  | +1–2 cents | 0.40 (n = 15) |
+  | +3–5 cents | 0.23 (n = 93) |
+  | ≥ +10 cents | 0.18 (n = 114) |
+
+  This sits between Haiku and Gemini.
+
+**Nemotron 3.5 Lightning ladder** (n = 4, $3.61, 1.4% parse retries, 0 refusals; budget not enforced, a median of 6,376 output tokens per hub call):
+
+| Arm | Δ | Harm removed |
+|---|---|---|
+| B0 | 0.033 | — |
+| M2-a | 0.990 | — |
+| M1-a (stale data) | 0.280 | **74%** (66–84) |
+| M0-a (data ban) | 0.110 | **92%** (85–98) |
+
+**Where the cross-model picture stands:**
+
+| | Works | Fails |
+|---|---|---|
+| Data ban | Nemotron 92%, Qwen 85%, Haiku 69% | DeepSeek 10%, Gemini Flash-Lite 8% |
+| Firm discretion | Qwen ~100%, Haiku 95% | Gemini Flash-Lite 57%, and none with thinking on (n = 2) |
+
+Gemini 3.8 Flash can't be estimated (unstable baseline); GPT-5.4 mini is pending. Guardrails were tested on Haiku only, and remove nothing.
+
+**Consequence for the title.** "Data Limits … Don't Stop an LLM Pricing Hub" is false for three of five interpretable models, as the skeptic warned (T4). The title must state model dependence. The final wording goes to Fable 5.1 once batches D and E are in.
