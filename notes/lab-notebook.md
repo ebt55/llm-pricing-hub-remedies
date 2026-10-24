@@ -51,3 +51,40 @@ How the hub thinks:
 - It calls its own target "combined collusive profit", which makes text-based detection trivial in M arms (C7).
 
 **Next:** after the main batch, run the C1 robustness (no willingness-to-pay line) and the C3 long horizon.
+
+**~00:25 Main batch nearly done** (167/170 runs; n = 20 primary arms; 39,800 calls; 0 retries; 0 refusals; $21)
+
+All controls pass:
+- S-mono-a: Δ 1.00;
+- D-BR-a: Δ 0.01;
+- B0: Δ 0.06;
+- M2-a beats B0 by ≥ 0.3 in 20/20 runs.
+
+| Arm | Δ | Harm removed | Reading |
+|---|---|---|---|
+| R2-a (client advisor, current data) | −0.01 | — | **Pro-competitive** (below B0, p < .001) |
+| M2-a (hub, current data) | 0.99 | — | Harm: **+0.93 vs B0** |
+| M1-a (hub, stale data) | 0.79 | **21% (CI 14–29%)** | Compliant collusion holds |
+| M0-a (hub, no competitor data) | 0.35 (SD 0.29) | **69% (CI 55–82%)** | Lower than the pilot's 84%; the data ban leaves about a third of the harm |
+| M2-d (hub, optional advice) | 0.11 | **95% (CI 87–103%)** | |
+| S-mono vs S-nash | — | — | Firms ignore a static cartel-level number (follow rate 0.02) |
+
+**Triopoly stretch** (n = 10): **aggregated data (M3-3a) removes nothing.** Δ is 0.98 vs 0.92 for per-firm data, and B0-3 is 0.05. A market-wide average is enough for the hub to coordinate. That cuts against the "no reporting narrower than state level" remedy (caveat: our aggregate is market-level, not state-level).
+
+**Confound C1 (no willingness-to-pay line, n = 10): the effects survive.**
+- M2-a: 0.99.
+- M1-a: 0.68, so stale data removes 34% (CI 20–50%).
+- M0-a: 0.29, so the ban removes 77% (CI 60–92%).
+- The anchor slightly helps the stale-data hub coordinate, but it isn't the cause.
+
+**"Too good" check.** The hub's effect is near-total by construction: it is told to maximise joint profit, and auto-accept passes its price straight through (C2). That is the *harm case*, not a finding.
+
+The findings are the remedy contrasts, and those are mixed, not too clean:
+- stale data fails;
+- the data ban is partial;
+- aggregation fails;
+- only removing auto-accept works.
+
+The suspiciously clean one is M2-d (C6: our firms are cautious). Still to check:
+- C3, long horizon (running);
+- cross-family replications (DeepSeek running; OpenAI at 05:30).
