@@ -24,12 +24,15 @@ class Arm:
     prior_steps: Optional[int] = None  # overrides GameConfig.prior_steps (warm-up rounds of competitive history)
     accept_prob: Optional[float] = None  # partial adherence: each firm auto-accepts with this probability per round
     advised: Optional[tuple] = None  # asymmetric adoption: which firms use the advisor, e.g. (True, False)
+    guard_band: Optional[float] = None  # guardrailed auto-accept: max relative price move per round (e.g. 0.03)
+    guard_mode: str = "clip"  # clip: out-of-band recs are applied at the band edge | firm: the firm decides
     role: str = ""
 
     @property
     def firm_calls(self) -> bool:
         return self.adherence == "disc" or self.accept_prob is not None or (
-            self.advised is not None and not all(self.advised))
+            self.advised is not None and not all(self.advised)) or (
+            self.guard_band is not None and self.guard_mode == "firm")
 
     @property
     def advisor_calls(self) -> bool:

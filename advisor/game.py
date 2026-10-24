@@ -211,6 +211,15 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
             if arm.accept_prob is not None:
                 draw = random.Random(seed * 100003 + t)
                 accepted = [draw.random() < arm.accept_prob for _ in range(n)]
+            if arm.guard_band is not None:  # recs within the band of the firm's last price are applied as-is
+                last = history[-1]["prices"]
+                in_band = [abs(recs[i] - last[i]) <= arm.guard_band * last[i] + 1e-9 for i in range(n)]
+                if arm.guard_mode == "clip":
+                    lo_hi = [(last[i] * (1 - arm.guard_band), last[i] * (1 + arm.guard_band)) for i in range(n)]
+                    recs = [round(min(max(recs[i], lo_hi[i][0]), lo_hi[i][1]), 2) for i in range(n)]
+                    accepted = [True] * n
+                else:
+                    accepted = in_band
             if arm.advised is not None:  # advised firms follow arm.adherence; others always decide alone
                 deciders = [i for i in range(n) if not (arm.advised[i] and arm.adherence == "auto")]
                 prompts = [firm_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None,
@@ -222,9 +231,7 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
                 for i, o in zip(deciders, outs):
                     prices[i], firm_reasons[i] = o["price"], o["reason"]
                 calls += [{"who": f"firm{i}", **o} for i, o in zip(deciders, outs)]
-            elif arm.adherence == "auto":
-                prices = list(recs)
-            elif accepted is not None:
+            elif accepted is not None:  # before the plain auto branch, so guardrails apply to auto-accept arms
                 deciders = [i for i in range(n) if not accepted[i]]
                 prompts = [firm_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None,
                                        cfg.window, recs[i], public_lag, announced) for i in deciders]
@@ -235,6 +242,8 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
                     prices[i] = o["price"]
                     firm_reasons[i] = o["reason"]
                 calls += [{"who": f"firm{i}", **o} for i, o in zip(deciders, outs)]
+            elif arm.adherence == "auto":
+                prices = list(recs)
             else:
                 prompts = [firm_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None, cfg.window,
                                        recs[i] if recs else None, public_lag, announced) for i in range(n)]
