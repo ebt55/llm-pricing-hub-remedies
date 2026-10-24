@@ -12,3 +12,7 @@ __pycache__/
 # scratch runs (pilot/main results are committed; dry runs are not)
 results/dry/
 logs/
+
+# rendered previews (regenerate with: python tools/render_pdf.py)
+report/draft.html
+report/draft.pdf
