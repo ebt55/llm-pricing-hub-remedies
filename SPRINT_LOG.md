@@ -202,3 +202,13 @@ An independent review (a Claude Fable 5.1 subagent, given the facts and none of 
 ### Design freeze
 
 *(Fill in before the main batch: config file, commit hash, arms, N per arm, metric, contrasts.)*
+
+### 2026-10-24 23:36: repository pushed (provenance)
+
+- The repository was pushed to GitHub at **18:06:08 UTC (23:36 IST)**, as private repo `ebt55/advisor-remedies`, with commits `caf7882`, `b81f6d3` and `4df5e61`.
+- GitHub records push times server-side in the repository's Activity log. Commit dates are set by the author and can be backdated; push times can't. The log becomes public when the repository is made public at submission.
+- The repository stays private until then, so the design isn't visible to other teams mid-sprint.
+
+**Replication models**, ready to run if the pilot shows the hub effect:
+- OpenAI `gpt-5.4-mini-2026-03-17`, a pinned snapshot. It runs inside the free data-sharing allowance, capped at 2.4M tokens per UTC day.
+- DeepSeek flash, under a hard $9.50 lifetime cap. It runs only if it adds value beyond the OpenAI replication.
