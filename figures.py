@@ -266,7 +266,9 @@ if __name__ == "__main__":
 
 RATCHET_FIRMS = [("ratchet", "main", "Claude Haiku 5.5", SLOT[0]),
                  ("ladder-gem-lite", "ladder-gem-lite", "Gemini 3.5 Flash-Lite, no thinking", SLOT[1]),
-                 ("ladder-gem-lite-hi", "ladder-gem-lite-hi", "Gemini 3.5 Flash-Lite, thinking on", SLOT[2])]
+                 ("ladder-gem-lite-hi", "ladder-gem-lite-hi", "Gemini 3.5 Flash-Lite, thinking on", SLOT[2]),
+                 ("ladder-or-qwen", "ladder-or-qwen", "Qwen3.8 Flash", SLOT[3]),
+                 ("ladder-or-nemotron", "ladder-or-nemotron", "Nemotron 3.5 Lightning", SLOT[4])]
 
 
 def fig_ratchet():
@@ -287,7 +289,7 @@ def fig_ratchet():
     for k, _, label, color in firms:
         paths = [np.array([np.mean(r["prices"]) for r in play]) for _, play in k["K1-d"]]
         for p in paths:
-            ax.plot(np.arange(1, len(p) + 1), p, color=color, lw=0.6, alpha=0.25, zorder=2)
+            ax.plot(np.arange(1, len(p) + 1), p, color=color, lw=0.6, alpha=0.18, zorder=2)
         m = np.mean(paths, axis=0)
         ax.plot(np.arange(1, len(m) + 1), m, color=color, lw=2, zorder=3)
         ends.append([m[-1], f"{label}\n(n = {len(paths)})", color])
@@ -333,7 +335,8 @@ def fig_ratchet():
     bx.set_title("(b) Firm discretion, by recommender and firm model", fontsize=8.5, color=INK, loc="left")
     bx.grid(axis="y", color=GRID, lw=0.6)
     bx.set_axisbelow(True)
-    bx.legend(frameon=False, fontsize=7, loc="center left", bbox_to_anchor=(0.0, 0.62))
+    h, l = bx.get_legend_handles_labels()
+    fig.legend(h, l, frameon=False, fontsize=7.5, loc="upper center", ncol=5, bbox_to_anchor=(0.5, 0.0))
     fig.tight_layout()
     save(fig, "fig2_ratchet")
 
