@@ -37,6 +37,11 @@ def usd_cost(spec: str, tin: int, tout: int, cache_hit: int = 0, when: Optional[
     # Gemini API paid tier, standard (ai.google.dev pricing, read 25 Oct 2026); output includes thinking tokens
     gem = {"gemini:gemini-4-argon": (2.00, 10.00), "gemini:gemini-3.8-flash": (0.75, 3.75),
            "gemini:gemini-3.5-flash-lite": (0.30, 2.50), "gemini:gemini-3.1-pro-preview": (2.00, 12.00)}
+    orp = {"openrouter:minimax/minimax-m3.1-flash": (0.15, 0.60), "openrouter:qwen/qwen3.8-flash": (0.15, 0.47),
+           "openrouter:nvidia/nemotron-3.5-lightning": (0.06, 0.16)}
+    if spec in orp:
+        pin, pout = orp[spec]
+        return (tin * pin + tout * pout) / 1e6
     if spec in gem:
         pin, pout = gem[spec]
         return (tin * pin + tout * pout) / 1e6
@@ -64,7 +69,11 @@ class BudgetExceeded(FatalProviderError):
 
 # Hard lifetime caps per provider, counting spend already recorded in results/ (user instruction 24 Oct:
 # DeepSeek strictly under $10 in total). Enforced before every call.
-PROVIDER_CAPS_USD = {"deepseek": 9.50, "gemini": 40.00}  # gemini: user's GCP credits ($40-60)
+PROVIDER_CAPS_USD = {"deepseek": 9.50, "gemini": 40.00, "openrouter": 9.00}  # gemini: GCP credits; openrouter: $10 credit
+
+# OpenRouter: one full-precision backend per model, no fallbacks (results must come from one deployment).
+OPENROUTER_PIN = {"minimax/minimax-m3.1-flash": "minimax", "qwen/qwen3.8-flash": "alibaba",
+                  "nvidia/nemotron-3.5-lightning": "deepinfra/bf16"}
 # OpenAI complimentary daily tokens (data sharing): stay under the lowest tier's 2.5M/day on mini models,
 # so no OpenAI call is billed. Counted per UTC day (the allowance resets at 00:00 UTC).
 DAILY_TOKEN_CAPS = {"openai": 2_400_000}
@@ -121,7 +130,7 @@ def make_provider(spec: str, effort: str = EFFORT, max_tokens: int = 4096):
         return AnthropicProvider(model, effort=effort, max_tokens=max_tokens)
     if kind in OpenAICompatProvider.ENDPOINTS:
         # DeepSeek thinking at effort low still runs to 4-5k tokens on advisor prompts; 4096 truncates to empty answers
-        mt = max(max_tokens, 16384) if kind in ("deepseek", "openai", "gemini") else max_tokens
+        mt = max(max_tokens, 16384) if kind in ("deepseek", "openai", "gemini", "openrouter") else max_tokens
         return OpenAICompatProvider(kind, model, effort=effort, max_tokens=mt)
     raise ValueError(f"unknown provider spec {spec!r}")
 
@@ -210,6 +219,11 @@ class OpenAICompatProvider:
             kwargs = {"max_completion_tokens": self.max_tokens, "reasoning_effort": self.effort}
         elif self.kind == "gemini":
             kwargs = {"max_tokens": self.max_tokens, "reasoning_effort": self.effort}
+        elif self.kind == "openrouter":
+            body = {"reasoning": {"effort": self.effort}, "usage": {"include": True}}
+            if self.model in OPENROUTER_PIN:
+                body["provider"] = {"order": [OPENROUTER_PIN[self.model]], "allow_fallbacks": False}
+            kwargs = {"max_tokens": self.max_tokens, "extra_body": body}
         t0 = time.time()
         try:
             resp = self.client.chat.completions.create(
@@ -225,6 +239,7 @@ class OpenAICompatProvider:
         tout = getattr(u, "completion_tokens", 0) or 0
         if self.kind == "gemini":  # Gemini's OpenAI endpoint leaves billed thinking tokens out of completion_tokens
             tout = max(tout, (getattr(u, "total_tokens", 0) or 0) - tin)
+        billed = (getattr(u, "model_extra", None) or {}).get("cost") if self.kind == "openrouter" else None
         hit = (getattr(u, "model_extra", None) or {}).get("prompt_cache_hit_tokens", 0) or 0
         msg = resp.choices[0].message if resp.choices else None
         extra = (getattr(msg, "model_extra", None) or {}) if msg is not None else {}
@@ -238,7 +253,9 @@ class OpenAICompatProvider:
             "tokens_out": tout,
             "cache_hit": hit,
             "stop_reason": resp.choices[0].finish_reason if resp.choices else None,
-            "usd": SPEND.add(usd_cost(self.spec, tin, tout, hit), tin, tout, self.spec),
+            "usd": SPEND.add(float(billed) if billed is not None else usd_cost(self.spec, tin, tout, hit),
+                             tin, tout, self.spec),
+            "provider": getattr(resp, "provider", None) or (getattr(resp, "model_extra", None) or {}).get("provider"),
             "reasoning": extra.get("reasoning_content") or "",
         }
         text = (msg.content or "") if msg is not None else ""

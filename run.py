@@ -136,7 +136,8 @@ def main():
                 for call in r.get("calls", []):
                     am = str(call.get("api_model") or "")
                     kind = ("deepseek" if am.startswith("deepseek") else "openai" if am.startswith(("gpt", "o3", "o4"))
-                            else "gemini" if am.startswith(("gemini", "models/gemini")) else None)
+                            else "gemini" if am.startswith(("gemini", "models/gemini"))
+                            else "openrouter" if "/" in am else None)
                     if kind:
                         u = call["usage"]
                         SPEND.by_provider[kind] = SPEND.by_provider.get(kind, 0.0) + u["usd"]

@@ -472,3 +472,25 @@ There is no pre-registered test of a monotone trend: "capability" is not measure
 - **Fix:** rate-limit errors (429) now wait 60 s and retry, up to 30 times, instead of failing the run.
 - **Gemini 3.8 Flash resumed alone with 6 workers.** 5 runs were finished; the partial runs resume deterministically with the same config.
 - **Gemini 3.5 Flash-Lite is complete** (20 runs).
+
+### 2026-10-25 02:25: open-weight and other-lab models via OpenRouter (logged before results)
+
+The ladder is extended with three cheap models, each pinned to one full-precision provider with no fallbacks:
+
+| Model | Lab | Provider | Note |
+|---|---|---|---|
+| `minimax/minimax-m3.1-flash` | MiniMax | MiniMax | first-party |
+| `qwen/qwen3.8-flash` | Alibaba | Alibaba | first-party |
+| `nvidia/nemotron-3.5-lightning` | NVIDIA | DeepInfra, bf16 | **open-weight**, 30B total / 3B active (MoE) |
+
+**Design.**
+- The same four arms as the Gemini ladder (B0, M2-a, M1-a, M0-a), with n = 4 (seeds 1000–1003) and `reasoning.effort = low`.
+- Cost is taken from OpenRouter's per-call billed figure.
+- OpenRouter lifetime cap: $9 (the user has $10 of credit). Expected spend is about $5.
+
+**Skipped:**
+- Muse Spark Open: about $15 or more, beyond the credit.
+- Free tiers: too slow, at around 1,000 requests a day.
+- Modal: all three models are served on OpenRouter.
+
+**Reported descriptively**, with the other models: the share of harm the data ban removes, and each model's baseline.
