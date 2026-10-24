@@ -143,3 +143,44 @@ if __name__ == "__main__":
     fig_paths("robust-long", (("B0", "No advisor"), ("M1-a", "Hub, stale data"), ("M0-a", "Hub, no rival data")),
               "figA_long_horizon")
     print("wrote", sorted(os.listdir(OUT)))
+
+
+def fig_dose():
+    """Adherence dose-response: Delta vs probability that a firm's price is the hub's recommendation."""
+    main, fu = finished("main"), finished("followup")
+    pts = [(0.0, main.get("M2-d", [])), (0.5, fu.get("M2-q50", [])), (0.8, fu.get("M2-q80", [])),
+           (0.9, fu.get("M2-q90", [])), (1.0, main.get("M2-a", []))]
+    b0 = [s["delta_lastk"] for s, _ in main.get("B0", [])]
+    fig, ax = plt.subplots(figsize=(5.2, 3.3))
+    rng = np.random.default_rng(1)
+    xs, ms, hs = [], [], []
+    for q, runs in pts:
+        vals = [s["delta_lastk"] for s, _ in runs]
+        if len(vals) < 2:
+            continue
+        ax.scatter(q + rng.uniform(-0.012, 0.012, len(vals)), vals, s=9, color=MUTED, alpha=0.55, linewidths=0, zorder=2)
+        m, h = ci(vals)
+        xs.append(q), ms.append(m), hs.append(h)
+    ax.errorbar(xs, ms, yerr=hs, fmt="-o", ms=6, color=SLOT[0], ecolor=SLOT[0], lw=2, capsize=3, mec="#fcfcfb",
+                mew=1.2, zorder=3)
+    if b0:
+        ax.axhline(np.mean(b0), color=MUTED, lw=0.8, ls=":")
+        ax.text(1.02, np.mean(b0), "no advisor", color=INK2, fontsize=7.5, va="center")
+    ax.axhline(1, color=MUTED, lw=0.8, ls=":")
+    ax.text(1.02, 1.0, "cartel", color=INK2, fontsize=7.5, va="center")
+    ax.axvspan(0.8, 0.9, color=GRID, alpha=0.6, zorder=0, lw=0)
+    ax.text(0.85, 0.42, "reported RealPage\nacceptance range", color=INK2, fontsize=7, ha="center")
+    ax.set_xticks([0, 0.5, 0.8, 0.9, 1.0], ["0\n(advice optional)", "0.5", "0.8", "0.9", "1\n(auto-accept)"], fontsize=8)
+    ax.set_xlim(-0.08, 1.18)
+    ax.set_ylim(-0.15, 1.12)
+    ax.set_xlabel("probability that a firm's price is the hub's recommendation")
+    ax.set_ylabel("Profit gain \u0394 (last 20 rounds)")
+    ax.set_title("Market-aligned hub with current data, Claude Haiku 5.5 (n = 10\u201320 per point)", fontsize=8.5,
+                 color=INK, loc="left")
+    ax.grid(axis="y", color=GRID, lw=0.6)
+    ax.set_axisbelow(True)
+    save(fig, "fig3_adherence_dose")
+
+
+if __name__ == "__main__":
+    fig_dose()
