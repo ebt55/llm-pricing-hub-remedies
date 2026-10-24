@@ -2,6 +2,14 @@
 
 *Testing the RealPage settlement's remedies on LLM pricing advisors*
 
+> **Under revision (01:40):** a methods red-team found overstatements and confounds (see SPRINT_LOG 01:35). Pending re-tests:
+> - a noisy-demand market;
+> - high hub effort;
+> - asymmetric adoption;
+> - the adherence dose-response.
+>
+> The abstract and the claims about the data ban, stale data and ending auto-accept will be rewritten once those results land. The rational-hub benchmark (J arms) reframes the data-ban result as a bounded-rationality effect.
+
 *Draft v1, Sun 25 Oct ~01:15 IST. Haiku numbers are final (main batch, frozen design). Items marked [pending] wait on the DeepSeek extension and the OpenAI replication. Paste into the official Apart template at the end: ≤ 8 pages, abstract 150–250 words.*
 
 ## Abstract (draft; ~230 words)
@@ -119,7 +127,7 @@ The hub drives prices to joint monopoly: M2-a Δ = 0.99 (SD 0.01).
 | No auto-accept | M2-d | 0.11 | **95%** (88–102%) |
 | Aggregation (triopoly, n = 10) | M3-3a | 0.98 vs per-firm 0.92 | **none** |
 
-All stage-2 contrasts have Holm-adjusted p < .001.
+Contrasts H2–H4 have Holm-adjusted p < .001. (H4c, client advisor with optional advice: p = .03. H5, static numbers: not significant, MDE 0.20.)
 
 ### 4.4 Mechanism: data confirms, the objective drives
 
