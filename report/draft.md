@@ -18,6 +18,10 @@
 
 ## 1. Introduction
 
+- **Hook (the "Saul Goodman" framing):** Saul Goodman's trademark is staying technically legal while doing shady things. The policy question here has the same shape: can an AI pricing hub that complies with the RealPage remedies to the letter still coordinate prices? We call this *compliant collusion*.
+  - Use it in the first paragraph and again in the Discussion, attached to whichever remedy arm still shows harm. The early pilot hints that stale data, which the decree allows, may still leave partial harm; confirm before claiming it.
+  - If every remedy fully removes the harm, the answer to the title is "yes, it's all good", and the framing becomes "the remedies work, and here's why".
+
 - Algorithmic pricing vendors and the RealPage case: the ~$360M MDL settlements, approved 16 Oct 2026, and the DOJ decree terms.
 - The open question: the decree's remedies were written for rule-based software that pools competitor data. Do they bind when the advisor is an LLM that reasons from whatever data it gets?
 - Contributions:
