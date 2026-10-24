@@ -4,18 +4,23 @@
 
 **Question.** The DOJ's settlement with RealPage limits what a shared pricing advisor may use: no competitors' current non-public data at runtime, training data at least 12 months old, and no reporting narrower than state level. The complaints also targeted auto-accept. Do these remedies stop an LLM pricing advisor whose objective is aligned with the whole market, the incentive alleged against RealPage?
 
-**Main findings** (Claude Haiku 5.5, n = 20 per arm unless noted; details in [report/draft.md](report/draft.md)):
+**Main findings** (details in [report/draft.md](report/draft.md); Claude Haiku 5.5 with n = 20 per arm unless noted; 666 runs on seven models):
 
 1. **The hub causes the harm.** A market-aligned hub drives a competitive market to joint monopoly (profit gain Δ 0.06 → 0.99). An advisor that serves only its own client is pro-competitive (Δ −0.01).
-2. **Data remedies leave most of the harm.**
-   - Stale competitor data removes 21% of it.
-   - A market average removes none (triopoly).
-   - A full data ban removes 69% for Haiku but ~0–10% for DeepSeek and the Gemini models.
-   - A scripted rational hub with no data still raises prices, so the ban binds only hubs that under-optimise.
-3. **Only *ending* auto-accept works.** It removes 95% of the harm. At 50%, 80% and 90% acceptance, 73%, 90% and 94% of the harm remains.
-4. **Coordination needs no instruction.** Advice to "avoid a race to the bottom", with no joint objective, also raises prices (Δ 0.45 without rival data).
-5. **Robustness.** The results hold under demand noise, without the prompt's price-ceiling cue, at higher reasoning effort, and over 200 rounds. With one-sided adoption, the hub only hurts its own client.
-6. **Detection.** The price-level screen catches outcomes. The classic variance screen fails (AUROC 0.36). A reasoning monitor catches the hub's *stated* intent, but also flags honest advisors that watch rivals.
+2. **Data limits help unevenly.** A competitor-data ban removes:
+   - 85% of the harm for Qwen3.8 Flash (n = 4);
+   - 69% for Haiku;
+   - ≤ 10% for DeepSeek V4.1 Flash and Gemini 3.5 Flash-Lite.
+
+   Stale data removes 21% for Haiku, and a market average removes none. A scripted rational hub with no data still raises prices.
+3. **Guardrails and partial adherence keep the harm.** Auto-accept within ±1–3% per round, the Final Judgment's "user-set parameters", retains all of it and only delays monopoly (round 4 → 8–19). At 50–90% acceptance, 73–94% remains.
+4. **The hub works as a ratchet, and firm discretion breaks it only when firms push back.** We swap in a scripted recommender that adds 1 cent per round:
+   - Haiku firms stay competitive (Δ 0.05).
+   - Gemini Flash-Lite firms follow it to monopoly (Δ 1.00), with or without thinking.
+
+   With an LLM hub, discretion removes 95% of the harm for Haiku and 57% for Gemini Flash-Lite. Stacking the data ban on top, or showing firms the cumulative drift, doesn't fix the Gemini case.
+5. **Coordination needs no joint instruction.** Advice to "avoid a race to the bottom" also raises prices (Δ 0.45 without rival data, n = 10).
+6. **Detection.** The price-level screen catches outcomes (AUROC 0.90). The classic variance screen points the wrong way (0.36). A reasoning monitor catches the hub's *stated* intent, but also flags honest advisors that watch rivals.
 
 ## Repository
 
@@ -23,6 +28,7 @@
 |---|---|
 | `advisor/` | Market (`market.py`), model providers with spend caps (`providers.py`), prompts (`prompts.py`), arm definitions (`arms.py`), game loop (`game.py`) |
 | `run.py` | Runs arms × seeds in parallel from a TOML config; resumable; prints a cost estimate |
+| `tools/` | `ratchet_curve.py` (acceptance by recommended step), `token_table.py` (measured reasoning budget per model), `pack_thoughts.py` |
 | `analyze.py` | Per-arm tables, pre-registered contrasts (Welch t, Mann-Whitney, Holm), MDE, share of harm removed, gate checks |
 | `detect.py` | Detection add-on: cartel screens and the reasoning monitor, scored against ground truth |
 | `figures.py` | Paper figures, written to `report/figures/` |
