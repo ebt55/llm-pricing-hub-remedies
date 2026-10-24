@@ -34,7 +34,7 @@ CONTRASTS = [
     ("stretch: aggregated vs per-firm data (triopoly hub)", "M3-3a", "M2-3a", "c"),
 ]
 # remedy arms whose share of the hub's harm removed is reported: (M2-a - X) / (M2-a - B0)
-REMEDIES = ["M1-a", "M0-a", "M2-d"]
+REMEDIES = ["M1-a", "M0-a", "M2-d", "M0-d", "M2-dx"]  # M0-d, M2-dx: post-hoc remedy follow-ups (SPRINT_LOG 03:30)
 
 
 def load(tag_dir: str):

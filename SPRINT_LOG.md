@@ -726,3 +726,27 @@ Harm removed = (M2-a − X)/(M2-a − B0), by model:
 **Reading.** The firm side of the ratchet is causal. Under the same scripted hub, Haiku firms push back and Gemini Flash-Lite firms (zero thinking tokens) rubber-stamp, whatever the step size. "Small nudges" matters for the LLM hub, which jumps less when ignored, but the decisive variable is **whether the deciding firm pushes back at all**.
 
 **Title.** The pre-registered rule fired: P2 and P3 both hold. Batch C (Gemini at high effort) decides whether "push back" can be read as "reasons". The final wording waits for C and goes to Fable 5.1.
+
+### 2026-10-25 03:58: batch C stopped at the Gemini project's monthly spend cap; partial results
+
+- **What happened.** From 03:46 every Gemini call returned HTTP 429 "Your project has exceeded its monthly spending cap" (AI Studio project spend cap). This is not the rate limit, and it won't clear before November unless the user raises the cap at ai.studio/spend. I stopped the batch at 03:56.
+- **What finished:** 11 of 24 runs, $5.17 logged. The partial runs are kept and will resume if the cap is raised.
+- **Gemini spend logged so far:** ~$26 across all batches.
+
+Results with thinking on (firms: median 425 output tokens per call; Haiku's are 557). Exploratory and **incomplete**:
+
+| Arm | n | Δ |
+|---|---|---|
+| B0 | 3 | 0.051 |
+| M2-a | 3 | 0.983 |
+| M2-d | 2 | 1.000 (both runs); removes none of the harm |
+| K1-d | 3 | 1.000 (all three runs) |
+
+- **Accepted recommended increases of 1–2 cents:**
+  - LLM hub: 0.88 (n = 58);
+  - scripted ratchet: 0.84 (n = 296).
+  - Without thinking the rate was 0.69.
+- **P7 failed:** reasoning firms accepted *more* nudges, not fewer.
+- **P8 failed:** discretion removed nothing with thinking on (n = 2).
+
+**Reading.** Pushing back is not a matter of having a reasoning budget. At a budget comparable to Haiku's, Gemini Flash-Lite firms defer even more. The decisive variable is the firm model's disposition toward the software's recommendation. The n is tiny (2–3); this is reported as exploratory.
