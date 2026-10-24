@@ -15,5 +15,5 @@ max_retries = 3
 last_k = 20
 workers = 20
 max_usd = 9.0
-seeds = [0, 1, 2, 3, 4]
-arms = ["B0", "M2-a", "M0-a"]
+seeds = [200, 201, 202, 203, 204]
+arms = ["B0", "M2-a", "M1-a", "M0-a"]

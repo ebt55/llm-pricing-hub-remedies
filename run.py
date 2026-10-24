@@ -34,7 +34,7 @@ def load_config(path: str) -> dict:
         return tomllib.load(f)
 
 
-def estimate(arms, seeds, cfg: GameConfig, firm_spec, advisor_spec, out_tokens=(60, 600)):
+def estimate(arms, seeds, cfg: GameConfig, firm_spec, advisor_spec, out_tokens=(60, 700), arm_n=None):
     """Calls and a cost range per arm. Input tokens from rendered full-window prompts (chars/3,
     Haiku 5.5's tokenizer counts ~30% more than chars/4); output tokens are a low/high guess
     (reason line only vs. reason line + low-effort thinking). Replace with measured cost after the smoke run."""
@@ -46,7 +46,8 @@ def estimate(arms, seeds, cfg: GameConfig, firm_spec, advisor_spec, out_tokens=(
                  "profits": [23.28] * m.n, "recs": [1.6] * m.n} for r in range(1, 41)]
         n_adv = m.n if arm.advisor_calls else 0
         n_firm = m.n if arm.firm_calls else 0
-        calls = cfg.rounds * (n_adv + n_firm) * len(seeds)
+        n_runs = (arm_n or {}).get(name, len(seeds))
+        calls = cfg.rounds * (n_adv + n_firm) * n_runs
         tin = 0
         if n_adv:
             tin += n_adv * (len(ADVISOR_SYSTEM[arm.objective]) + len(
@@ -65,7 +66,7 @@ def estimate(arms, seeds, cfg: GameConfig, firm_spec, advisor_spec, out_tokens=(
                     continue
                 share_in = per_round_in * k / max(calls_per_round, 1)
                 usd += usd_cost(spec, int(share_in), k * spec_mix)
-            cost.append(usd * cfg.rounds * len(seeds))
+            cost.append(usd * cfg.rounds * n_runs)
         rows.append((name, calls, cost[0], cost[1]))
         tot_calls += calls
         lo += cost[0]
@@ -106,7 +107,8 @@ def main():
     advisor_spec = "mock" if args.dry else (args.model or c["advisor_model"])
     out_root = os.path.join(HERE, "results", "dry" if args.dry else "", tag)
 
-    rows, calls, lo, hi = estimate(arms, seeds, cfg, firm_spec, advisor_spec)
+    rows, calls, lo, hi = estimate(arms, seeds, cfg, firm_spec, advisor_spec,
+                                   arm_n={a: len(c.get("arm_seeds", {}).get(a, seeds)) for a in arms})
     print(f"{tag}: {len(arms)} arms x {len(seeds)} seeds x {cfg.rounds} rounds | firm={firm_spec} advisor={advisor_spec}")
     for name, n, a, b in rows:
         print(f"   {name:7s} {n:6d} calls   est ${a:6.2f} - ${b:6.2f}")
@@ -144,7 +146,10 @@ def main():
         print("   lifetime spend already recorded:", {k: round(v, 2) for k, v in SPEND.by_provider.items()},
               "| tokens by UTC day:", SPEND.day_tokens)
 
-    jobs = [(a, s) for s in seeds for a in arms]  # seed-major so partial batches cover all arms
+    # seed-major so partial batches cover all arms; arm_seeds (optional) gives an arm its own seed list
+    arm_seeds = {a: c.get("arm_seeds", {}).get(a, seeds) for a in arms} if args.seeds is None else {a: seeds for a in arms}
+    all_seeds = sorted({s for v in arm_seeds.values() for s in v})
+    jobs = [(a, s) for s in all_seeds for a in arms if s in arm_seeds[a]]
     t0 = time.time()
     done, failed, skipped = 0, [], []
     meta = {"tag": tag, "config_file": os.path.relpath(args.config, HERE), "effort": c.get("effort", "low")}

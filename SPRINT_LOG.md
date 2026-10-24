@@ -199,9 +199,58 @@ An independent review (a Claude Fable 5.1 subagent, given the facts and none of 
 - **DeepSeek flash:** failed criterion 2 at a 4096-token cap. At a 16k cap it works but costs about 3× Haiku per advisor call. It will be used only for a small cross-family replication of the headline contrast (B0, M2-a, M0-a), if the pilot shows an effect worth replicating.
 - **OpenAI** (free daily tokens with data sharing, mini models) is a possible third lineage if the user enables it.
 
-### Design freeze
+### Design freeze (2026-10-25 ~00:00 IST, after pilot2)
 
-*(Fill in before the main batch: config file, commit hash, arms, N per arm, metric, contrasts.)*
+**pilot2** (`results/pilot2`, design v2, Haiku 5.5): 39 runs, 8,400 calls, $4.23, 0 parse retries, 0 refusals. Pilot data is exploratory only and is not pooled with the main batch.
+
+| Arm | Δ (n = 3) |
+|---|---|
+| B0 | 0.08 |
+| B0-cold | 0.07 |
+| R0-d | 0.02 |
+| R2-a | −0.01 |
+| R2-d | 0.04 |
+| M2-a | 0.99 |
+| M1-a | 0.84 |
+| M0-a | 0.23 (SD 0.22) |
+| M2-d | 0.07 |
+| S-nash | 0.00 |
+| S-mono | 0.02 (follow rate 0.01) |
+| S-mono-a | 1.00 |
+| D-BR-a | 0.02 |
+
+**Gates:** all pass.
+- **Mechanical controls:** S-mono-a = 1.00 and D-BR-a = 0.02.
+- **Baseline headroom:** B0 = 0.08.
+- **Behavioural positive control:** M2-a exceeds B0 by at least 0.3 in 3/3 runs.
+
+**Notes for interpretation, recorded before the main results.**
+- **Cold start no longer jumps.** With the competitor sentence, B0-cold ≈ B0. The earlier jump to the monopoly price came from firms that didn't know they had a rival.
+- **Recommendations and adherence.** In the -d arms, firms follow recommendations close to their current price (R0-d 0.90, S-nash 0.90), but not high ones (S-mono 0.01, M2-d 0.36).
+
+**N.** All effects except M0-a are large relative to their SDs. Runs are cheap ($0.09–0.23 each), so N is set *above* the pre-registered plan:
+- **Primary arms, n = 20:** B0, R2-a, R2-d, M2-a, M1-a, M0-a, M2-d.
+- **Controls, n = 5:** R0-d, S-nash, S-mono, B0-cold, S-mono-a, D-BR-a.
+- **Triopoly stretch, n = 10:** B0-3, M2-3a, M3-3a. Not piloted, so it is labelled exploratory-confirmatory.
+- **Seeds:** 100+ (pilot used 0–2).
+
+**Frozen.**
+- **Configs:** `configs/main.toml` and `configs/main_triopoly.toml`, in the commit that adds this entry.
+- **Metric:** Δ over the last 20 of 100 rounds. Price index secondary.
+- **Contrasts:** as listed in `analyze.py` CONTRASTS (stages 1 and 2, Holm within stage).
+- **Effect sizes:** share of harm removed for M1-a, M0-a and M2-d.
+- **Analysis code:** `analyze.py` at this commit.
+
+**Launch commands.**
+```
+uv run python run.py --config configs/main.toml -y
+uv run python run.py --config configs/main_triopoly.toml -y
+```
+
+**Replications**, decided now, before the main results:
+- **OpenAI `gpt-5.4-mini-2026-03-17`:** B0, M2-a, M1-a, M0-a, n = 5, seeds 200–204. Free tier, capped at 2.4M tokens per UTC day, so it may span two UTC days.
+- **DeepSeek flash:** the same 4 arms, n = 3, seeds 300–302, under the $9.50 lifetime cap.
+- **Why DeepSeek runs (it adds value):** the most surprising pilot result is that stale data, which the decree allows, leaves most of the harm. A third, independent model family makes that claim much harder to dismiss as specific to Claude. The estimated ~$5 fits under the cap.
 
 ### 2026-10-24 23:36: repository pushed (provenance)
 

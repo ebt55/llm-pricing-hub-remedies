@@ -1,0 +1,26 @@
+# MAIN BATCH (frozen 25 Oct 2026 ~00:00 IST after pilot2; see SPRINT_LOG "Design freeze").
+# Same game as pilot2; new seeds (100+) so the pilot stays exploratory. n = 20 primary arms, n = 5 controls.
+tag = "main"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "low"
+max_tokens = 4096
+rounds = 100
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 10
+max_retries = 3
+last_k = 20
+workers = 100
+max_usd = 30.0
+seeds = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119]
+arms = ["B0", "R2-a", "R2-d", "M2-a", "M1-a", "M0-a", "M2-d", "R0-d", "S-nash", "S-mono", "B0-cold", "S-mono-a", "D-BR-a"]
+
+[arm_seeds]
+"R0-d" = [100, 101, 102, 103, 104]
+"S-nash" = [100, 101, 102, 103, 104]
+"S-mono" = [100, 101, 102, 103, 104]
+"B0-cold" = [100, 101, 102, 103, 104]
+"S-mono-a" = [100, 101, 102, 103, 104]
+"D-BR-a" = [100, 101, 102, 103, 104]

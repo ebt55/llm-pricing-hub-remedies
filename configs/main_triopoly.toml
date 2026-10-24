@@ -1,0 +1,17 @@
+# Stretch (pre-registered 24 Oct 23:45): aggregation remedy on the market-aligned hub, triopoly. Not piloted.
+tag = "main-tri"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "low"
+max_tokens = 4096
+rounds = 100
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 10
+max_retries = 3
+last_k = 20
+workers = 30
+max_usd = 8.0
+seeds = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109]
+arms = ["B0-3", "M2-3a", "M3-3a"]
