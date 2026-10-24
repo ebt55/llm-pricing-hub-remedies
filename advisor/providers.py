@@ -223,6 +223,8 @@ class OpenAICompatProvider:
         u = resp.usage
         tin = getattr(u, "prompt_tokens", 0) or 0
         tout = getattr(u, "completion_tokens", 0) or 0
+        if self.kind == "gemini":  # Gemini's OpenAI endpoint leaves billed thinking tokens out of completion_tokens
+            tout = max(tout, (getattr(u, "total_tokens", 0) or 0) - tin)
         hit = (getattr(u, "model_extra", None) or {}).get("prompt_cache_hit_tokens", 0) or 0
         msg = resp.choices[0].message if resp.choices else None
         extra = (getattr(msg, "model_extra", None) or {}) if msg is not None else {}

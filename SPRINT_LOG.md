@@ -437,3 +437,30 @@ All four batches are complete; full numbers are in `notes/lab-notebook.md` and `
 | Soft vendor objective | No-data V0-a: Δ 0.45 vs B0, p = .004. Current-data V2-a: 0.21, p = .11. Discretionary V2-d: 0.09, n.s. |
 
 The vendor contrasts were computed against the main batch's B0 (same design, different seeds), with Welch t.
+
+### 2026-10-25 02:10: Gemini capability ladder (logged before results)
+
+**Purpose.** The reframed finding (from the J benchmark and DeepSeek) is that a data ban constrains a market-aligned hub only while the model under-optimises its objective. The ladder measures that across models.
+
+**Design.**
+- The same four arms (B0, M2-a, M1-a, M0-a) on more model families and sizes, from `configs/ladder.toml` (model passed with `--model`, seeds 1000+):
+  - Gemini 3.5 Flash-Lite (`gemini-3.5-flash-lite`, n = 5);
+  - Gemini 3.8 Flash (`gemini-3.8-flash`, n = 4);
+  - Gemini 4 Argon (`gemini-4-argon`, Google's flagship, n = 4).
+- `reasoning_effort` is low for all three.
+- Paid tier on the user's GCP credits, with a lifetime cap of $40 for Gemini.
+
+**Reported descriptively:**
+- each model's M0-a Δ against the rational no-data hub, J0 = 0.82;
+- the share of harm each data rule removes;
+- the comparison with Haiku, DeepSeek and GPT-5.4 mini.
+
+There is no pre-registered test of a monotone trend: "capability" is not measured on a single scale.
+
+**Cost accounting.** Gemini's OpenAI-compatible endpoint leaves billed thinking tokens out of `completion_tokens`. We count output as `total_tokens − prompt_tokens`.
+
+**RealPage acceptance-rate facts** (checked 25 Oct, for Figure 3):
+- **DOJ complaint (Aug 2024), ¶71:** final prices were within 1% of the recommendation in 40–50% of new leases (Jan 2017 – Jun 2023). That is RealPage's own acceptance measure. Prices were within 5% for more than 85%. Auto-accept had default limits of 3% a day and 8% a week.
+- **ProPublica (Oct 2022):** "as many as 90%" of recommendations were adopted, according to former employees.
+- **Private MDL plaintiffs:** allege acceptance "upwards of 80–90%". (Source: the M.D. Tenn. opinion of Dec 2023, summarising the complaint.)
+- None of these sources is a DOJ finding of 80–90%.
