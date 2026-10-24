@@ -58,4 +58,4 @@ The old-data result suggests the allowed data may still leave room for a "techni
 3. Repeat the key comparison on OpenAI's model (free), and possibly DeepSeek, to show the result isn't specific to Claude.
 4. Write it up as **S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel?**
 
-For the detail behind each decision, see [SPRINT_LOG.md](../SPRINT_LOG.md).
+For the detail behind each decision, see [SPRINT_LOG.md](../SPRINT_LOG.md). Questions and answers: [faq.md](faq.md).
