@@ -48,8 +48,12 @@ The key test is the **"technically legal" cases** (the hub with old data, or wit
 
 That connects the paper to the sprint's detection track as well as the markets track. It reuses data we already collect and adds an estimated ~$1–3 in monitor calls. Planned as a stretch section after the main batch.
 
-## Why is it called "S'all Good, Man?"
+## Why this title?
 
-"S'all good, man" is the catchphrase of Saul Goodman, the TV lawyer in *Breaking Bad* and *Better Call Saul*, and the origin of his name. His trademark is staying technically legal while doing shady things.
+**Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub** states the two main findings directly:
+- **stale data**, which the RealPage settlement allows, leaves most of the hub's harm in place;
+- the remedy that works is **ending auto-accept**, i.e. letting firms ignore the hub's price.
 
-The paper asks whether everything really is fine once the RealPage remedies are in place, or whether an AI hub can follow the rules and still coordinate prices. We call that **compliant collusion**.
+We call the residual harm **data-compliant coordination**: the hub obeys every data restriction, but prices still move toward joint monopoly because the hub's *objective* drives them. An earlier pun title ("S'all Good, Man?") was dropped after a simulated judge review found it unclear.
+
+*(The title's second half depends on the adherence dose-response running on 25 Oct; it will be adjusted if partial overriding turns out not to work.)*

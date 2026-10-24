@@ -1,5 +1,7 @@
 # Initial direction (plain-language summary)
 
+> **Update 25 Oct ~01:30:** the title is now *Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub*, and "compliant collusion" is now **data-compliant coordination**. A rational-hub benchmark also showed that data rules can't stop a joint-profit hub even in principle (see SPRINT_LOG). The text below is kept as written on 24 Oct.
+
 *Written Sat 24 Oct 2026, ~23:50 IST, while the first pilot of design v2 was finishing. The early numbers below come from single pilot runs and are **not final results**.*
 
 ## The real-world story

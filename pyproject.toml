@@ -1,7 +1,7 @@
 [project]
-name = "sall-good-man"
+name = "llm-pricing-hub-remedies"
 version = "0.1.0"
-description = "S'all Good, Man? Do antitrust remedies stop an AI pricing cartel? Testing the RealPage settlement on LLM pricing advisors (Apart AI Collusion Research Sprint, Oct 2026)"
+description = "Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub. Testing the RealPage settlement's remedies on LLM pricing advisors (Apart AI Collusion Research Sprint, Oct 2026)"
 requires-python = ">=3.11"
 dependencies = [
     "anthropic>=1.0",

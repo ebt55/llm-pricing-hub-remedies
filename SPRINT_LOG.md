@@ -1,4 +1,4 @@
-# SPRINT_LOG: S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel? (internal plan name: ADVISOR)
+# SPRINT_LOG: Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub (internal plan name: ADVISOR)
 
 Apart Research AI Collusion Research Sprint, 23–26 Oct 2026. Entries are dated, in IST, and append-only. The log records:
 - where the idea came from;
@@ -348,3 +348,10 @@ Motivated by the judge simulation and by confound C6. The game is the same as th
 - **Detection hard case:** this advisor has no stated joint objective, so it tests the reasoning monitor where intent is not stated.
 
 All contrasts are two-sided, with Holm correction within this batch.
+
+### 2026-10-25 01:30: title changed (user decision, after the judge simulation)
+
+- **Title:** now **Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub**. *Testing the RealPage settlement's remedies on LLM pricing advisors.*
+- **Concept renamed:** "compliant collusion" is now **data-compliant coordination**.
+- **Repository:** renamed to `ebt55/llm-pricing-hub-remedies`. GitHub redirects the earlier names, and the push history is kept.
+- **Caveat:** the title's second half depends on the adherence dose-response running now. If partial overriding doesn't work, the title will be adjusted.

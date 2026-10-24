@@ -1,6 +1,6 @@
-# S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel?
+# Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub
 
-*Testing the RealPage settlement on LLM pricing advisors.*
+*Testing the RealPage settlement's remedies on LLM pricing advisors.*
 
 One pricing advisor serving competing firms can coordinate their prices like a cartel hub, as RealPage was alleged to. We test whether the remedies in the DOJ's RealPage settlement (no current competitor data, stale data only, no auto-accept) stop an LLM version of that hub. (Internal plan name: ADVISOR.)
 

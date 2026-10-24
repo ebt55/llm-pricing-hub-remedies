@@ -1,6 +1,6 @@
-# S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel?
+# Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub
 
-*Testing the RealPage settlement on LLM pricing advisors*
+*Testing the RealPage settlement's remedies on LLM pricing advisors*
 
 *Draft v1, Sun 25 Oct ~01:15 IST. Haiku numbers are final (main batch, frozen design). Items marked [pending] wait on the DeepSeek extension and the OpenAI replication. Paste into the official Apart template at the end: ≤ 8 pages, abstract 150–250 words.*
 
@@ -21,11 +21,11 @@ An advisor that maximises only its own client's profit is pro-competitive (profi
 
 A second model family (DeepSeek V4.1 Flash) is even less constrained: its hub reaches cartel prices without any competitor data [n pending].
 
-We call the residual harm **compliant collusion**: data remedies leave it largely intact because the hub's objective, not its data, drives coordination. Classic variance screens miss these cartels. Reasoning monitors catch the hub's intent, but also flag honest advisors that merely watch rivals.
+We call the residual harm **data-compliant coordination**: data remedies leave it largely intact because the hub's objective, not its data, drives coordination. Classic variance screens miss these cartels. Reasoning monitors catch the hub's intent, but also flag honest advisors that merely watch rivals.
 
 ## 1. Introduction
 
-**Hook.** Saul Goodman's trademark is staying technically legal while doing shady things. Our question has the same shape: can an AI pricing hub that follows the RealPage remedies to the letter still coordinate prices? We find that largely it can. We call this *compliant collusion*.
+**Hook.** Can an AI pricing hub that follows the RealPage data remedies to the letter still coordinate prices? We find that largely it can. We call this *data-compliant coordination*: the hub obeys every data restriction, yet prices still move most of the way to joint monopoly, because its objective, not its data, drives them.
 
 **The case.**
 - RealPage sold revenue-management software that pooled landlords' non-public rent and occupancy data.
@@ -164,7 +164,7 @@ Two caveats about the reasoning monitor:
 
 ## 5. Discussion
 
-**Compliant collusion.**
+**Data-compliant coordination.**
 - When the advisor's objective is market-aligned, the data remedies leave most of the harm in place:
   - stale and aggregated data barely help;
   - a data ban helps for one model and delays coordination for another.
