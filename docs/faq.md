@@ -50,10 +50,11 @@ That connects the paper to the sprint's detection track as well as the markets t
 
 ## Why this title?
 
-**Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub** states the two main findings directly:
-- **stale data**, which the RealPage settlement allows, leaves most of the hub's harm in place;
-- the remedy that works is **ending auto-accept**, i.e. letting firms ignore the hub's price.
+**Data Limits and Guardrails Don't Stop an LLM Pricing Hub; Only Firm Discretion Does** states the three main findings directly:
+- **Data limits**, the RealPage settlement's data rules (stale data only, no current competitor data, aggregation), leave most of an AI hub's harm in place.
+- **Guardrails** don't help either. The settlement still allows auto-accept within limits each landlord sets, such as a 3% daily cap. Under that rule the hub reached near-monopoly prices by round 8 instead of round 4.
+- **Only firm discretion works.** When firms set every price themselves, with the hub's advice optional, almost all the harm goes away.
 
-We call the residual harm **data-compliant coordination**: the hub obeys every data restriction, but prices still move toward joint monopoly because the hub's *objective* drives them. An earlier pun title ("S'all Good, Man?") was dropped after a simulated judge review found it unclear.
+We call the residual harm **data-compliant coordination**: the hub obeys every data restriction, but prices still move toward joint monopoly, because the hub's *objective* drives them.
 
-*(The title's second half depends on the adherence dose-response running on 25 Oct; it will be adjusted if partial overriding turns out not to work.)*
+Earlier titles were changed during the sprint. "S'all Good, Man?" was dropped after a simulated judge review found it unclear. "…Only Ending Auto-Accept Stops…" was dropped because the settlement restricts auto-accept rather than ending it.

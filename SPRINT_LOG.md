@@ -1,4 +1,4 @@
-# SPRINT_LOG: Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub (internal plan name: ADVISOR)
+# SPRINT_LOG: Data Limits and Guardrails Don't Stop an LLM Pricing Hub; Only Firm Discretion Does (internal plan name: ADVISOR)
 
 Apart Research AI Collusion Research Sprint, 23–26 Oct 2026. Entries are dated, in IST, and append-only. The log records:
 - where the idea came from;
@@ -556,3 +556,18 @@ A fact-check subagent opened the documents themselves:
 **Framing changes (same review):**
 - Say "firm discretion", not "ending auto-accept". The settlement's parameterised auto-accept is a partial remedy.
 - §1 states §V.A.1, §V.A.5 and §V.C precisely.
+
+### 2026-10-25 03:10: guardrail results; title set by the pre-registered rule
+
+`results/guardrail`: 30 runs, $3.76, 0 retries, 0 refusals.
+
+| Arm | Δ | Harm retained | Reached 0.95·p_M | Median first round |
+|---|---|---|---|---|
+| M2-g3 (n = 20) | 0.997 | 101% | 20/20 | 8 |
+| M2-g1 (n = 10) | 0.999 | 101% | 10/10 | 18.5 |
+| M2-a (comparison) | — | — | 20/20 | 4 |
+| M2-d (comparison) | — | 5% | 0/20 | — |
+
+- **The prediction (Δ ≥ 0.95 and ≥ 0.90) is confirmed.** Parameterised auto-accept only delays the hub.
+- **The title rule fired** (M2-g3 retains ≥ 80%). The title is now **"Data Limits and Guardrails Don't Stop an LLM Pricing Hub; Only Firm Discretion Does"**, with the subtitle *"Testing the RealPage remedies (stale data, data bans, parameterised auto-accept) on LLM pricing advisors"*.
+- Applied to the README, draft, FAQ, pyproject and plan doc.

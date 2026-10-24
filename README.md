@@ -1,6 +1,6 @@
-# Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub
+# Data Limits and Guardrails Don't Stop an LLM Pricing Hub; Only Firm Discretion Does
 
-*Testing the RealPage settlement's remedies on LLM pricing advisors. Apart Research AI Collusion Research Sprint, October 2026.*
+*Testing the RealPage remedies (stale data, data bans, parameterised auto-accept) on LLM pricing advisors. Apart Research AI Collusion Research Sprint, October 2026.*
 
 **Question.** The DOJ's settlement with RealPage limits what a shared pricing advisor may use: no competitors' current non-public data at runtime, training data at least 12 months old, and no reporting narrower than state level. The complaints also targeted auto-accept. Do these remedies stop an LLM pricing advisor whose objective is aligned with the whole market, the incentive alleged against RealPage?
 

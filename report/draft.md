@@ -1,6 +1,6 @@
-# Stale Data Isn't Enough: Only Ending Auto-Accept Stops an LLM Pricing Hub
+# Data Limits and Guardrails Don't Stop an LLM Pricing Hub; Only Firm Discretion Does
 
-*Testing the RealPage settlement's remedies on LLM pricing advisors*
+*Testing the RealPage remedies (stale data, data bans, parameterised auto-accept) on LLM pricing advisors*
 
 *Draft v2, Sun 25 Oct ~02:30 IST, rewritten after the methods red-team and the judge simulation. Section markers say which results are **confirmatory** (pre-registered before the main batch, freeze commit `5aa9f79`) and which are **exploratory** (added later, each logged in SPRINT_LOG before its results). The model-ladder and OpenAI numbers are filled in when those runs finish. Target: ≤ 8 pages on the Apart template.*
 
