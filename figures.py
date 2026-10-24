@@ -188,3 +188,55 @@ def fig_dose():
 
 if __name__ == "__main__":
     fig_dose()
+
+
+CROSS_MODELS = [("main", "Claude\nHaiku 5.5"), ("replicate-openai", "GPT-5.4\nmini"), ("ladder-or-qwen", "Qwen3.8\nFlash"),
+                ("ladder-or-nemotron", "Nemotron 3.5\nLightning"), ("ladder-gem-lite", "Gemini 3.5\nFlash-Lite"),
+                ("replicate-dsflash", "DeepSeek\nV4.1 Flash"), ("ladder-gem-flash", "Gemini 3.8\nFlash")]
+
+
+def fig_cross_model():
+    """Price index (0 = Nash, 1 = joint monopoly, > 1 = above monopoly) for the hub under each data rule, per model.
+    The price index is used instead of Delta because Delta falls on both sides of the monopoly price and would
+    hide overshooting hubs. Error bars (t 95% CI) only where n >= 8; dots are individual runs."""
+    arms = [("B0", "no advisor"), ("M2-a", "hub, current data"), ("M1-a", "hub, stale data"), ("M0-a", "hub, no rival data")]
+    p_n, p_m = 1.4729, 1.9250
+
+    def idx(play):
+        return (np.mean([np.mean(r["prices"]) for r in play[-20:]]) - p_n) / (p_m - p_n)
+
+    data = [(label, finished(tag)) for tag, label in CROSS_MODELS]
+    data = [(label, d) for label, d in data if sum(len(d.get(a, [])) >= 2 for a, _ in arms) == len(arms)]
+    fig, ax = plt.subplots(figsize=(7.4, 3.8))
+    off = {"B0": -0.27, "M2-a": -0.09, "M1-a": 0.09, "M0-a": 0.27}
+    rng = np.random.default_rng(2)
+    for arm, label in arms:
+        xs, ms = [], []
+        for i, (_, d) in enumerate(data):
+            vals = [idx(play) for _, play in d.get(arm, [])]
+            x = i + off[arm]
+            ax.scatter(x + rng.uniform(-0.025, 0.025, len(vals)), vals, s=7, color=ARM_COLOR[arm], alpha=0.4,
+                       linewidths=0, zorder=2)
+            m, h = ci(vals)
+            if len(vals) >= 8:
+                ax.errorbar([x], [m], yerr=[h], fmt="none", ecolor=ARM_COLOR[arm], elinewidth=1.2, capsize=2, zorder=3)
+            xs.append(x), ms.append(m)
+        ax.scatter(xs, ms, s=34, color=ARM_COLOR[arm], edgecolors="#fcfcfb", linewidths=1.0, zorder=4, label=label)
+    j0 = (1.7464 - p_n) / (p_m - p_n)  # scripted rational hub, no rival data: both firms at the joint BR to Nash
+    ax.axhline(j0, color=INK2, lw=1, ls="--", zorder=1)
+    ax.text(len(data) - 0.45, j0 + 0.06, "rational hub,\nno rival data", color=INK2, fontsize=7, va="bottom")
+    for y, lab in ((0, "competitive (Nash)"), (1, "joint monopoly")):
+        ax.axhline(y, color=MUTED, lw=0.8, ls=":")
+        ax.text(len(data) - 0.45, y, lab, color=INK2, fontsize=7, va="center")
+    ax.set_xticks(range(len(data)), [l for l, _ in data], fontsize=7.5)
+    ax.set_xlim(-0.6, len(data) + 0.5)
+    ax.set_ylim(-0.3, 1.65)
+    ax.set_ylabel("price index (last 20 of 100 rounds)")
+    ax.grid(axis="y", color=GRID, lw=0.6)
+    ax.set_axisbelow(True)
+    ax.legend(frameon=False, fontsize=7.5, loc="upper left", bbox_to_anchor=(0.0, 1.16), ncol=4)
+    save(fig, "fig4_cross_model")
+
+
+if __name__ == "__main__":
+    fig_cross_model()
