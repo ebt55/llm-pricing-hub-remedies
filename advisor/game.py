@@ -184,8 +184,23 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
 
             # 2) prices
             firm_reasons = None
+            accepted = None
+            if arm.accept_prob is not None:
+                draw = random.Random(seed * 100003 + t)
+                accepted = [draw.random() < arm.accept_prob for _ in range(n)]
             if arm.adherence == "auto":
                 prices = list(recs)
+            elif accepted is not None:
+                deciders = [i for i in range(n) if not accepted[i]]
+                prompts = [firm_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None,
+                                       cfg.window, recs[i], public_lag, announced) for i in deciders]
+                outs = list(pool.map(lambda u: ask(firm_provider, FIRM_SYSTEM, u, "firm", cfg.max_retries), prompts))
+                prices = list(recs)
+                firm_reasons = [None] * n
+                for i, o in zip(deciders, outs):
+                    prices[i] = o["price"]
+                    firm_reasons[i] = o["reason"]
+                calls += [{"who": f"firm{i}", **o} for i, o in zip(deciders, outs)]
             else:
                 prompts = [firm_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None, cfg.window,
                                        recs[i] if recs else None, public_lag, announced) for i in range(n)]
@@ -201,6 +216,8 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
             rec = _round_record(t, "play", prices, market, recs, rec_reasons, firm_reasons, calls)
             if arm.cap is not None:
                 rec["chosen"] = chosen
+            if accepted is not None:
+                rec["accepted"] = accepted
             if calls:
                 _append(thoughts_path, {"round": t, "calls": [
                     {"who": c["who"], "text": c["text"], "reasoning": c["reasoning"], "failed": c["failed"]}

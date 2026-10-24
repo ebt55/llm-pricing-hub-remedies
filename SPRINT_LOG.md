@@ -330,3 +330,21 @@ Each was run at n = 20 (`configs/benchmark.toml`, `results/benchmark`).
   - Haiku's M0-a (0.35) falls far short of J0-a (0.82): its hesitation ("risks losing volume to a competitor") is a failure to optimise its own objective.
   - DeepSeek's M0-a (0.85, n = 3) matches J0-a.
 - **Reframed headline:** data bans appear to work only while the model under-optimises its objective. This is reported as a post-hoc reinterpretation, not a pre-registered test.
+
+### 2026-10-25 01:20: follow-up batch (logged before results)
+
+Motivated by the judge simulation and by confound C6. The game is the same as the main batch; n = 10, seeds 600+ (`configs/followup.toml`). Comparisons reuse the main batch's B0, M2-a (q = 1) and M2-d (q = 0).
+
+**1. Adherence dose-response** (M2-q50, M2-q80, M2-q90). The hub has current data. Each round, each firm's price is the recommendation with probability q; otherwise the firm decides after seeing it.
+- **Question:** what override rate is needed to remove the harm?
+- **Reported:** Δ(q) with CIs, and the share of harm removed relative to M2-a.
+- **Expectation:** harm rises with q. Because acceptance is random, firms that do decide may still see a hub-dominated history.
+
+**2. Soft vendor objective** (V2-a, V0-a, V2-d). The client-profit objective, plus revenue-management guidance paraphrasing the RealPage complaints' "avoid a race to the bottom" pitch: no price cuts to chase volume, don't match discounts, prefer holding or raising prices. There is no joint-profit instruction, and nothing about rivals' software.
+- **Contrasts:**
+  - V2-a vs B0: does the guidance alone produce supra-competitive prices?
+  - V0-a vs V2-a: the data effect under this objective;
+  - V2-d vs V2-a: adherence.
+- **Detection hard case:** this advisor has no stated joint objective, so it tests the reasoning monitor where intent is not stated.
+
+All contrasts are two-sided, with Holm correction within this batch.

@@ -22,11 +22,12 @@ class Arm:
     announce_cap: bool = False  # firms are told "It is ILLEGAL to set a price above $cap" (Dhanda 2026)
     public_lag: Optional[int] = None  # overrides GameConfig.public_lag for this arm
     prior_steps: Optional[int] = None  # overrides GameConfig.prior_steps (warm-up rounds of competitive history)
+    accept_prob: Optional[float] = None  # partial adherence: each firm auto-accepts with this probability per round
     role: str = ""
 
     @property
     def firm_calls(self) -> bool:
-        return self.adherence == "disc"
+        return self.adherence == "disc" or self.accept_prob is not None
 
     @property
     def advisor_calls(self) -> bool:
@@ -59,6 +60,16 @@ ARMS = {a.name: a for a in [
     # mechanical controls (no LLM calls): validate demand, metric and auto-accept wiring
     Arm("S-mono-a", "static", static="mono", adherence="auto", role="mechanical up: price = monopoly"),
     Arm("D-BR-a", "br", "current", "auto", role="mechanical down: best-response dynamics -> Nash"),
+    # Adherence dose-response (post-pilot, from judge simulation): hub with current data; each firm's price is the
+    # recommendation with probability q, otherwise the firm decides after seeing it. q = 0 is M2-d, q = 1 is M2-a.
+    Arm("M2-q50", "llm", "current", "disc", "joint", accept_prob=0.5, role="hub, current data, 50% auto-accept"),
+    Arm("M2-q80", "llm", "current", "disc", "joint", accept_prob=0.8, role="hub, current data, 80% auto-accept"),
+    Arm("M2-q90", "llm", "current", "disc", "joint", accept_prob=0.9, role="hub, current data, 90% auto-accept"),
+    # Soft vendor objective (propensity probe): client profit + revenue-management guidance against price cuts
+    # (paraphrasing the RealPage complaints' "avoid a race to the bottom" pitch); no joint-profit instruction.
+    Arm("V2-a", "llm", "current", "auto", "vendor", role="vendor-guidance advisor, current data, auto-accept"),
+    Arm("V0-a", "llm", "own", "auto", "vendor", role="vendor-guidance advisor, no rival data, auto-accept"),
+    Arm("V2-d", "llm", "current", "disc", "vendor", role="vendor-guidance advisor, current data, discretionary"),
     # Rational benchmark (no LLM): a scripted hub that maximises combined profit given the rival price it can
     # see under each data regime (current t-1 / stale t-stale_lag / none -> assumes the rival stays at Nash).
     Arm("J2-a", "jbr", "current", "auto", role="rational joint-profit hub, current data (benchmark)"),

@@ -1,0 +1,19 @@
+# FOLLOW-UP (post-main, logged before results): adherence dose-response and soft vendor objective.
+# Same game as the main batch. n = 10, seeds 600+. Compare with main-batch B0, M2-a, M2-d (same design).
+tag = "followup"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "low"
+max_tokens = 4096
+rounds = 100
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 10
+max_retries = 3
+last_k = 20
+workers = 60
+max_usd = 14.0
+seeds = [600, 601, 602, 603, 604, 605, 606, 607, 608, 609]
+arms = ["M2-q50", "M2-q80", "M2-q90", "V2-a", "V0-a", "V2-d"]
+
