@@ -501,3 +501,24 @@ The ladder is extended with three cheap models, each pinned to one full-precisio
   - **Measured:** Qwen 21 s and $0.0008 per call; Nemotron 14 s and $0.0005 per call. Both give valid answers.
   - **Decision:** thinking-off mode was tested but not used, so these stay reasoning models like the others.
   - The watcher that launched with the old setting was stopped before any run started.
+
+### 2026-10-25 02:55: fact-check: auto-accept in the RealPage remedies (primary sources)
+
+A fact-check subagent opened the documents themselves:
+
+**DOJ–RealPage Final Judgment** (M.D.N.C. 1:24-cv-710, entered 19 May 2026, Doc. 194):
+- **Data terms:** no competitors' non-public data in runtime pricing; non-public training data at least 12 months old; no sub-state geographic models; no market surveys; a monitor; a 7-year term.
+- **§V.A.1:** no Auto Accept feature "that does not require a licensee or user to individually set parameters".
+- **§V.A.5:** no feature that "prohibits, disincentivizes, or impedes" rejecting or overriding a recommendation.
+- **§V.C:** no incentives to accept recommended prices.
+- **§V.A.2 and §V.B:** symmetric guardrails, floors and ceilings.
+- **Conclusion:** auto-accept is **restricted, not banned**.
+
+**Landlord decrees** (Greystar, entered 2 Mar 2026; Cortland, LivCor, Willow Bridge, Pinnacle, proposed): they bar software that *requires*, or provides incentives, to accept recommended prices. They do not restrict auto-accept.
+
+**MDL settlements** (final approval 15 Oct 2026) and **state AG settlements** (press summaries only): no auto-accept term found.
+
+**Consequences for the paper:**
+- Ending auto-accept is **not** what the settlement mandates. It restricts auto-accept to user-set parameters and protects overrides.
+- Our dose-response, where partial adherence keeps most of the harm, speaks directly to this partial remedy.
+- The framing must say this precisely.
