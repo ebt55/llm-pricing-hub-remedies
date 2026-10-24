@@ -330,3 +330,28 @@ Data limits remove 84–85% (wide CI, 54–130%). Together with Haiku, this make
 - Data limits bind only some models.
 - Per-round guardrails and partial adherence leave the ratchet intact.
 - Firm discretion works only if the firm model pushes back. Haiku's does; Gemini's doesn't, with or without thinking.
+
+**~04:13 Qwen firm discretion and the Nemotron ladder**
+- **Qwen M2-d:** Δ 0.095 against B0 0.15 and M2-a 0.97, so discretion removes all of the harm (n = 4).
+- **Nemotron:** the data ban removes 92% (85–98%) and stale data 74% (n = 4).
+- **Data limits now split three to two.** They work for Nemotron, Qwen and Haiku, and fail for DeepSeek and Gemini Flash-Lite. The spread doesn't track reasoning budget: DeepSeek's hub thinks about as much as Haiku's.
+
+**~04:43 The ratchet on more firm models, and Haiku over 200 rounds**
+
+| Firm model | +1 cent ratchet Δ | Accepts +1–2 cent nudges |
+|---|---|---|
+| Haiku | 0.05 | 12% |
+| Nemotron | 0.35 | 26% |
+| Qwen | 0.64 | 46% |
+| Gemini Flash-Lite | 1.00 | 61% |
+
+- **The ratchet's success tracks acceptance of small nudges.**
+- **Qwen is the telling case.** It refuses the LLM hub's jumps, so discretion removes all of that hub's harm, but a patient ratchet gets through in 3 of 4 runs.
+- **Haiku over 200 rounds:** M2-d and K1-d are both Δ 0.03 in rounds 181–200, so discretion blocks rather than delays for Haiku.
+
+**Final shape of the story.**
+- The hub harms through its objective.
+- Data limits are model-dependent.
+- Per-period guardrails only delay.
+- Firm discretion works only when firms refuse small nudges.
+- The title goes to the Fable 5.1 reviewer (04:50).
