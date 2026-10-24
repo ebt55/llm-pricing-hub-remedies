@@ -262,3 +262,27 @@ Data restrictions don't bite harder when own quantities stop revealing the rival
 | GPT-5.4 mini | pending (resumes 05:30) |
 
 Haiku's cautious hub is the exception, not the rule. That strengthens the headline: data remedies mostly fail.
+
+**~02:25 Gemini 3.8 Flash ladder complete** (n = 4, 0 retries, 0 refusals)
+
+| Arm | Δ |
+|---|---|
+| B0 | **0.51, bimodal:** 0.98, 1.00, 0.02, 0.02 |
+| M2-a | 0.96 |
+| M1-a | 0.98 |
+| M0-a | 0.98 |
+
+- **Data rules make no difference for this hub.** M0-a ≈ M1-a ≈ M2-a. This comparison is against the hub itself, so B0's bimodality doesn't affect it.
+- **Side finding:** half of the no-advisor Gemini Flash runs reach monopoly on their own.
+- Gemini spend is about $11.70 of the user's GCP credits; Argon was dropped.
+
+**Model dependence so far** (share of the hub's harm the data ban removes):
+
+| Model | Removes |
+|---|---|
+| Haiku | 69% |
+| DeepSeek | 10% |
+| Gemini Flash-Lite | 8% |
+| Gemini 3.8 Flash | ≈ 0% |
+| GPT-5.4 mini | pending (05:30) |
+| Qwen3.8 Flash, Nemotron 3.5 Lightning | pending (OpenRouter key) |
