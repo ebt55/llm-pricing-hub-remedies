@@ -121,6 +121,29 @@ def main():
     except FatalProviderError as e:
         sys.exit(f"provider error: {e}")
 
+    # seed per-provider lifetime spend from every run file already on disk, so caps hold across invocations
+    import glob, json
+    for path in glob.glob(os.path.join(HERE, "results", "**", "s*.jsonl"), recursive=True):
+        if path.endswith(".thoughts.jsonl") or os.sep + "dry" + os.sep in path:
+            continue
+        with open(path, encoding="utf-8") as fh:
+            for line in fh:
+                r = json.loads(line)
+                if r.get("type") != "round":
+                    continue
+                for call in r.get("calls", []):
+                    am = str(call.get("api_model") or "")
+                    kind = "deepseek" if am.startswith("deepseek") else "openai" if am.startswith(("gpt", "o3", "o4")) else None
+                    if kind:
+                        u = call["usage"]
+                        SPEND.by_provider[kind] = SPEND.by_provider.get(kind, 0.0) + u["usd"]
+                        if u.get("utc_day"):
+                            key = (kind, u["utc_day"])
+                            SPEND.day_tokens[key] = SPEND.day_tokens.get(key, 0) + u["tokens_in"] + u["tokens_out"]
+    if SPEND.by_provider:
+        print("   lifetime spend already recorded:", {k: round(v, 2) for k, v in SPEND.by_provider.items()},
+              "| tokens by UTC day:", SPEND.day_tokens)
+
     jobs = [(a, s) for s in seeds for a in arms]  # seed-major so partial batches cover all arms
     t0 = time.time()
     done, failed, skipped = 0, [], []

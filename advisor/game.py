@@ -53,6 +53,8 @@ def ask(provider, system: str, user: str, role: str, max_retries: int) -> dict:
         for k in usage_total:
             usage_total[k] += usage.get(k, 0) or 0
         api_model = usage.get("api_model")
+        if usage.get("utc_day"):
+            usage_total["utc_day"] = usage["utc_day"]
         price, reason = parse_answer(text, role)
         if price is not None and 0 < price < 10:
             return {"price": price, "reason": reason, "attempts": attempt, "refusals": refusals,

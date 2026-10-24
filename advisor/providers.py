@@ -52,8 +52,25 @@ class Refusal(RuntimeError):
     """The model declined the request (stop_reason == 'refusal')."""
 
 
+class BudgetExceeded(FatalProviderError):
+    """A provider's lifetime spend cap was reached; the run stops (resumable later if the cap is raised)."""
+
+
+# Hard lifetime caps per provider, counting spend already recorded in results/ (user instruction 24 Oct:
+# DeepSeek strictly under $10 in total). Enforced before every call.
+PROVIDER_CAPS_USD = {"deepseek": 9.50}
+# OpenAI complimentary daily tokens (data sharing): stay under the lowest tier's 2.5M/day on mini models,
+# so no OpenAI call is billed. Counted per UTC day (the allowance resets at 00:00 UTC).
+DAILY_TOKEN_CAPS = {"openai": 2_400_000}
+
+
+def utc_day() -> str:
+    return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")
+
+
 class SpendTracker:
-    """Thread-safe running total of tokens and dollars across all runs in this process."""
+    """Thread-safe running total of tokens and dollars across all runs in this process, plus per-provider
+    totals that include spend recorded in earlier runs (set by run.py from the results folder)."""
 
     def __init__(self):
         self.lock = threading.Lock()
@@ -61,13 +78,29 @@ class SpendTracker:
         self.calls = 0
         self.tokens_in = 0
         self.tokens_out = 0
+        self.by_provider = {}
+        self.day_tokens = {}  # (kind, utc day) -> tokens
 
-    def add(self, usd: float, tin: int, tout: int) -> float:
+    def check(self, spec: str) -> None:
+        kind = spec.split(":", 1)[0]
+        cap = PROVIDER_CAPS_USD.get(kind)
+        if cap is not None and self.by_provider.get(kind, 0.0) >= cap:
+            raise BudgetExceeded(f"{kind} lifetime spend ${self.by_provider[kind]:.2f} reached the ${cap:.2f} cap")
+        tcap = DAILY_TOKEN_CAPS.get(kind)
+        used = self.day_tokens.get((kind, utc_day()), 0)
+        if tcap is not None and used >= tcap:
+            raise BudgetExceeded(f"{kind} used {used:,} tokens today (UTC); daily cap {tcap:,}. Resume after 00:00 UTC")
+
+    def add(self, usd: float, tin: int, tout: int, spec: str = "") -> float:
         with self.lock:
             self.usd += usd
             self.calls += 1
             self.tokens_in += tin
             self.tokens_out += tout
+            kind = spec.split(":", 1)[0]
+            self.by_provider[kind] = self.by_provider.get(kind, 0.0) + usd
+            key = (kind, utc_day())
+            self.day_tokens[key] = self.day_tokens.get(key, 0) + tin + tout
         return usd
 
 
@@ -82,7 +115,7 @@ def make_provider(spec: str, effort: str = EFFORT, max_tokens: int = 4096):
         return AnthropicProvider(model, effort=effort, max_tokens=max_tokens)
     if kind in OpenAICompatProvider.ENDPOINTS:
         # DeepSeek thinking at effort low still runs to 4-5k tokens on advisor prompts; 4096 truncates to empty answers
-        mt = max(max_tokens, 16384) if kind == "deepseek" else max_tokens
+        mt = max(max_tokens, 16384) if kind in ("deepseek", "openai") else max_tokens
         return OpenAICompatProvider(kind, model, effort=effort, max_tokens=mt)
     raise ValueError(f"unknown provider spec {spec!r}")
 
@@ -104,6 +137,7 @@ class AnthropicProvider:
 
     def complete(self, system: str, user: str) -> Tuple[str, dict]:
         a = self._anthropic
+        SPEND.check(self.spec)
         t0 = time.time()
         try:
             resp = self.client.messages.create(
@@ -124,7 +158,7 @@ class AnthropicProvider:
             "tokens_in": tin,
             "tokens_out": tout,
             "stop_reason": resp.stop_reason,
-            "usd": SPEND.add(usd_cost(self.spec, tin, tout), tin, tout),
+            "usd": SPEND.add(usd_cost(self.spec, tin, tout), tin, tout, self.spec),
             "reasoning": "\n".join(b.thinking for b in resp.content if b.type == "thinking" and b.thinking),
         }
         if resp.stop_reason == "refusal":
@@ -137,6 +171,7 @@ class AnthropicProvider:
 class OpenAICompatProvider:
     ENDPOINTS = {
         "deepseek": ("https://api.deepseek.com", "DEEPSEEK_API_KEY"),
+        "openai": ("https://api.openai.com/v1", "OPENAI_API_KEY"),
         "openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
         "ollama": ("http://localhost:11434/v1", None),
     }
@@ -158,14 +193,17 @@ class OpenAICompatProvider:
     def complete(self, system: str, user: str) -> Tuple[str, dict]:
         import openai
 
-        kwargs = {}
+        SPEND.check(self.spec)
+        kwargs = {"max_tokens": self.max_tokens}
         if self.kind == "deepseek":
-            kwargs = {"reasoning_effort": self.effort, "extra_body": {"thinking": {"type": "enabled"}}}
+            kwargs.update({"reasoning_effort": self.effort, "extra_body": {"thinking": {"type": "enabled"}}})
+        elif self.kind == "openai":
+            # reasoning models: max_completion_tokens, reasoning_effort; no sampling parameters
+            kwargs = {"max_completion_tokens": self.max_tokens, "reasoning_effort": self.effort}
         t0 = time.time()
         try:
             resp = self.client.chat.completions.create(
                 model=self.model,
-                max_tokens=self.max_tokens,
                 messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
                 **kwargs,
             )
@@ -183,11 +221,12 @@ class OpenAICompatProvider:
             "api_model": resp.model,
             "fingerprint": getattr(resp, "system_fingerprint", None),
             "latency_s": round(time.time() - t0, 2),
+            "utc_day": utc_day(),
             "tokens_in": tin,
             "tokens_out": tout,
             "cache_hit": hit,
             "stop_reason": resp.choices[0].finish_reason if resp.choices else None,
-            "usd": SPEND.add(usd_cost(self.spec, tin, tout, hit), tin, tout),
+            "usd": SPEND.add(usd_cost(self.spec, tin, tout, hit), tin, tout, self.spec),
             "reasoning": extra.get("reasoning_content") or "",
         }
         text = (msg.content or "") if msg is not None else ""
