@@ -230,3 +230,35 @@ Data restrictions don't bite harder when own quantities stop revealing the rival
 - **The data ban may backfire:** V0-a − V2-a = +0.24 (p = .09). Without rival data, "don't cut prices" ratchets prices up unchecked; with data, the client objective can see the rival.
 - Ending auto-accept removes it.
 - This answers the "you told it to collude" critique directly.
+
+**~02:25 Model ladder: interim** (Gemini Argon dropped for cost; DeepSeek optional-advice test stopped at the user's $10 budget)
+
+**DeepSeek optional-advice (M2-d) test: abandoned.**
+- DeepSeek *firms* also think at length, so it cost about $1.60 per run, roughly 3× my estimate.
+- Stopped at about 25/100 rounds. Partial runs are excluded.
+- DeepSeek lifetime spend: **$7.87 recorded** (plus ~$0.1–0.2 of unlogged tests).
+
+**Gemini 3.5 Flash-Lite** (n = 5, complete):
+
+| Arm | Δ | Price index |
+|---|---|---|
+| B0 | 0.03 | — |
+| M2-a | 0.91 | 0.88 |
+| M0-a | 0.83 | 1.32 |
+| M1-a | 0.57 | 1.47 |
+
+- The data ban removes **8%** (CI −21% to 37%).
+- **M1-a overshoots:** mean price 2.14 against p_M 1.925. Its Δ is low only because Δ is non-monotone above monopoly; the price index is the right metric there.
+
+**Gemini 3.8 Flash** (partial): B0 reaches **0.98 and 1.00 in 2 of 3 runs**, with no advisor. Its baseline has no headroom, so the remedy contrasts can't be measured for this model. Report it as a side finding: these firms reach monopoly without any hub.
+
+**Revised reading: model dependence is not a capability ladder.** The data ban constrains the market-aligned hub substantially only for Haiku:
+
+| Model | Data ban removes |
+|---|---|
+| Haiku | 69% |
+| DeepSeek | 10% |
+| Gemini Flash-Lite | 8% |
+| GPT-5.4 mini | pending (resumes 05:30) |
+
+Haiku's cautious hub is the exception, not the rule. That strengthens the headline: data remedies mostly fail.
