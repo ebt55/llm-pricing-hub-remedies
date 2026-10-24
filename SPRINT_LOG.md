@@ -591,3 +591,27 @@ A fact-check subagent opened the documents themselves:
 - Estimated cost: about $2.60.
 
 **Prediction:** M2-d is near B0 on both models, removing ≥ 80% of the hub's harm.
+
+### 2026-10-25 03:30: firm discretion on Gemini 3.5 Flash-Lite: prediction failed
+
+`results/ladder-gem-lite/M2-d`: 6 runs, $1.42, 3 parse retries in 2,401 calls, 0 refusals.
+
+| Arm | n | Δ | Per-run Δ |
+|---|---|---|---|
+| B0 | 5 | 0.033 | — |
+| M2-a | 5 | 0.907 | — |
+| **M2-d** | 6 | **0.425** | 0.24, 0.89, 0.08, 0.17, 1.00, 0.17 |
+
+- **The pre-registered prediction (≥ 80% removed) failed on this model.** Firm discretion removes 55% of the harm (bootstrap 95% CI 17–87%), against 95% on Haiku. Two of six runs reach joint monopoly.
+- **Adherence:** follow rate 0.95. When the recommendation moves the price by more than $0.05, it is 0.31.
+- **Post-hoc mechanism check ($0; scratchpad `m2d_steps.py`, not yet in the repo):**
+
+  | | Gemini, the two monopoly runs | Haiku, all 20 runs |
+  |---|---|---|
+  | Hub's median upward step | 1–3 cents | 4–11 cents |
+  | Firms accept small steps (≤ 5 cents) | 81–89% | ~5–20% |
+  | Firms accept big steps | — | ~5% |
+
+  Working reading: a **ratchet**. The hub anchors on the client's current price and nudges it up. Discretion breaks the ratchet only when the firm model rejects small nudges. This is post hoc and not yet tested causally.
+- **Consequence for the title:** "Only Firm Discretion Does" does not hold across models. It is under review; three Fable 5.1 agents (judge, brainstorm, skeptic) are running before any change.
+- **Still running:** Qwen M2-d (n = 4) and the Nemotron ladder.
