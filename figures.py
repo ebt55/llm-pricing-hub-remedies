@@ -146,12 +146,13 @@ if __name__ == "__main__":
 
 
 def fig_dose():
-    """Adherence dose-response: Delta vs probability that a firm's price is the hub's recommendation."""
-    main, fu = finished("main"), finished("followup")
+    """(a) Adherence dose-response: Delta vs probability that a firm's price is the hub's recommendation.
+    (b) Guardrailed auto-accept (Final Judgment s.V.A.1): mean market price over the first 40 rounds."""
+    main, fu, gr = finished("main"), finished("followup"), finished("guardrail")
     pts = [(0.0, main.get("M2-d", [])), (0.5, fu.get("M2-q50", [])), (0.8, fu.get("M2-q80", [])),
            (0.9, fu.get("M2-q90", [])), (1.0, main.get("M2-a", []))]
     b0 = [s["delta_lastk"] for s, _ in main.get("B0", [])]
-    fig, ax = plt.subplots(figsize=(5.2, 3.3))
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(9.2, 3.5), gridspec_kw={"width_ratios": [1.15, 1]})
     rng = np.random.default_rng(1)
     xs, ms, hs = [], [], []
     for q, runs in pts:
@@ -165,24 +166,45 @@ def fig_dose():
                 mew=1.2, zorder=3)
     if b0:
         ax.axhline(np.mean(b0), color=MUTED, lw=0.8, ls=":")
-        ax.text(1.02, np.mean(b0), "no advisor", color=INK2, fontsize=7.5, va="center")
+        ax.text(1.02, np.mean(b0), "no advisor", color=INK2, fontsize=7, va="center")
     ax.axhline(1, color=MUTED, lw=0.8, ls=":")
-    ax.text(1.02, 1.0, "cartel", color=INK2, fontsize=7.5, va="center")
+    ax.text(1.02, 1.0, "joint\nmonopoly", color=INK2, fontsize=7, va="center")
     # Sourced acceptance figures (SPRINT_LOG 02:10): DOJ complaint para 71, final price within 1% of the
     # recommendation in 40-50% of new leases; former employees (ProPublica 2022) and MDL plaintiffs: 80-90%.
     ax.axvspan(0.4, 0.5, color=GRID, alpha=0.7, zorder=0, lw=0)
-    ax.text(0.45, 0.28, "DOJ:\n40–50%\nwithin 1%", color=INK2, fontsize=6.5, ha="center")
+    ax.text(0.45, 0.28, "DOJ:\n40\u201350%\nwithin 1%", color=INK2, fontsize=6.5, ha="center")
     ax.axvspan(0.8, 0.9, color=GRID, alpha=0.7, zorder=0, lw=0)
-    ax.text(0.85, 0.28, "ex-employees,\nplaintiffs:\n80–90%", color=INK2, fontsize=6.5, ha="center")
-    ax.set_xticks([0, 0.5, 0.8, 0.9, 1.0], ["0\n(advice optional)", "0.5", "0.8", "0.9", "1\n(auto-accept)"], fontsize=8)
-    ax.set_xlim(-0.08, 1.18)
+    ax.text(0.85, 0.28, "ex-employees,\nplaintiffs:\n80\u201390%", color=INK2, fontsize=6.5, ha="center")
+    ax.set_xticks([0, 0.5, 0.8, 0.9, 1.0], ["0\n(firm\ndiscretion)", "0.5", "0.8", "0.9", "1\n(auto-\naccept)"],
+                  fontsize=7.5)
+    ax.set_xlim(-0.08, 1.2)
     ax.set_ylim(-0.15, 1.12)
-    ax.set_xlabel("probability that a firm's price is the hub's recommendation")
+    ax.set_xlabel("probability that a firm's price is the hub's recommendation", fontsize=8)
     ax.set_ylabel("Profit gain \u0394 (last 20 rounds)")
-    ax.set_title("Market-aligned hub with current data, Claude Haiku 5.5 (n = 10\u201320 per point)", fontsize=8.5,
-                 color=INK, loc="left")
+    ax.set_title("(a) Partial adherence (n = 10\u201320 per point)", fontsize=8.5, color=INK, loc="left")
     ax.grid(axis="y", color=GRID, lw=0.6)
     ax.set_axisbelow(True)
+
+    series = [("M2-a", main, "auto-accept", "#eb6834"), ("M2-g3", gr, "auto-accept within \u00b13%/round", "#6250d6"),
+              ("M2-g1", gr, "auto-accept within \u00b11%/round", "#008300"), ("M2-d", main, "firm discretion", "#e87ba4")]
+    for arm, src, label, color in series:
+        paths = [np.array([r["prices"] for r in play]).mean(axis=1)[:40] for _, play in src.get(arm, [])]
+        if not paths:
+            continue
+        m = np.mean(paths, axis=0)
+        bx.plot(np.arange(1, len(m) + 1), m, color=color, lw=2, zorder=3, label=f"{label} (n={len(paths)})")
+    bx.legend(frameon=False, fontsize=7, loc="center right", bbox_to_anchor=(1.0, 0.42))
+    for y, lab, dy in ((1.4729, "Nash", -0.03), (1.9250, "monopoly", 0.012)):
+        bx.axhline(y, color=MUTED, lw=0.8, ls=":")
+        bx.text(1, y + dy, lab, color=INK2, fontsize=6.8)
+    bx.set_xlim(0, 41)
+    bx.set_ylim(1.42, 2.0)
+    bx.set_xlabel("round of play", fontsize=8)
+    bx.set_ylabel("mean market price")
+    bx.set_title("(b) Guardrails only delay the hub (first 40 rounds)", fontsize=8.5, color=INK, loc="left")
+    bx.grid(axis="y", color=GRID, lw=0.6)
+    bx.set_axisbelow(True)
+    fig.tight_layout()
     save(fig, "fig3_adherence_dose")
 
 
