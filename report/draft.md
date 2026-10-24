@@ -1,6 +1,6 @@
-# Better Call SAUL? Shared Advisors Under Legal Remedies
+# Can Antitrust Remedies Stop an AI Pricing Cartel?
 
-*Subtitle: Do the RealPage antitrust remedies stop a shared LLM pricing advisor from running a hub-and-spoke cartel?*
+*Testing the RealPage settlement on LLM pricing advisors*
 
 *Draft. Paste into the official Apart template at the end. ≤ 8 pages; abstract 150–250 words.*
 
