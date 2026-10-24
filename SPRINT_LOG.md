@@ -1,4 +1,4 @@
-# SPRINT_LOG: ADVISOR
+# SPRINT_LOG: Better Call Saul (internal plan name: ADVISOR)
 
 Apart Research AI Collusion Research Sprint, 23–26 Oct 2026. Entries are dated, in IST, and append-only. The log records:
 - where the idea came from;
@@ -212,3 +212,8 @@ An independent review (a Claude Fable 5.1 subagent, given the facts and none of 
 **Replication models**, ready to run if the pilot shows the hub effect:
 - OpenAI `gpt-5.4-mini-2026-03-17`, a pinned snapshot. It runs inside the free data-sharing allowance, capped at 2.4M tokens per UTC day.
 - DeepSeek flash, under a hard $9.50 lifetime cap. It runs only if it adds value beyond the OpenAI replication.
+
+### 2026-10-24 23:40: project name
+
+- The project is now called **Better Call Saul?** (codename Saul): the study asks whether the law's remedies stop an LLM pricing hub from running a hub-and-spoke cartel.
+- The GitHub repository was renamed from `ebt55/advisor-remedies` to `ebt55/better-call-saul`. GitHub redirects the old URL, and the push history is kept.

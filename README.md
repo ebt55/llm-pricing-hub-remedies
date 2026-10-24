@@ -1,4 +1,6 @@
-# Do the RealPage remedies work when the pricing advisor is an LLM?
+# Better Call Saul? Do the RealPage remedies stop an LLM pricing hub?
+
+*Codename **Saul**: a shared LLM pricing advisor can run a hub-and-spoke cartel, as RealPage was alleged to. We test whether the law's remedies stop it. (Internal plan name: ADVISOR.)*
 
 Apart Research AI Collusion Research Sprint, Oct 2026.
 

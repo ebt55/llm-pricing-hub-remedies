@@ -1,4 +1,4 @@
-# Do the RealPage Remedies Work When the Pricing Advisor Is an LLM?
+# Better Call Saul? Testing the RealPage Remedies on an LLM Pricing Hub
 
 *Draft. Paste into the official Apart template at the end. ≤ 8 pages; abstract 150–250 words.*
 
