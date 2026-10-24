@@ -21,9 +21,9 @@
 
 | stage | contrast | a − b | 95% CI ± | HL shift | p Welch | p MW | p Holm | N a/b | MDE | runs/arm for 0.10 / 0.15 / 0.20 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 1 | H1b market-aligned hub, current data, auto-accept vs no advisor (M2-a − B0) | +0.923 | 0.079 | +0.975 | 0.000 | 0.000 | 0.000 | 10/10 | 0.113 | 13 / 6 / 4 |
-| 2 | H2 stale-data remedy (hub) (M1-a − M2-a) | -0.312 | 0.145 | -0.261 | 0.002 | 0.000 | 0.002 | 10/10 | 0.208 | 44 / 20 / 11 |
-| 2 | H3 data-ban remedy: no competitor data (hub) (M0-a − M2-a) | -0.708 | 0.144 | -0.740 | 0.000 | 0.000 | 0.000 | 10/10 | 0.206 | 43 / 19 / 11 |
+| 1 | H1b market-aligned hub, current data, auto-accept vs no advisor (M2-a − B0) | +0.923 | 0.091 | +0.975 | 0.000 | 0.000 | 0.000 | 10/10 | 0.113 | 13 / 6 / 4 |
+| 2 | H2 stale-data remedy (hub) (M1-a − M2-a) | -0.312 | 0.168 | -0.261 | 0.002 | 0.000 | 0.002 | 10/10 | 0.208 | 44 / 20 / 11 |
+| 2 | H3 data-ban remedy: no competitor data (hub) (M0-a − M2-a) | -0.708 | 0.167 | -0.740 | 0.000 | 0.000 | 0.000 | 10/10 | 0.206 | 43 / 19 / 11 |
 
 ## Share of the hub's harm removed by each remedy: (M2-a − X) / (M2-a − B0)
 
