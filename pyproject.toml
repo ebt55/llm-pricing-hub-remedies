@@ -1,7 +1,7 @@
 [project]
 name = "ai-pricing-cartel-remedies"
 version = "0.1.0"
-description = "Can antitrust remedies stop an AI pricing cartel? Testing the RealPage settlement on LLM pricing advisors (Apart AI Collusion Research Sprint, Oct 2026)"
+description = "S'all Good, Man? Do antitrust remedies stop an AI pricing cartel? Testing the RealPage settlement on LLM pricing advisors (Apart AI Collusion Research Sprint, Oct 2026)"
 requires-python = ">=3.11"
 dependencies = [
     "anthropic>=1.0",

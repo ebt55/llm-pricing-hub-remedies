@@ -1,6 +1,8 @@
-# Can Antitrust Remedies Stop an AI Pricing Cartel?
+# S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel?
 
 *Testing the RealPage settlement on LLM pricing advisors*
+
+*(Title note: "S'all good, man" is Saul Goodman's catchphrase in Better Call Saul, the TV lawyer who stays technically legal. The paper asks whether everything really is fine once the RealPage remedies are in place.)*
 
 *Draft. Paste into the official Apart template at the end. ≤ 8 pages; abstract 150–250 words.*
 

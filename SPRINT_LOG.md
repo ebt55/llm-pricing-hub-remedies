@@ -1,4 +1,4 @@
-# SPRINT_LOG: Can Antitrust Remedies Stop an AI Pricing Cartel? (internal plan name: ADVISOR)
+# SPRINT_LOG: S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel? (internal plan name: ADVISOR)
 
 Apart Research AI Collusion Research Sprint, 23–26 Oct 2026. Entries are dated, in IST, and append-only. The log records:
 - where the idea came from;
@@ -225,3 +225,7 @@ An independent review (a Claude Fable 5.1 subagent, given the facts and none of 
 ### 2026-10-24 23:50: final title
 
 The pun titles were dropped as unclear. The title is now **Can Antitrust Remedies Stop an AI Pricing Cartel? Testing the RealPage settlement on LLM pricing advisors.** The repository was renamed to `ebt55/ai-pricing-cartel-remedies`; GitHub redirects the earlier names, and the push history is kept.
+
+### 2026-10-24 23:55: title chosen
+
+**S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel?** *Testing the RealPage settlement on LLM pricing advisors.* The repository name stays `ebt55/ai-pricing-cartel-remedies`, because it describes the contents.

@@ -1,4 +1,4 @@
-# Can Antitrust Remedies Stop an AI Pricing Cartel?
+# S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel?
 
 *Testing the RealPage settlement on LLM pricing advisors.*
 
