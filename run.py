@@ -126,7 +126,7 @@ def main():
     # seed per-provider lifetime spend from every run file already on disk, so caps hold across invocations
     import glob, json
     for path in glob.glob(os.path.join(HERE, "results", "**", "s*.jsonl"), recursive=True):
-        if path.endswith(".thoughts.jsonl") or os.sep + "dry" + os.sep in path:
+        if ".thoughts." in path or os.sep + "dry" + os.sep in path:
             continue
         with open(path, encoding="utf-8") as fh:
             for line in fh:

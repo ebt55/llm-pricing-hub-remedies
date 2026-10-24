@@ -101,3 +101,25 @@ The suspiciously clean one is M2-d (C6: our firms are cautious). Still to check:
 - **Reading:** the data ban **delays** coordination rather than preventing it. Over a longer horizon, more no-data hubs infer that the rival is following (from their own quantities) and climb.
 - Stale data gets slightly *more* harmful with time.
 - **For the paper:** report "harm removed" as horizon-dependent. The 100-round figures (21% and 69%) are upper bounds on what these remedies achieve.
+
+**~00:45 Main batch complete** (170/170 runs, 41,000 calls, 0 retries, 0 refusals, $21.74). Final numbers match the ~00:25 entry.
+- M2-d final: Δ 0.11, removes 95% (CI 88–102%).
+- Figures: `results/main/fig_delta_by_arm.png`, `results/main/fig_price_paths.png`.
+
+**~00:45 DeepSeek replication** (n = 3, $2.95, 0.5% parse retries, 0 refusals). The model ID stayed `deepseek-flash` on every call.
+
+| Arm | Δ by run | Harm removed |
+|---|---|---|
+| B0 | 0.27, 0.13, 0.17 | — |
+| M2-a | 1.00, 1.00, 1.00 | — |
+| M1-a (stale data) | 1.00, 1.00, 0.88 | 5% |
+| M0-a (data ban) | 0.97, 0.94, 0.66 | **18%** |
+
+**The striking part: DeepSeek's no-data hub reaches cartel prices anyway.** A stronger reasoner with a joint objective computes the joint-monopoly price, assumes a symmetric rival, and posts it, so no data is needed. Haiku's no-data hub is more cautious (69% removed at 100 rounds, decaying by 200).
+
+- **Implication:** the data ban's effect depends on the model. Data remedies don't touch the actual driver, which is the hub's *objective* together with auto-accept.
+- **Robust remedy so far:** only removing auto-accept, i.e. letting firms decide.
+
+**Follow-up:** DeepSeek extended to n = 8 for B0, M0-a and M1-a (seeds 303–307, about $3.4, lifetime spend kept under $9.50).
+
+**Housekeeping:** reasoning sidecars of finished runs are gzipped (`tools/pack_thoughts.py`); results are now about 50 MB.

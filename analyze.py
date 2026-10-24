@@ -40,7 +40,7 @@ REMEDIES = ["M1-a", "M0-a", "M2-d"]
 def load(tag_dir: str):
     runs, paths = [], {}
     for path in sorted(glob.glob(os.path.join(tag_dir, "*", "s*.jsonl"))):
-        if path.endswith(".thoughts.jsonl"):
+        if ".thoughts." in path:
             continue
         with open(path, encoding="utf-8") as f:
             lines = [json.loads(x) for x in f if x.strip()]
