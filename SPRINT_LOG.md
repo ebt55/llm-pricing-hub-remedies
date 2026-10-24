@@ -494,3 +494,4 @@ The ladder is extended with three cheap models, each pinned to one full-precisio
 - Modal: all three models are served on OpenRouter.
 
 **Reported descriptively**, with the other models: the share of harm the data ban removes, and each model's baseline.
+- **02:28 update:** at the user's request, only two OpenRouter models are run: **Qwen3.8 Flash** (Alibaba, a lab not yet covered) and **Nemotron 3.5 Lightning** (NVIDIA, open-weight and small). MiniMax M3.1 Flash is dropped; it is a second Chinese flash model and adds the least. Expected spend is about $2.60.
