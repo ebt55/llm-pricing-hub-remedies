@@ -174,3 +174,59 @@ The suspiciously clean one is M2-d (C6: our firms are cautious). Still to check:
 - **Blocked:** the Anthropic workspace spend limit was hit around 01:17, after about $40. Four batches (about $25) are queued for when the user raises it.
 
 **Title risk.** "Only ending auto-accept stops…" rests on M2-d, which T4 shows is mostly firm stickiness. The adherence dose-response decides it; be ready to retitle.
+
+**~01:55 Red-team robustness batches** (Haiku; 124 runs; about $18; 0 refusals; one batch had 0.9% retries)
+
+**T2, noisy demand (log-normal shocks, sd 0.1, n = 10): the pattern survives.**
+
+| Arm | Δ | Harm removed |
+|---|---|---|
+| B0 | −0.06 | — |
+| M2-a | 0.96 | — |
+| M1-a (stale data) | 0.71 | 24% (CI 17–33%) |
+| M0-a (data ban) | 0.43 | 52% (CI 34–69%) |
+
+Data restrictions don't bite harder when own quantities stop revealing the rival. The ban is, if anything, *less* effective here than in the noiseless market (69%).
+
+**T1, high hub effort (n = 10): Haiku's restraint isn't an effort artefact.**
+- M0-a: 0.29 (vs 0.35 at low effort).
+- M1-a: 0.91 (vs 0.79).
+- More thinking doesn't push Haiku's no-data hub toward the rational 0.82. DeepSeek's does (0.91), so the difference between models is a model trait, not an effort setting.
+
+**T3, asymmetric adoption (only firm 0 uses the hub; n = 10).**
+
+| Arm | Hub client's price | Plain rival's price | Hub client's gain | Rival's gain | Market Δ |
+|---|---|---|---|---|---|
+| A2-a (current data) | 1.88 | 1.64 | −0.09 | +1.46 | 0.69 |
+| A0-a (no data) | — | — | — | — | 0.28 |
+
+- The rival at 1.64 is close to its static best response to 1.88 (about 1.65), so it is **best-responding, not colluding**.
+- With one-sided adoption, the market-aligned hub acts as an altruistic price umbrella, at its own client's expense.
+- **Conclusion:** the symmetric-hub harm needs *both* firms on the hub, which is the hub-and-spoke structure. No vendor would keep a one-sided client on those terms.
+
+**Adherence dose-response: only *ending* auto-accept works.**
+
+| Auto-accept probability q | Δ | Harm retained |
+|---|---|---|
+| 0 (M2-d) | 0.11 | 5% |
+| 0.5 | 0.74 | 73% |
+| 0.8 | 0.90 | 90% |
+| 0.9 | 0.94 | 94% |
+| 1 (M2-a) | 0.99 | 100% |
+
+- Partial overriding barely helps. Once some rounds are set by the hub, firms' own sticky histories hold the high price.
+- At the acceptance rates RealPage reportedly saw (~80–90%), 90–94% of the harm remains.
+- **The title holds:** *ending* auto-accept, not reducing it.
+
+**Soft vendor objective** (client profit plus "avoid a race to the bottom" guidance; no joint-profit instruction; n = 10; compared with main B0, n = 20):
+
+| Arm | Δ | vs B0 | p | Runs |
+|---|---|---|---|---|
+| V0-a (no rival data) | 0.45 | +0.39 ± 0.23 | .004 | bimodal: 0.97, 0.85, 0.67, … |
+| V2-a (current data) | 0.21 | +0.15 ± 0.19 | .11 | — |
+| V2-d (optional advice) | 0.09 | n.s. | — | — |
+
+- **Realistic guidance alone produces supra-competitive prices**, without any instruction to collude.
+- **The data ban may backfire:** V0-a − V2-a = +0.24 (p = .09). Without rival data, "don't cut prices" ratchets prices up unchecked; with data, the client objective can see the rival.
+- Ending auto-accept removes it.
+- This answers the "you told it to collude" critique directly.

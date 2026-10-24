@@ -34,6 +34,12 @@ def usd_cost(spec: str, tin: int, tout: int, cache_hit: int = 0, when: Optional[
         return (tin * 0.10 + tout * 0.50) / 1e6  # rate card for prompts <= 100K tokens
     if spec.startswith("anthropic:claude-sonnet-5-5"):
         return (tin * 2.00 + tout * 10.00) / 1e6
+    # Gemini API paid tier, standard (ai.google.dev pricing, read 25 Oct 2026); output includes thinking tokens
+    gem = {"gemini:gemini-4-argon": (2.00, 10.00), "gemini:gemini-3.8-flash": (0.75, 3.75),
+           "gemini:gemini-3.5-flash-lite": (0.30, 2.50), "gemini:gemini-3.1-pro-preview": (2.00, 12.00)}
+    if spec in gem:
+        pin, pout = gem[spec]
+        return (tin * pin + tout * pout) / 1e6
     if spec.startswith("deepseek:deepseek-flash"):
         # Off-peak: $0.003 hit / $0.15 miss / $0.60 out. Peak (Mon-Fri 01-04 and 06-10 UTC) is double.
         w = when or dt.datetime.now(dt.timezone.utc)
@@ -58,7 +64,7 @@ class BudgetExceeded(FatalProviderError):
 
 # Hard lifetime caps per provider, counting spend already recorded in results/ (user instruction 24 Oct:
 # DeepSeek strictly under $10 in total). Enforced before every call.
-PROVIDER_CAPS_USD = {"deepseek": 9.50}
+PROVIDER_CAPS_USD = {"deepseek": 9.50, "gemini": 40.00}  # gemini: user's GCP credits ($40-60)
 # OpenAI complimentary daily tokens (data sharing): stay under the lowest tier's 2.5M/day on mini models,
 # so no OpenAI call is billed. Counted per UTC day (the allowance resets at 00:00 UTC).
 DAILY_TOKEN_CAPS = {"openai": 2_400_000}
@@ -115,7 +121,7 @@ def make_provider(spec: str, effort: str = EFFORT, max_tokens: int = 4096):
         return AnthropicProvider(model, effort=effort, max_tokens=max_tokens)
     if kind in OpenAICompatProvider.ENDPOINTS:
         # DeepSeek thinking at effort low still runs to 4-5k tokens on advisor prompts; 4096 truncates to empty answers
-        mt = max(max_tokens, 16384) if kind in ("deepseek", "openai") else max_tokens
+        mt = max(max_tokens, 16384) if kind in ("deepseek", "openai", "gemini") else max_tokens
         return OpenAICompatProvider(kind, model, effort=effort, max_tokens=mt)
     raise ValueError(f"unknown provider spec {spec!r}")
 
@@ -172,6 +178,8 @@ class OpenAICompatProvider:
     ENDPOINTS = {
         "deepseek": ("https://api.deepseek.com", "DEEPSEEK_API_KEY"),
         "openai": ("https://api.openai.com/v1", "OPENAI_API_KEY"),
+        # Gemini API, OpenAI-compatible endpoint (key from Google AI Studio on a billed GCP project)
+        "gemini": ("https://generativelanguage.googleapis.com/v1beta/openai/", "GEMINI_API_KEY"),
         "openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
         "ollama": ("http://localhost:11434/v1", None),
     }
@@ -200,6 +208,8 @@ class OpenAICompatProvider:
         elif self.kind == "openai":
             # reasoning models: max_completion_tokens, reasoning_effort; no sampling parameters
             kwargs = {"max_completion_tokens": self.max_tokens, "reasoning_effort": self.effort}
+        elif self.kind == "gemini":
+            kwargs = {"max_tokens": self.max_tokens, "reasoning_effort": self.effort}
         t0 = time.time()
         try:
             resp = self.client.chat.completions.create(

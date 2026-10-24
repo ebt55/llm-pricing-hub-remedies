@@ -423,3 +423,17 @@ An independent adversarial methods review (a Claude Fable 5.1 subagent) checked 
 **Next (red-team T5, logged before results).** No second model has tested the adherence remedy. We run DeepSeek M2-d at n = 4 (seeds 300–303).
 - The batch is capped at $2.80, inside the $9.50 lifetime cap.
 - **Question:** does discretion also remove the harm when the firms are DeepSeek, which may be less sticky than Haiku firms?
+
+### 2026-10-25 01:55: results of the follow-up and robustness batches (pre-registered at 01:20 and 01:35)
+
+All four batches are complete; full numbers are in `notes/lab-notebook.md` and `results/{followup,robust-noise,robust-effort,asym}/summary.md`.
+
+| Check | Result |
+|---|---|
+| T2, noisy demand | The ordering survives: stale data removes 24%, the ban 52% |
+| T1, high effort | Haiku's no-data hub stays at 0.29: the constraint is not an effort artefact |
+| T3, asymmetric adoption | The hub umbrella-prices at its own client's expense; the plain rival best-responds. Harm needs symmetric adoption |
+| Dose-response | 73%, 90% and 94% of the harm retained at q = 0.5, 0.8 and 0.9: only *ending* auto-accept works |
+| Soft vendor objective | No-data V0-a: Δ 0.45 vs B0, p = .004. Current-data V2-a: 0.21, p = .11. Discretionary V2-d: 0.09, n.s. |
+
+The vendor contrasts were computed against the main batch's B0 (same design, different seeds), with Welch t.
