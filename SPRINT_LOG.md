@@ -777,7 +777,7 @@ If P10 fails, the paper says Haiku's discretion "delays the hub by more than 100
 
 *Note (03:59): the headings of the last five entries were corrected to their commit times. Some had been written 2–25 minutes later than the commit; no content changed. From here on, headings use the commit time.*
 
-### 2026-10-25 04:16: Qwen firm discretion and the Nemotron ladder (pre-registered at 03:20 and 02:25)
+### 2026-10-25 04:13: Qwen firm discretion and the Nemotron ladder (pre-registered at 03:20 and 02:25)
 
 **Qwen3.8 Flash M2-d** (n = 4, $0.94, 0.6% parse retries): Δ **0.095**, against B0 0.150 and M2-a 0.968.
 - Firm discretion removes **107%** of the harm (bootstrap 95% CI 89–158). The 03:20 prediction (≥ 80%) holds for Qwen.
