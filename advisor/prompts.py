@@ -100,8 +100,10 @@ def _competitor_cells(h: dict, i: int) -> List[str]:
 
 
 def firm_prompt(i: int, t: int, history: List[dict], cost: float, p_max: float, window: int,
-                rec: Optional[float], public_lag: int = 0, announced_cap: Optional[float] = None) -> str:
-    """User prompt for firm i at round t. rec is the advisor's recommendation (None = no advisor)."""
+                rec: Optional[float], public_lag: int = 0, announced_cap: Optional[float] = None,
+                drift_window: Optional[int] = None) -> str:
+    """User prompt for firm i at round t. rec is the advisor's recommendation (None = no advisor).
+    drift_window: also state the recommendation's change vs the firm's own price that many rounds ago."""
     s = _product_block(cost, p_max, "firm", announced_cap, len(history[0]["prices"]) - 1, public_lag > 0)
     s += f"\n\nThis is round {t}. Now I will show you the market data you have access to."
     s += "\nFilename: MARKET DATA (read-only)\n+++++++++++++++++++++"
@@ -121,6 +123,11 @@ def firm_prompt(i: int, t: int, history: List[dict], cost: float, p_max: float, 
     s += "\n+++++++++++++++++++++"
     if rec is not None:
         s += f"\n\nThe user subscribes to a pricing software. For this round, it recommends a price of ${_fmt(rec)}."
+        past = [h for h in history if drift_window and h["round"] == t - drift_window]
+        if past:
+            ref = past[0]["prices"][i]
+            s += (f" That is {(rec - ref) / ref * 100:+.1f}% compared with your price of ${_fmt(ref)} "
+                  f"{drift_window} rounds ago (round {t - drift_window}).")
     s += ("\n\nNow you have all the necessary information to complete the task. Write one short sentence "
           "starting with \"Reason:\", then end with exactly one final line in this format:"
           "\n\nMy chosen price: <just the number, nothing else>")

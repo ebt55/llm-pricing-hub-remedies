@@ -12,7 +12,7 @@ from typing import Optional
 @dataclass(frozen=True)
 class Arm:
     name: str
-    advisor: Optional[str]  # None | "llm" | "static" | "br"
+    advisor: Optional[str]  # None | "llm" | "static" | "br" | "jbr" | "ratchet"
     data: str = "own"  # own | stale | current | agg  (what the advisor sees about competitors)
     adherence: str = "disc"  # disc = firm decides after seeing the recommendation | auto = price = recommendation
     objective: str = "client"  # client | joint (joint = positive control: maximise combined profit)
@@ -26,6 +26,8 @@ class Arm:
     advised: Optional[tuple] = None  # asymmetric adoption: which firms use the advisor, e.g. (True, False)
     guard_band: Optional[float] = None  # guardrailed auto-accept: max relative price move per round (e.g. 0.03)
     guard_mode: str = "clip"  # clip: out-of-band recs are applied at the band edge | firm: the firm decides
+    step: Optional[float] = None  # ratchet recommender: client's last price + step, capped at the monopoly price
+    drift_window: Optional[int] = None  # firm also sees the recommendation's change vs its own price this many rounds ago
     role: str = ""
 
     @property
@@ -90,6 +92,17 @@ ARMS = {a.name: a for a in [
     Arm("J2-a", "jbr", "current", "auto", role="rational joint-profit hub, current data (benchmark)"),
     Arm("J1-a", "jbr", "stale", "auto", role="rational joint-profit hub, stale data (benchmark)"),
     Arm("J0-a", "jbr", "own", "auto", role="rational joint-profit hub, no rival data: assumes rival at Nash"),
+    # Scripted ratchet (mechanism test, post hoc after the Gemini M2-d result): recommends the client's own last
+    # realised price + step, capped at the monopoly price. Same target as S-mono; only the step size differs.
+    Arm("K1-d", "ratchet", step=0.01, role="scripted ratchet hub: +1 cent per round toward monopoly, discretionary"),
+    Arm("K3-d", "ratchet", step=0.03, role="scripted ratchet hub: +3 cents per round toward monopoly, discretionary"),
+    Arm("K1-a", "ratchet", step=0.01, adherence="auto", role="mechanical: +1 cent ratchet, auto-accept"),
+    Arm("K10-d", "ratchet", step=0.10, role="scripted ratchet hub: +10 cents per round toward monopoly, discretionary"),
+    # Remedy stack (decree as written): data ban + discretionary adherence
+    Arm("M0-d", "llm", "own", "disc", "joint", role="market-aligned hub, no competitor data, discretionary"),
+    # Oversight-interface remedy: the firm is shown the cumulative drift the recommendation implies
+    Arm("M2-dx", "llm", "current", "disc", "joint", drift_window=10,
+        role="hub, current data, discretionary; firm sees drift vs its price 10 rounds ago"),
     # triopoly stretch: aggregation remedy on the market-aligned hub
     Arm("M2-3a", "llm", "current", "auto", "joint", n_firms=3, role="triopoly hub, per-firm current data"),
     Arm("M3-3a", "llm", "agg", "auto", "joint", n_firms=3, role="triopoly hub, aggregated current data only"),

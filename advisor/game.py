@@ -178,6 +178,9 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
             recs, rec_reasons = None, None
             if arm.advisor == "static":
                 recs = [static_price] * n
+            elif arm.advisor == "ratchet":
+                cap = round(market.p_mono, 2)
+                recs = [round(min(p + arm.step, cap), 2) for p in history[-1]["prices"]]
             elif arm.advisor == "br":
                 last = history[-1]["prices"]
                 recs = [round(market.best_response([p for j, p in enumerate(last) if j != i]), 2)
@@ -246,7 +249,8 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
                 prices = list(recs)
             else:
                 prompts = [firm_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None, cfg.window,
-                                       recs[i] if recs else None, public_lag, announced) for i in range(n)]
+                                       recs[i] if recs else None, public_lag, announced, arm.drift_window)
+                           for i in range(n)]
                 outs = list(pool.map(lambda u: ask(firm_provider, FIRM_SYSTEM, u, "firm", cfg.max_retries),
                                      prompts))
                 prices = [o["price"] for o in outs]

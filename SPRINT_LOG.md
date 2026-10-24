@@ -615,3 +615,49 @@ A fact-check subagent opened the documents themselves:
   Working reading: a **ratchet**. The hub anchors on the client's current price and nudges it up. Discretion breaks the ratchet only when the firm model rejects small nudges. This is post hoc and not yet tested causally.
 - **Consequence for the title:** "Only Firm Discretion Does" does not hold across models. It is under review; three Fable 5.1 agents (judge, brainstorm, skeptic) are running before any change.
 - **Still running:** Qwen M2-d (n = 4) and the Nemotron ladder.
+
+### 2026-10-25 03:55: ratchet mechanism test and remedy follow-ups (logged before results)
+
+**Why.** Three independent Fable 5.1 agents (judge, experiment brainstorm, skeptic) were asked what to do with the Gemini result. The judge and the brainstorm both ranked a **causal test of the ratchet** first. The ratchet reading so far rests on two runs.
+
+**The judge's decomposition of the six Gemini M2-d runs** (checked by the judge with `m2d_steps.py`):
+
+| Runs | What happened |
+|---|---|
+| s1004, s1005 | The hub stopped nudging |
+| s1000 | The hub jumped (median up-step $0.43); firms rejected |
+| s1003 | Firms refused small steps |
+| s1001, s1002 | A persistent hub *and* accepting firms: these reached monopoly |
+
+So the ratchet has two sides: the hub must keep nudging, and the firm must accept. A scripted hub fixes the hub side and isolates whether the firm model accepts nudges.
+
+**New code** (post hoc, no change to existing arms):
+- `advisor="ratchet"`: the recommendation is the client's own last realised price + `step`, capped at round(p_M, 2) = 1.92. It re-anchors after a rejection. The firm sees only the number, exactly as with S-mono. **The ratchet and S-mono have the same target; only the step differs.**
+- `drift_window`: the firm prompt adds one sentence: "That is ±X% compared with your price of $Y N rounds ago (round t−N)."
+
+**Batch A (`results/ratchet`, Claude Haiku 5.5, seeds 100–109, n = 10 per arm, ~6,000 calls, ~$3.2):**
+- K1-a: the mechanical check (no LLM).
+- K1-d / K3-d / K10-d: a +1 / +3 / +10 cent ratchet with discretionary firms.
+- Comparators from `main`, same seeds and warm-up: S-mono (a one-step jump to the same target; Δ 0.066, follow 0.02), M2-d and B0.
+
+**Batch B (`results/ladder-gem-lite`, Gemini 3.5 Flash-Lite, seeds 1000–1005, n = 6, ~$6.5):**
+- K1-d, K3-d, K10-d.
+- M0-d: the decree's remedies stacked (data ban + discretion).
+- M2-dx: discretion + drift disclosure, with N = 10.
+- M2-d extended to seeds 1006–1011 (n = 12).
+
+**Predictions** (Δ over the last 20 rounds):
+
+| # | Check | Prediction |
+|---|---|---|
+| P1 | K1-a | Reaches 1.92; Δ ≥ 0.98 |
+| P2 | Haiku K1-d | Δ < 0.30: Haiku firms resist nudges, as in M2-d, where they accept ~5–20% of small steps |
+| P3 | Gemini K1-d and K3-d | Δ ≥ 0.50 |
+| P4 | Step size, on each model | Δ(K1-d) ≥ Δ(K10-d) |
+| P5 | Gemini M0-d | Removes < 80% of the harm (stacking does not fix it) |
+| P6 | Gemini M2-dx | Removes more harm than M2-d (directional); ≥ 80% counts as a working fix |
+
+**Title rule (pre-registered; final wording to be set by a Fable 5.1 review):**
+- **P2 and P3 both hold:** "…; Firm Discretion Works Only When Firms Refuse Small Nudges" (the judge's proposal).
+- **Haiku K1-d Δ ≥ 0.50:** discretion fails against a patient hub even on Haiku. The title becomes "no tested remedy reliably stops…".
+- **Gemini K arms Δ < 0.30:** the firm side of the ratchet reading is wrong. The title keeps the two failed remedies and drops the "only" clause on discretion.
