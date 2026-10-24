@@ -406,3 +406,20 @@ An independent adversarial methods review (a Claude Fable 5.1 subagent) checked 
 - **01:40 correction:** the stopped follow-up runs had played about 451 rounds in total, about 8 per run, before the limit hit.
   - They were deleted unanalysed, because their saved arm settings predate the new `advised` field and could not resume.
   - The follow-up batch reruns from scratch on the same seeds (600+).
+
+### 2026-10-25 01:35: DeepSeek extension complete; DeepSeek M2-d (logged before results)
+
+**DeepSeek at n = 8** (B0, M0-a, M1-a; M2-a at n = 3):
+
+| Arm | Δ | Harm removed |
+|---|---|---|
+| B0 | 0.15 | — |
+| M0-a (data ban) | 0.91 | 10% (CI 1–21%) |
+| M1-a (stale data) | 0.98 | 2% (CI 0–6%) |
+
+- 0.31% parse retries, 0 refusals.
+- Lifetime DeepSeek spend is about $6.20.
+
+**Next (red-team T5, logged before results).** No second model has tested the adherence remedy. We run DeepSeek M2-d at n = 4 (seeds 300–303).
+- The batch is capped at $2.80, inside the $9.50 lifetime cap.
+- **Question:** does discretion also remove the harm when the firms are DeepSeek, which may be less sticky than Haiku firms?
