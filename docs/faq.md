@@ -89,3 +89,21 @@ Two fixes didn't help the Gemini shops:
 - adding the data ban on top.
 
 **The AI-safety translation.** Firm discretion is a "human (or AI) in the loop". It works only if whoever is in the loop has their own interest and uses their own judgment. A rubber stamp in the loop is the same as auto-accept. Former RealPage employees put landlords' acceptance at 80–90%, which is closer to our Gemini shops than to our Haiku ones.
+
+## Is RealPage real, or part of the simulation?
+
+**RealPage is real.** It's a real company and a real antitrust case. The "incident" label just comes from the sprint prep folder (`02_incidents/`), where it's one of the real-world cases we collected. Nothing about RealPage itself is inside our experiment.
+
+**What's real (outside our study):**
+- RealPage sells rent-pricing software to US landlords. Landlords feed it their private rent and occupancy data, and it recommends rents.
+- The US Department of Justice and several states sued in 2024. They alleged that competing landlords coordinated rents through the software: a "hub-and-spoke" cartel, with RealPage as the hub.
+- The case ended in settlements. The Final Judgment we cite (entered 19 May 2026) sets the rules we test: no competitors' current private data, training data at least 12 months old, protected overrides, and more.
+- The numbers on how often landlords accepted the recommendations come from the DOJ complaint and from reporting based on former employees.
+
+**What's simulated (our study):**
+- A toy market with two shops selling one product. It's a standard economics model (Calvano et al.), not rental housing.
+- The shops and the hub are LLMs: Claude Haiku, Gemini, Qwen and others.
+- The hub plays a RealPage-*like* role. It advises both shops and is told to care about their combined profit.
+- Each settlement rule becomes a setting, for example "the hub can't see the rival's data". We then check whether prices still rise to the monopoly level.
+
+**The honest caveat** (it's in the paper): RealPage's real software is its own pricing algorithm, not an LLM. We don't claim RealPage behaves like our hub. The question is forward-looking: if pricing hubs like this are built on LLMs, would the remedies written for RealPage still work? So far the answer is "mostly not, and it depends on the model."
