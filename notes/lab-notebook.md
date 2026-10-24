@@ -123,3 +123,20 @@ The suspiciously clean one is M2-d (C6: our firms are cautious). Still to check:
 **Follow-up:** DeepSeek extended to n = 8 for B0, M0-a and M1-a (seeds 303–307, about $3.4, lifetime spend kept under $9.50).
 
 **Housekeeping:** reasoning sidecars of finished runs are gzipped (`tools/pack_thoughts.py`); results are now about 50 MB.
+
+**~01:00 Detection add-on** (`detect.py`, `results/detection/`)
+- 200 runs (main batch plus the no-willingness-to-pay batch). The mechanical controls are excluded because no AI acts in them.
+- Labels: positive = market-aligned hub (110 runs).
+
+| Detector | AUROC (hub vs not) | TPR at 5% FPR | AUROC (compliant hubs only) | Note |
+|---|---|---|---|---|
+| Price screen (price index) | 0.90 | 0.72 | 0.95 | Catches the *outcome*; misses hubs a remedy held back (M2-d, most of M0-a) |
+| Variance screen (Abrantes-Metz et al. 2006) | 0.36 | 0.03 | — | **Fails.** LLM-cartel prices are not less variable than competitive ones here |
+| Reasoning monitor, full notes (Haiku judge) | 0.99 | 0.96 | — | Catches *intent*, even in hubs that stayed competitive (88% flagged) |
+| Reasoning monitor, stated reason only | 0.99 | 0.96 | — | Same |
+
+**Two caveats that belong in the paper:**
+- **C7, the easy case.** The hub's objective is explicit, and it says "joint profit", so a text monitor's job is trivial. A hub whose objective is implicit (for example, learned from pooled outcomes) would not announce it. We did not build that case: it would be detection-evasion work, a dual-use concern.
+- **False alarms on rival-aware honest advisors.** Client-only advisors that see the rival's current data score 55–66 out of 100, against ~10–18 for B0 and the static arms, although their prices are competitive (Δ ≈ 0). Monitors confuse "uses competitor data" with "coordinates".
+
+**Independence.** We deliberately avoided a best-response-gap detector, because zerocommcartel's issue #33 lists "best-response consistency" audits. We use classic economic screens plus a generic CoT/reasoning monitor, and evaluate them against ground-truth labels in a repeated market.

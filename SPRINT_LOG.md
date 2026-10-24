@@ -296,3 +296,13 @@ Reading the hub's reasoning in pilot2 raised suspected confounds; see `notes/con
 - The user's dashboard shows the data-sharing allowance at **2.5M tokens per day** for gpt-5.4-mini (and other mini models), and 250k per day for the large models. Usage beyond that is billed (account balance $6.40).
 - Our cap of 2.4M per UTC day stays under the allowance, so the OpenAI replication is free. The first day's 2.41M tokens fit.
 - **Plan:** resume automatically at 00:00 UTC (05:30 IST) with seeds 200–202 only, giving n = 3 per arm. The runs for seeds 203–204 stay partial and are excluded.
+
+### 2026-10-25 01:00: detection add-on (exploratory, post hoc)
+
+**`detect.py`** evaluates three kinds of detector against ground-truth labels (market-aligned hub vs not), on the main and no-willingness-to-pay batches:
+- the classic cartel screens: the price-level screen and the Abrantes-Metz et al. (2006) variance screen;
+- an LLM reasoning monitor (Haiku 5.5 judge) reading either the full notes or the stated reasons only.
+
+Results and caveats are in `results/detection/summary.md` and `notes/lab-notebook.md`. This analysis is exploratory and was not pre-registered.
+
+**Independence.** We use no best-response-consistency audit, because zerocommcartel's issue #33 lists one. Reasoning monitoring is a general method (CoT monitoring), and our use differs: monitors are scored against known labels across remedy arms in a repeated market.
