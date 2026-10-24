@@ -592,7 +592,7 @@ A fact-check subagent opened the documents themselves:
 
 **Prediction:** M2-d is near B0 on both models, removing ≥ 80% of the hub's harm.
 
-### 2026-10-25 03:30: firm discretion on Gemini 3.5 Flash-Lite: prediction failed
+### 2026-10-25 03:22: firm discretion on Gemini 3.5 Flash-Lite: prediction failed
 
 `results/ladder-gem-lite/M2-d`: 6 runs, $1.42, 3 parse retries in 2,401 calls, 0 refusals.
 
@@ -616,7 +616,7 @@ A fact-check subagent opened the documents themselves:
 - **Consequence for the title:** "Only Firm Discretion Does" does not hold across models. It is under review; three Fable 5.1 agents (judge, brainstorm, skeptic) are running before any change.
 - **Still running:** Qwen M2-d (n = 4) and the Nemotron ladder.
 
-### 2026-10-25 03:55: ratchet mechanism test and remedy follow-ups (logged before results)
+### 2026-10-25 03:30: ratchet mechanism test and remedy follow-ups (logged before results; commit d06e6e3 at 03:30:45, batches launched 03:31)
 
 **Why.** Three independent Fable 5.1 agents (judge, experiment brainstorm, skeptic) were asked what to do with the Gemini result. The judge and the brainstorm both ranked a **causal test of the ratchet** first. The ratchet reading so far rests on two runs.
 
@@ -661,3 +661,34 @@ So the ratchet has two sides: the hub must keep nudging, and the firm must accep
 - **P2 and P3 both hold:** "…; Firm Discretion Works Only When Firms Refuse Small Nudges" (the judge's proposal).
 - **Haiku K1-d Δ ≥ 0.50:** discretion fails against a patient hub even on Haiku. The title becomes "no tested remedy reliably stops…".
 - **Gemini K arms Δ < 0.30:** the firm side of the ratchet reading is wrong. The title keeps the two failed remedies and drops the "only" clause on discretion.
+
+### 2026-10-25 03:37: does firm reasoning make discretion work? Gemini with thinking on (logged before results)
+
+**The skeptic agent's top threat (T1), checked.** At our setting (`reasoning_effort = low`) Gemini 3.5 Flash-Lite does **no thinking at all** on the game prompts. Probe on a real M2-d firm prompt, 3 calls per setting (~$0.01):
+
+| Setting | Hidden thinking tokens | Latency |
+|---|---|---|
+| low | 0 | ~1 s |
+| medium | 120–170 | — |
+| 1,024 budget | 120–170 | — |
+| **high** | **330–500** | ~1.8 s |
+
+Haiku thinks for ~600–1,000 tokens. So "remedy effectiveness depends on the model" is partly "depends on whether the model reasons". The Gemini discretion result compares non-reasoning firms with reasoning ones. Other measured budgets (skeptic, from the run files):
+
+| Model | Output tokens per call |
+|---|---|
+| Qwen | ~1,000; advisor calls at the 1,024 cap |
+| Nemotron | 2,900–7,600; the budget is not enforced |
+| Gemini 3.8 Flash | 100–140 |
+| GPT-5.4 mini | 150–200 |
+
+The draft's model table will report measured output tokens.
+
+**Batch C** (`results/ladder-gem-lite-hi`): Gemini 3.5 Flash-Lite at `effort = high` for the firm and the hub; seeds 1000–1005 (n = 6); arms B0, M2-a, M2-d and K1-d (the scripted +1 cent ratchet, which isolates the firm side); ~6,000 calls, ~$9.
+
+**Predictions:**
+
+| # | Prediction | If it holds |
+|---|---|---|
+| P7 | Reasoning firms accept fewer +1–2 cent nudges than non-reasoning ones (K1-d high vs low), and Δ(K1-d high) < Δ(K1-d low) | — |
+| P8 | M2-d at high effort removes more of the hub's harm than at low effort (55%) | If it removes ≥ 80%, the discretion result reads as "discretion works when the deciding firm reasons" |
