@@ -403,3 +403,6 @@ An independent adversarial methods review (a Claude Fable 5.1 subagent) checked 
 **Decision rules:**
 - If M0-a and M1-a fall to B0 under noise, the main result is a property of a noiseless market, and we say so.
 - If they survive, the result is a property of the objective.
+- **01:40 correction:** the stopped follow-up runs had played about 451 rounds in total, about 8 per run, before the limit hit.
+  - They were deleted unanalysed, because their saved arm settings predate the new `advised` field and could not resume.
+  - The follow-up batch reruns from scratch on the same seeds (600+).
