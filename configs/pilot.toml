@@ -1,0 +1,17 @@
+# Pilot (gate G-A then G-B): all core arms x 3 seeds x 100 rounds. Measures per-arm SD to set N.
+tag = "pilot"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "low"
+max_tokens = 2048
+rounds = 100
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 1
+max_retries = 3
+last_k = 20
+workers = 16
+max_usd = 10.0
+seeds = [0, 1, 2]
+arms = ["B0", "R0-d", "R1-d", "R2-d", "R0-a", "R2-a", "S-nash", "S-mono", "D-BR", "PC"]
