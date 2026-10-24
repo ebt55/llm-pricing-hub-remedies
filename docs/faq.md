@@ -58,3 +58,34 @@ That connects the paper to the sprint's detection track as well as the markets t
 We call the residual harm **data-compliant coordination**: the hub obeys every data restriction, but prices still move toward joint monopoly, because the hub's *objective* drives them.
 
 Earlier titles were changed during the sprint. "S'all Good, Man?" was dropped after a simulated judge review found it unclear. "…Only Ending Auto-Accept Stops…" was dropped because the settlement restricts auto-accept rather than ending it.
+
+## What is firm discretion, and how does it hold the AIs off collusion?
+
+**What it is.** Each round, a shared pricing hub (an AI told to maximise the two shops' *combined* profit, the incentive alleged against RealPage) recommends a price to each shop's AI.
+- **Auto-accept:** the recommendation simply becomes the price. The shop's AI isn't even asked.
+- **Firm discretion:** the shop's AI sees the recommendation next to its own sales history and picks its own price. It can follow the recommendation, ignore it, or land in between.
+
+The real-world version is a leasing manager who can override RealPage. The DOJ settlement protects overrides (§V.A.5) and bans rewards for accepting (§V.C).
+
+**Why it holds collusion off.** The collusion lives in the hub: both shops get the same "everyone raise prices" plan. That plan is good for the pair, but each shop, looking only at its own data, sees that raising its price loses customers to a cheaper rival. A shop that thinks for itself keeps drifting back down. This is the classic cartel problem: every member is tempted to cheat.
+
+**Auto-accept is what removes that temptation.** The hub sets both prices, so nobody can cheat. Discretion puts the temptation back. The shop isn't *trying* to fight collusion; its own self-interest is what breaks the cartel. A real Claude Haiku shop, in round 18, recommended $1.60:
+
+> "Average observed profit is highest near $1.43 … and $1.60 lies outside the tested range, so I'll stay near the best-performing tested price."
+
+**When it fails.** Discretion only protects if the one deciding actually pushes back. We tested this with a scripted hub that nudges the price up by +1, +3 or +10 cents a round. Profit gain Δ is 0 at competitive prices and 1 at the monopoly price:
+
+| Shop AI | Δ | Outcome |
+|---|---|---|
+| Claude Haiku (reasons before answering) | 0.03–0.05 | Competitive, the same as having no hub |
+| Gemini Flash-Lite (no thinking at our settings) | 0.93–1.00 | Followed the nudges all the way to monopoly |
+
+A typical Gemini reason:
+
+> "…the software's upward nudge, a slight increase to 1.52 will test higher profit margins…"
+
+Two fixes didn't help the Gemini shops:
+- showing them the total drift ("+7.5% vs 10 rounds ago");
+- adding the data ban on top.
+
+**The AI-safety translation.** Firm discretion is a "human (or AI) in the loop". It works only if whoever is in the loop has their own interest and uses their own judgment. A rubber stamp in the loop is the same as auto-accept. Former RealPage employees put landlords' acceptance at 80–90%, which is closer to our Gemini shops than to our Haiku ones.

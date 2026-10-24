@@ -692,3 +692,37 @@ The draft's model table will report measured output tokens.
 |---|---|---|
 | P7 | Reasoning firms accept fewer +1–2 cent nudges than non-reasoning ones (K1-d high vs low), and Δ(K1-d high) < Δ(K1-d low) | — |
 | P8 | M2-d at high effort removes more of the hub's harm than at low effort (55%) | If it removes ≥ 80%, the discretion result reads as "discretion works when the deciding firm reasons" |
+
+### 2026-10-25 03:45: results of batches A and B (pre-registered at 03:30)
+
+`results/ratchet` (Haiku): 40 runs, $2.68. `results/ladder-gem-lite`: 36 runs, $5.89.
+
+Harm removed = (M2-a − X)/(M2-a − B0), by model:
+- Haiku: M2-a 0.989, B0 0.062 (n = 20).
+- Gemini: M2-a 0.907, B0 0.033 (n = 5).
+
+| Arm | Haiku Δ (n = 10) | Gemini Flash-Lite Δ (n = 6) |
+|---|---|---|
+| K1-a: +1 cent ratchet, auto-accept | 1.000 | — |
+| K1-d: +1 cent ratchet, discretion | **0.053** | **0.999** |
+| K3-d: +3 cents | **0.032** | **0.995** |
+| K10-d: +10 cents | **0.028** | **0.933** |
+| S-mono (one jump to 1.92; `main`, n = 5) | 0.066 | — |
+| M2-d, LLM hub (Gemini n = 12) | 0.107 | 0.409 (57% removed) |
+| M0-d, data ban + discretion | — | 0.383 (60% removed); per run 0.09 1.00 0.01 0.07 0.15 0.98 |
+| M2-dx, discretion + drift disclosure | — | 0.572 (38% removed); per run 1.00 0.17 0.09 1.00 0.17 1.00 |
+
+**Predictions:**
+
+| # | Prediction | Outcome |
+|---|---|---|
+| P1 | K1-a reaches 1.92 | **Confirmed** |
+| P2 | Haiku K1-d Δ < 0.30 | **Confirmed**: Haiku firms resist even a patient +1 cent ratchet; every K arm is at or below B0 |
+| P3 | Gemini K1-d and K3-d Δ ≥ 0.50 | **Confirmed**: non-reasoning Gemini firms follow a scripted ratchet to monopoly, even in 10-cent steps |
+| P4 | Δ(K1-d) ≥ Δ(K10-d) on each model | Holds on both, weakly |
+| P5 | Gemini M0-d removes < 80% | **Confirmed**: stacking the decree's remedies does not fix it |
+| P6 | Drift disclosure removes more harm than M2-d | **Failed**: 38% vs 57%, n = 6, bimodal; no evidence that it helps |
+
+**Reading.** The firm side of the ratchet is causal. Under the same scripted hub, Haiku firms push back and Gemini Flash-Lite firms (zero thinking tokens) rubber-stamp, whatever the step size. "Small nudges" matters for the LLM hub, which jumps less when ignored, but the decisive variable is **whether the deciding firm pushes back at all**.
+
+**Title.** The pre-registered rule fired: P2 and P3 both hold. Batch C (Gemini at high effort) decides whether "push back" can be read as "reasons". The final wording waits for C and goes to Fable 5.1.
