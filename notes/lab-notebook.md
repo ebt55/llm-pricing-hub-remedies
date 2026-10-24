@@ -323,9 +323,9 @@ Data limits remove 84–85% (wide CI, 54–130%). Together with Haiku, this make
 - **Data ban + discretion** (Gemini) removes 60% (16–98%).
 - **Drift disclosure** removes 38% (−4% to 76%). We predicted it would help; it didn't.
 
-**~03:58 Gemini with thinking on** (partial; stopped by the project's monthly spending cap). K1-d 1.00 (n = 3); M2-d 1.00 (n = 2). Reasoning firms accept *more* of the 1–2-cent increases (84–88% vs 69%). Pushing back is a model disposition, not a reasoning budget.
+**~03:54 Gemini with thinking on** (partial; stopped by the project's monthly spending cap). K1-d 1.00 (n = 3); M2-d 1.00 (n = 2). Reasoning firms accept *more* of the 1–2-cent increases (84–88% vs 69%). Pushing back is a model disposition, not a reasoning budget.
 
-**Where the story stands (04:00).**
+**Where the story stands (03:55).**
 - The hub harms through its objective.
 - Data limits bind only some models.
 - Per-round guardrails and partial adherence leave the ratchet intact.

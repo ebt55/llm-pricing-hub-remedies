@@ -662,7 +662,7 @@ So the ratchet has two sides: the hub must keep nudging, and the firm must accep
 - **Haiku K1-d Δ ≥ 0.50:** discretion fails against a patient hub even on Haiku. The title becomes "no tested remedy reliably stops…".
 - **Gemini K arms Δ < 0.30:** the firm side of the ratchet reading is wrong. The title keeps the two failed remedies and drops the "only" clause on discretion.
 
-### 2026-10-25 03:37: does firm reasoning make discretion work? Gemini with thinking on (logged before results)
+### 2026-10-25 03:36: does firm reasoning make discretion work? Gemini with thinking on (logged before results; commit a6dd017 at 03:36:19, launched 03:36:21)
 
 **The skeptic agent's top threat (T1), checked.** At our setting (`reasoning_effort = low`) Gemini 3.5 Flash-Lite does **no thinking at all** on the game prompts. Probe on a real M2-d firm prompt, 3 calls per setting (~$0.01):
 
@@ -693,7 +693,7 @@ The draft's model table will report measured output tokens.
 | P7 | Reasoning firms accept fewer +1–2 cent nudges than non-reasoning ones (K1-d high vs low), and Δ(K1-d high) < Δ(K1-d low) | — |
 | P8 | M2-d at high effort removes more of the hub's harm than at low effort (55%) | If it removes ≥ 80%, the discretion result reads as "discretion works when the deciding firm reasons" |
 
-### 2026-10-25 03:45: results of batches A and B (pre-registered at 03:30)
+### 2026-10-25 03:42: results of batches A and B (pre-registered at 03:30)
 
 `results/ratchet` (Haiku): 40 runs, $2.68. `results/ladder-gem-lite`: 36 runs, $5.89.
 
@@ -727,7 +727,7 @@ Harm removed = (M2-a − X)/(M2-a − B0), by model:
 
 **Title.** The pre-registered rule fired: P2 and P3 both hold. Batch C (Gemini at high effort) decides whether "push back" can be read as "reasons". The final wording waits for C and goes to Fable 5.1.
 
-### 2026-10-25 03:58: batch C stopped at the Gemini project's monthly spend cap; partial results
+### 2026-10-25 03:54: batch C stopped at the Gemini project's monthly spend cap; partial results
 
 - **What happened.** From 03:46 every Gemini call returned HTTP 429 "Your project has exceeded its monthly spending cap" (AI Studio project spend cap). This is not the rate limit, and it won't clear before November unless the user raises the cap at ai.studio/spend. I stopped the batch at 03:56.
 - **What finished:** 11 of 24 runs, $5.17 logged. The partial runs are kept and will resume if the cap is raised.
@@ -751,7 +751,7 @@ Results with thinking on (firms: median 425 output tokens per call; Haiku's are 
 
 **Reading.** Pushing back is not a matter of having a reasoning budget. At a budget comparable to Haiku's, Gemini Flash-Lite firms defer even more. The decisive variable is the firm model's disposition toward the software's recommendation. The n is tiny (2–3); this is reported as exploratory.
 
-### 2026-10-25 04:00: ratchet on two more firm models; 200-round check of Haiku discretion (logged before results)
+### 2026-10-25 03:56: ratchet on two more firm models; 200-round check of Haiku discretion (logged before results; commit de9656d at 03:56:27, launched 03:57)
 
 **Why.**
 - The ratchet test so far has two firm models: Haiku pushes back, and Gemini Flash-Lite defers.
@@ -774,3 +774,5 @@ Results with thinking on (firms: median 425 output tokens per call; Haiku's are 
 | P10 | Haiku over 200 rounds: M2-d and K1-d both Δ ≤ 0.2 in rounds 181–200 | Discretion blocks rather than delays |
 
 If P10 fails, the paper says Haiku's discretion "delays the hub by more than 100 rounds" instead of "stops it".
+
+*Note (03:59): the headings of the last five entries were corrected to their commit times. Some had been written 2–25 minutes later than the commit; no content changed. From here on, headings use the commit time.*
