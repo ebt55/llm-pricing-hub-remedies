@@ -522,3 +522,37 @@ A fact-check subagent opened the documents themselves:
 - Ending auto-accept is **not** what the settlement mandates. It restricts auto-accept to user-set parameters and protects overrides.
 - Our dose-response, where partial adherence keeps most of the harm, speaks directly to this partial remedy.
 - The framing must say this precisely.
+
+### 2026-10-25 03:05: guardrailed auto-accept (decided by a Fable 5.1 review; logged before results)
+
+**Why.** The settlement does not end auto-accept. It permits auto-accept within parameters each user sets (§V.A.1). We test that remedy directly.
+
+**Arms** (`configs/guardrail.toml`, compared with main M2-a, M2-d and B0):
+- **M2-g3:** the hub's recommendation is applied automatically, clipped to ±3% of the firm's last realised price per round. This is the complaint's default daily limit. n = 20.
+- **M2-g1:** ±1%, as a stress test. n = 10.
+
+**Otherwise identical to M2-a:**
+- the hub objective and current data through t−1;
+- the same hub prompt; the hub is not told about the band, but sees realised prices;
+- 100 rounds and a competitive start.
+
+**Out-of-band recommendations are clipped to the band edge**, which is true parameterised auto-accept. They are not passed to the firm, because that would re-measure firm stickiness, which M2-d already does.
+
+**Extra metric:** the first round at which the market price is ≥ 0.95·p_M.
+- Compounding gets there in about 9 rounds at 3% per round, and about 27 at 1%.
+
+**Pre-registered prediction:**
+- M2-g3 Δ ≥ 0.95, i.e. ≤ 5% of the harm removed.
+- M2-g1 Δ ≥ 0.90.
+
+**What happens to the headline:**
+
+| M2-g3 result | Consequence |
+|---|---|
+| Retains ≥ 80% of the harm | Title becomes "Data Limits and Guardrails Don't Stop an LLM Pricing Hub; Only Firm Discretion Does" |
+| Removes ≥ 50% | Report it as model-dependent restraint, like the data ban. Title becomes "Data Limits Don't Stop an LLM Pricing Hub; Only Full Firm Discretion Does" |
+| In between | Add it to the dose-response table; the base title stays |
+
+**Framing changes (same review):**
+- Say "firm discretion", not "ending auto-accept". The settlement's parameterised auto-accept is a partial remedy.
+- §1 states §V.A.1, §V.A.5 and §V.C precisely.

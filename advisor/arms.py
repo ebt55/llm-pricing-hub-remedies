@@ -79,6 +79,12 @@ ARMS = {a.name: a for a in [
     # B0 firm. Does the hub move a rival that is not a copy of itself? No prompt mentions rivals' software.
     Arm("A2-a", "llm", "current", "auto", "joint", advised=(True, False), role="hub on firm 0 only, current data"),
     Arm("A0-a", "llm", "own", "auto", "joint", advised=(True, False), role="hub on firm 0 only, no rival data"),
+    # Guardrailed auto-accept (DOJ-RealPage Final Judgment s.V.A.1: auto-accept only with user-set parameters).
+    # The hub's recommendation is applied automatically, clipped to +/- band of the firm's last realised price.
+    Arm("M2-g3", "llm", "current", "auto", "joint", guard_band=0.03, guard_mode="clip",
+        role="hub, current data, auto-accept within +/-3% per round (complaint's default daily limit)"),
+    Arm("M2-g1", "llm", "current", "auto", "joint", guard_band=0.01, guard_mode="clip",
+        role="hub, current data, auto-accept within +/-1% per round (stress test)"),
     # Rational benchmark (no LLM): a scripted hub that maximises combined profit given the rival price it can
     # see under each data regime (current t-1 / stale t-stale_lag / none -> assumes the rival stays at Nash).
     Arm("J2-a", "jbr", "current", "auto", role="rational joint-profit hub, current data (benchmark)"),

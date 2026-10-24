@@ -1,0 +1,22 @@
+# GUARDRAILED AUTO-ACCEPT (Final Judgment s.V.A.1), decided by Fable 5.1 review, logged before results.
+# Same game as the main batch; compare with main M2-a, M2-d, B0. n = 20 (g3), 10 (g1).
+tag = "guardrail"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "low"
+max_tokens = 4096
+rounds = 100
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 10
+max_retries = 3
+last_k = 20
+workers = 30
+max_usd = 9.0
+seeds = [1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117, 1118, 1119]
+arms = ["M2-g3", "M2-g1"]
+
+
+[arm_seeds]
+"M2-g1" = [1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109]
