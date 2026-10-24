@@ -228,4 +228,4 @@ The pun titles were dropped as unclear. The title is now **Can Antitrust Remedie
 
 ### 2026-10-24 23:55: title chosen
 
-**S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel?** *Testing the RealPage settlement on LLM pricing advisors.* The repository name stays `ebt55/ai-pricing-cartel-remedies`, because it describes the contents.
+**S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel?** *Testing the RealPage settlement on LLM pricing advisors.* The repository was renamed to `ebt55/sall-good-man`, matching the title. GitHub redirects the earlier names.
