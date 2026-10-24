@@ -571,3 +571,23 @@ A fact-check subagent opened the documents themselves:
 - **The prediction (Δ ≥ 0.95 and ≥ 0.90) is confirmed.** Parameterised auto-accept only delays the hub.
 - **The title rule fired** (M2-g3 retains ≥ 80%). The title is now **"Data Limits and Guardrails Don't Stop an LLM Pricing Hub; Only Firm Discretion Does"**, with the subtitle *"Testing the RealPage remedies (stale data, data bans, parameterised auto-accept) on LLM pricing advisors"*.
 - Applied to the README, draft, FAQ, pyproject and plan doc.
+
+### 2026-10-25 03:20: Qwen ladder results; firm-discretion replication (logged before results)
+
+**Qwen3.8 Flash** (`results/ladder-or-qwen`; n = 4; 0.5% retries; 0 refusals; $1.83; every call reported `qwen/qwen3.8-flash`):
+
+| Arm | Δ | Harm removed |
+|---|---|---|
+| B0 | 0.15 | — |
+| M2-a | 0.97 | — |
+| M1-a | 0.28 | **84%** |
+| M0-a | 0.28 | **85%** |
+
+**Reading.** Data limits largely work for Qwen and Haiku, and fail for DeepSeek, Gemini Flash-Lite and Gemini 3.8 Flash. The effect depends on the model, so data limits are **unreliable**, not "never effective".
+
+**Next.** The red-team (T5) flagged that firm discretion (M2-d) has been tested only on Haiku; the DeepSeek attempt was stopped for cost. We run M2-d on two cheap models from other families, in the same design and tags as the ladder:
+- **Gemini 3.5 Flash-Lite:** a model where data limits *fail*. n = 6, seeds 1000–1005.
+- **Qwen3.8 Flash:** a model where data limits *work*. n = 4, seeds 1000–1003.
+- Estimated cost: about $2.60.
+
+**Prediction:** M2-d is near B0 on both models, removing ≥ 80% of the hub's harm.
