@@ -290,3 +290,9 @@ Reading the hub's reasoning in pilot2 raised suspected confounds; see `notes/con
   - **If M0-a drifts up**, the data ban only *delays* coordination.
 
 **OpenAI replication.** It hit the 2.4M-token daily cap within about 4 minutes, because all 20 runs started in parallel; the cap held, at 2.41M tokens that day. The runs resume after 00:00 UTC. At 2.4M tokens a day the replication will finish at n = 3 per arm (seeds 200–202) rather than 5, unless the user's allowance turns out to be 10M a day.
+
+### 2026-10-25 00:02: OpenAI allowance confirmed
+
+- The user's dashboard shows the data-sharing allowance at **2.5M tokens per day** for gpt-5.4-mini (and other mini models), and 250k per day for the large models. Usage beyond that is billed (account balance $6.40).
+- Our cap of 2.4M per UTC day stays under the allowance, so the OpenAI replication is free. The first day's 2.41M tokens fit.
+- **Plan:** resume automatically at 00:00 UTC (05:30 IST) with seeds 200–202 only, giving n = 3 per arm. The runs for seeds 203–204 stay partial and are excluded.
