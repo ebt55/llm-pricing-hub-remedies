@@ -159,3 +159,18 @@ The suspiciously clean one is M2-d (C6: our firms are cautious). Still to check:
 - show individual runs in figure A;
 - an outdated README;
 - citations for the legal facts.
+
+**~01:35 Methods red-team** (summarised in SPRINT_LOG; full text from the Fable subagent)
+- **Biggest hits:**
+  - T2, noiseless market: "no data" is cosmetic.
+  - T4, sticky firms: material-gap follow rate is only 0.06.
+  - T1, the data ban is a bounded-rationality artefact.
+- **Built for $0:**
+  - demand noise (`demand_noise`);
+  - asymmetric adoption (A arms);
+  - effort override via config;
+  - gap-conditional follow rate;
+  - Welch t CIs.
+- **Blocked:** the Anthropic workspace spend limit was hit around 01:17, after about $40. Four batches (about $25) are queued for when the user raises it.
+
+**Title risk.** "Only ending auto-accept stops…" rests on M2-d, which T4 shows is mostly firm stickiness. The adherence dose-response decides it; be ready to retitle.

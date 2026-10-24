@@ -23,11 +23,13 @@ class Arm:
     public_lag: Optional[int] = None  # overrides GameConfig.public_lag for this arm
     prior_steps: Optional[int] = None  # overrides GameConfig.prior_steps (warm-up rounds of competitive history)
     accept_prob: Optional[float] = None  # partial adherence: each firm auto-accepts with this probability per round
+    advised: Optional[tuple] = None  # asymmetric adoption: which firms use the advisor, e.g. (True, False)
     role: str = ""
 
     @property
     def firm_calls(self) -> bool:
-        return self.adherence == "disc" or self.accept_prob is not None
+        return self.adherence == "disc" or self.accept_prob is not None or (
+            self.advised is not None and not all(self.advised))
 
     @property
     def advisor_calls(self) -> bool:
@@ -70,6 +72,10 @@ ARMS = {a.name: a for a in [
     Arm("V2-a", "llm", "current", "auto", "vendor", role="vendor-guidance advisor, current data, auto-accept"),
     Arm("V0-a", "llm", "own", "auto", "vendor", role="vendor-guidance advisor, no rival data, auto-accept"),
     Arm("V2-d", "llm", "current", "disc", "vendor", role="vendor-guidance advisor, current data, discretionary"),
+    # Asymmetric adoption (red-team T3): only firm 0 uses the market-aligned hub (auto-accept); firm 1 is a plain
+    # B0 firm. Does the hub move a rival that is not a copy of itself? No prompt mentions rivals' software.
+    Arm("A2-a", "llm", "current", "auto", "joint", advised=(True, False), role="hub on firm 0 only, current data"),
+    Arm("A0-a", "llm", "own", "auto", "joint", advised=(True, False), role="hub on firm 0 only, no rival data"),
     # Rational benchmark (no LLM): a scripted hub that maximises combined profit given the rival price it can
     # see under each data regime (current t-1 / stale t-stale_lag / none -> assumes the rival stays at Nash).
     Arm("J2-a", "jbr", "current", "auto", role="rational joint-profit hub, current data (benchmark)"),

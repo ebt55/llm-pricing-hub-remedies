@@ -362,3 +362,44 @@ All contrasts are two-sided, with Holm correction within this batch.
 - **Spend so far:** about $40 of Haiku across smoke, diagnostics, pilot, main, triopoly, robustness and the detection monitor.
 - **State of the runs:** all 60 follow-up runs stopped at round 0, with no data. Their files hold only the header and warm-up, so they resume cleanly once the limit is raised.
 - **Waiting on:** the user, to raise the workspace limit.
+
+### 2026-10-25 01:35: methods red-team; queued robustness batches (logged before results)
+
+An independent adversarial methods review (a Claude Fable 5.1 subagent) checked the raw JSONL and git history.
+
+**It confirmed:**
+- the pre-registration timeline: freeze commit `5aa9f79` at 23:51:48 IST, first main run at 00:00:57;
+- prompts are identical after the freeze when `show_wtp=True`;
+- the draft's numbers match the summaries, with one exception (below).
+
+**Threats it raised:**
+
+| | Threat | Severity |
+|---|---|---|
+| T1 | The data ban's 69% is a bounded-rationality artefact; see the J benchmark | Major |
+| T2 | The market is noiseless and symmetric, so own quantity reveals the rival's price, and "no data" and "stale data" are cosmetic restrictions | Major |
+| T3 | Two copies of one model with a joint objective share a focal point; this is not hub-and-spoke | Major |
+| T4 | Firms are sticky: when the recommendation moves the price by more than $0.05, the follow rate is 0.06 in M2-d (0.01 for S-mono, 0.42 for R0-d), so "no auto-accept removes 95%" partly measures firm-prompt stickiness | Major |
+| T5 | Model and horizon dependence | Major |
+| T6 | Aggregation over two symmetric rivals hides nothing | Minor to major |
+| T7 | Forking paths: post-hoc findings appear in the abstract unlabelled; n was raised from 10 to 20 after the pilot | Minor |
+| T8 | Detection caveats: the price screen against the outcome label is circular; the variance screen pooled across firms | Minor |
+
+**Bugs, fixed in `analyze.py`:**
+- Contrast CIs now use Welch t, not normal.
+- A gap-conditional follow rate was added: follow rate when the recommendation moves the price by more than $0.05.
+
+**Overstatement in the draft:** "all stage-2 Holm p < .001" is false (H4c p = .029; H5 p = .82). To be corrected.
+
+**Queued Haiku batches**, waiting for the Anthropic workspace limit. All seed blocks are new.
+
+| Config | Addresses | What it runs | n | Seeds |
+|---|---|---|---|---|
+| `configs/followup.toml` | Logged 01:20 | Adherence dose-response (q = 0.5, 0.8, 0.9) and the soft vendor objective | 10 | 600+ |
+| `configs/robust_noise.toml` | T2 | Log-normal demand shocks with sd 0.1 per firm and round, deterministic per seed and round. Shown quantities and profits are noisy; the metric is expected profit gain. Arms B0, M2-a, M1-a, M0-a | 10 | 700+ |
+| `configs/robust_effort.toml` | T1 | Hub reasoning effort set to high. Arms M0-a, M1-a. If Δ rises toward the rational J0 level (0.82), the ban's effect is an effort artefact | 10 | 800+ |
+| `configs/asym.toml` | T3 | Asymmetric adoption: only firm 0 uses the market-aligned hub, firm 1 is a plain firm. Arms A2-a and A0-a, compared with main B0 | 10 | 900+ |
+
+**Decision rules:**
+- If M0-a and M1-a fall to B0 under noise, the main result is a property of a noiseless market, and we say so.
+- If they survive, the result is a property of the objective.

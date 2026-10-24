@@ -1,0 +1,19 @@
+# ROBUSTNESS T3 (red-team): asymmetric adoption, only firm 0 uses the market-aligned hub; firm 1 is a plain firm.
+# Same game as the main batch unless noted. Logged in SPRINT_LOG before results.
+tag = "asym"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "low"
+max_tokens = 4096
+rounds = 100
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 10
+max_retries = 3
+last_k = 20
+workers = 40
+max_usd = 6.0
+seeds = [900, 901, 902, 903, 904, 905, 906, 907, 908, 909]
+arms = ["A2-a", "A0-a"]
+

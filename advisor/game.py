@@ -8,6 +8,7 @@ A call that cannot be parsed after all retries aborts the run (no substituted pr
 from __future__ import annotations
 
 import json
+import math
 import os
 import random
 from concurrent.futures import ThreadPoolExecutor
@@ -32,6 +33,7 @@ class GameConfig:
     max_retries: int = 3
     last_k: int = 20  # rounds in the primary metric
     price_scale: float = 1.0  # alpha (Fish et al.): all prices and costs scaled
+    demand_noise: float = 0.0  # sd of i.i.d. log-normal quantity shocks per firm-round (0 = noiseless)
     show_wtp: bool = True  # "No customer would pay more than $X" line (confound check C1: False removes it)
 
 
@@ -91,8 +93,9 @@ def summarize_rounds(rounds: List[dict], market: LogitMarket, last_k: int) -> di
     }
     recs = [r for r in tail if r.get("recs") is not None]
     if recs:
-        p = np.array([r["prices"] for r in recs])
-        rc = np.array([r["recs"] for r in recs])
+        idx = [i for i, v in enumerate(recs[0]["recs"]) if v is not None]
+        p = np.array([[r["prices"][i] for i in idx] for r in recs])
+        rc = np.array([[r["recs"][i] for i in idx] for r in recs])
         out["rec_lastk"] = float(rc.mean())
         out["abs_dev_from_rec_lastk"] = float(np.abs(p - rc).mean())
         out["follow_rate_lastk"] = float((np.abs(p - rc) <= 0.01).mean())
@@ -109,6 +112,12 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
                 meta: Optional[dict] = None) -> dict:
     market = LogitMarket.for_firms(arm.n_firms, cfg.price_scale)
     prior_steps = arm.prior_steps if arm.prior_steps is not None else cfg.prior_steps
+
+    def shocks(t):  # deterministic per (seed, round), so resumed runs see the same demand draws
+        if cfg.demand_noise <= 0:
+            return None
+        g = random.Random(seed * 7919 + t * 31 + 17)
+        return [math.exp(g.gauss(0.0, cfg.demand_noise)) for _ in range(arm.n_firms)]
     n = market.n
     records = _read(path)
     if records and records[0].get("arm") != arm.name:
@@ -136,7 +145,7 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
         rng = random.Random(seed)
         for r in range(1, prior_steps + 1):  # llm-cartel warm-up: Nash +/- 0.05
             prices = [round(market.p_nash + market.alpha * (rng.randint(0, 11) - 5) / 100, 2) for _ in range(n)]
-            rec = _round_record(r, "warmup", prices, market, None, [], [], [])
+            rec = _round_record(r, "warmup", prices, market, None, [], [], [], shocks(r))
             _append(path, rec)
         records = _read(path)
 
@@ -174,13 +183,15 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
                     recs.append(round(market.joint_best_response([p for j, p in enumerate(seen) if j != i]), 2))
             elif arm.advisor == "llm":
                 system = ADVISOR_SYSTEM[arm.objective]
-                prompts = [advisor_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None, cfg.window, arm.data,
-                                          cfg.stale_lag, public_lag) for i in range(n)]
+                adv_ids = [i for i in range(n) if arm.advised is None or arm.advised[i]]
+                prompts = [advisor_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None,
+                                          cfg.window, arm.data, cfg.stale_lag, public_lag) for i in adv_ids]
                 outs = list(pool.map(lambda u: ask(advisor_provider, system, u, "advisor", cfg.max_retries),
                                      prompts))
-                recs = [o["price"] for o in outs]
-                rec_reasons = [o["reason"] for o in outs]
-                calls += [{"who": f"advisor{i}", **o} for i, o in enumerate(outs)]
+                recs, rec_reasons = [None] * n, [None] * n
+                for i, o in zip(adv_ids, outs):
+                    recs[i], rec_reasons[i] = o["price"], o["reason"]
+                calls += [{"who": f"advisor{i}", **o} for i, o in zip(adv_ids, outs)]
 
             # 2) prices
             firm_reasons = None
@@ -188,7 +199,18 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
             if arm.accept_prob is not None:
                 draw = random.Random(seed * 100003 + t)
                 accepted = [draw.random() < arm.accept_prob for _ in range(n)]
-            if arm.adherence == "auto":
+            if arm.advised is not None:  # advised firms follow arm.adherence; others always decide alone
+                deciders = [i for i in range(n) if not (arm.advised[i] and arm.adherence == "auto")]
+                prompts = [firm_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None,
+                                       cfg.window, recs[i] if recs else None, public_lag, announced)
+                           for i in deciders]
+                outs = list(pool.map(lambda u: ask(firm_provider, FIRM_SYSTEM, u, "firm", cfg.max_retries), prompts))
+                prices = [recs[i] if recs else None for i in range(n)]
+                firm_reasons = [None] * n
+                for i, o in zip(deciders, outs):
+                    prices[i], firm_reasons[i] = o["price"], o["reason"]
+                calls += [{"who": f"firm{i}", **o} for i, o in zip(deciders, outs)]
+            elif arm.adherence == "auto":
                 prices = list(recs)
             elif accepted is not None:
                 deciders = [i for i in range(n) if not accepted[i]]
@@ -213,7 +235,7 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
             chosen = list(prices)
             if arm.cap is not None:
                 prices = [min(p, arm.cap) for p in prices]
-            rec = _round_record(t, "play", prices, market, recs, rec_reasons, firm_reasons, calls)
+            rec = _round_record(t, "play", prices, market, recs, rec_reasons, firm_reasons, calls, shocks(t))
             if arm.cap is not None:
                 rec["chosen"] = chosen
             if accepted is not None:
@@ -233,14 +255,18 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
     return summary
 
 
-def _round_record(t, kind, prices, market, recs, rec_reasons, firm_reasons, calls) -> dict:
+def _round_record(t, kind, prices, market, recs, rec_reasons, firm_reasons, calls, shock=None) -> dict:
+    """Quantities and profits shown to agents include demand shocks; gains (the metric) are the expected,
+    noise-free profit gains at these prices."""
     q = market.quantities(prices)
-    pi = market.profits(prices)
+    if shock is not None:
+        q = q * np.array(shock)
+    pi = q * (np.asarray(prices, dtype=float) - market.unit_cost)
     g = market.gains(prices)
     return {"type": "round", "round": t, "kind": kind, "prices": [float(p) for p in prices],
             "quantities": [round(float(x), 4) for x in q], "profits": [round(float(x), 4) for x in pi],
             "gains": [round(float(x), 4) for x in g], "recs": recs, "rec_reasons": rec_reasons,
-            "firm_reasons": firm_reasons,
+            "firm_reasons": firm_reasons, "shocks": shock,
             "calls": [{k: v for k, v in c.items() if k not in ("reason", "text", "reasoning", "failed")} for c in calls]}
 
 

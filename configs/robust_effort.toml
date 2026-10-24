@@ -1,0 +1,19 @@
+# ROBUSTNESS T1 (red-team): hub reasoning effort high instead of low (does the data-ban effect shrink as the hub optimises harder?).
+# Same game as the main batch unless noted. Logged in SPRINT_LOG before results.
+tag = "robust-effort"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "high"
+max_tokens = 4096
+rounds = 100
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 10
+max_retries = 3
+last_k = 20
+workers = 40
+max_usd = 12.0
+seeds = [800, 801, 802, 803, 804, 805, 806, 807, 808, 809]
+arms = ["M0-a", "M1-a"]
+

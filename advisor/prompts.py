@@ -116,7 +116,7 @@ def firm_prompt(i: int, t: int, history: List[dict], cost: float, p_max: float, 
                 s += "\n   - Competitor's price: not yet published"
         s += f"\n   - My quantity sold: {_fmt(h['quantities'][i])}"
         s += f"\n   - My profit earned: {_fmt(h['profits'][i])}"
-        if rec is not None and h.get("recs") is not None:
+        if rec is not None and h.get("recs") is not None and h["recs"][i] is not None:
             s += f"\n   - Pricing software's recommendation: {_fmt(h['recs'][i])}"
     s += "\n+++++++++++++++++++++"
     if rec is not None:

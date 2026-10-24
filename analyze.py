@@ -52,12 +52,25 @@ def load(tag_dir: str):
         refusals = sum(c.get("refusals", 0) for r in rounds for c in r.get("calls", []))
         mk = cfg["market"]
         tail = rounds[-cfg["game"]["last_k"]:]
+        big, big_follow = 0, 0
+        allr = [r for r in lines if r.get("type") == "round"]
+        for prev, cur in zip(allr, allr[1:]):
+            if cur["kind"] != "play" or not cur.get("recs") or cfg["arm_spec"]["adherence"] != "disc":
+                continue
+            for i, rec in enumerate(cur["recs"]):
+                if rec is None or (cur.get("accepted") and cur["accepted"][i]):
+                    continue
+                if abs(rec - prev["prices"][i]) > 0.05:
+                    big += 1
+                    big_follow += abs(cur["prices"][i] - rec) <= 0.01
         p_bar = float(np.mean([np.mean(r["prices"]) for r in tail]))
-        rec_disp = (float(np.mean([np.ptp(r["recs"]) for r in tail])) if tail and tail[0].get("recs") else np.nan)
+        rec_disp = (float(np.mean([np.ptp([v for v in r["recs"] if v is not None]) for r in tail]))
+                    if tail and tail[0].get("recs") and sum(v is not None for v in tail[0]["recs"]) > 1 else np.nan)
         runs.append({**{k: v for k, v in s.items() if k != "type"}, "refusals": refusals, "n_firms": mk["n"],
                      # monotone price index: 0 = Nash, 1 = monopoly (Delta is not monotone above p_M)
                      "price_index": (p_bar - mk["p_nash"]) / (mk["p_mono"] - mk["p_nash"]),
-                     "rec_dispersion": rec_disp})
+                     "rec_dispersion": rec_disp,
+                     "follow_big_gap": (big_follow / big) if big else np.nan, "n_big_gap": big})
         paths[(s["arm"], s["seed"])] = rounds
     return pd.DataFrame(runs), paths
 
@@ -80,10 +93,12 @@ def contrast(df, a, b, metric="delta_lastk"):
     diff = xa.mean() - xb.mean()
     se = np.sqrt(xa.var(ddof=1) / len(xa) + xb.var(ddof=1) / len(xb))
     t, p = stats.ttest_ind(xa, xb, equal_var=False)
+    va, vb = xa.var(ddof=1) / len(xa), xb.var(ddof=1) / len(xb)
+    df_w = (va + vb) ** 2 / (va**2 / (len(xa) - 1) + vb**2 / (len(xb) - 1)) if (va + vb) > 0 else len(xa) + len(xb) - 2
     p_mw = stats.mannwhitneyu(xa, xb, alternative="two-sided").pvalue
     hl = float(np.median(np.subtract.outer(xa, xb)))
     pooled_sd = np.sqrt((xa.var(ddof=1) + xb.var(ddof=1)) / 2)
-    return {"diff": diff, "se": se, "ci95": 1.96 * se, "p": p, "p_mw": p_mw, "hl": hl, "n_a": len(xa), "n_b": len(xb),
+    return {"diff": diff, "se": se, "ci95": float(stats.t.ppf(0.975, df_w)) * se, "p": p, "p_mw": p_mw, "hl": hl, "n_a": len(xa), "n_b": len(xb),
             "mde80": 2.8 * se, "pooled_sd": pooled_sd,
             # runs per arm for 80% power at alpha .05 to detect a difference of 0.10 / 0.15 / 0.20 in Delta
             "n_for_0.10": int(np.ceil(2 * 2.8**2 * (pooled_sd / 0.10) ** 2)),
@@ -136,10 +151,13 @@ def gates(df):
                    f"-> {'PASS' if k >= int(np.ceil(2 * len(m) / 3)) else 'FAIL'}")
     calls, retries, refusals = int(df["calls"].sum()), int(df["retries"].sum()), int(df["refusals"].sum())
     out.append(f"harness: {calls} calls, {retries} parse retries ({retries / max(calls, 1):.2%}), {refusals} refusals")
-    for arm in ["R0-d", "R2-d", "M2-d", "S-nash", "S-mono"]:
-        if "follow_rate_lastk" in df and len(df.loc[df.arm == arm]):
-            fr = df.loc[df.arm == arm, "follow_rate_lastk"].mean()
-            out.append(f"manipulation check {arm}: follow rate {fr:.2f}" + (" (< 0.2: 'no adherence')" if fr < 0.2 else ""))
+    for arm in sorted(set(df.arm)):
+        g = df.loc[df.arm == arm]
+        if "follow_rate_lastk" in df and g["n_big_gap"].sum() > 0:
+            fr, fb = g["follow_rate_lastk"].mean(), (g["follow_big_gap"] * g["n_big_gap"]).sum() / g["n_big_gap"].sum()
+            out.append(f"manipulation check {arm}: follow rate {fr:.2f} (last rounds); follow rate when the "
+                       f"recommendation moves the price by > $0.05: {fb:.2f} (n = {int(g['n_big_gap'].sum())} decisions)"
+                       + (" -> 'no adherence'" if fb < 0.2 else ""))
     return out
 
 

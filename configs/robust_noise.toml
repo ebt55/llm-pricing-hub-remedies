@@ -1,0 +1,20 @@
+# ROBUSTNESS T2 (red-team): i.i.d. log-normal demand shocks, sd 0.1, so own quantities no longer reveal the rival's price.
+# Same game as the main batch unless noted. Logged in SPRINT_LOG before results.
+tag = "robust-noise"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "low"
+max_tokens = 4096
+rounds = 100
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 10
+max_retries = 3
+last_k = 20
+workers = 40
+max_usd = 8.0
+seeds = [700, 701, 702, 703, 704, 705, 706, 707, 708, 709]
+arms = ["B0", "M2-a", "M1-a", "M0-a"]
+demand_noise = 0.1
+
