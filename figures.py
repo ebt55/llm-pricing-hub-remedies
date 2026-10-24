@@ -168,8 +168,12 @@ def fig_dose():
         ax.text(1.02, np.mean(b0), "no advisor", color=INK2, fontsize=7.5, va="center")
     ax.axhline(1, color=MUTED, lw=0.8, ls=":")
     ax.text(1.02, 1.0, "cartel", color=INK2, fontsize=7.5, va="center")
-    ax.axvspan(0.8, 0.9, color=GRID, alpha=0.6, zorder=0, lw=0)
-    ax.text(0.85, 0.42, "reported RealPage\nacceptance range", color=INK2, fontsize=7, ha="center")
+    # Sourced acceptance figures (SPRINT_LOG 02:10): DOJ complaint para 71, final price within 1% of the
+    # recommendation in 40-50% of new leases; former employees (ProPublica 2022) and MDL plaintiffs: 80-90%.
+    ax.axvspan(0.4, 0.5, color=GRID, alpha=0.7, zorder=0, lw=0)
+    ax.text(0.45, 0.28, "DOJ:\n40–50%\nwithin 1%", color=INK2, fontsize=6.5, ha="center")
+    ax.axvspan(0.8, 0.9, color=GRID, alpha=0.7, zorder=0, lw=0)
+    ax.text(0.85, 0.28, "ex-employees,\nplaintiffs:\n80–90%", color=INK2, fontsize=6.5, ha="center")
     ax.set_xticks([0, 0.5, 0.8, 0.9, 1.0], ["0\n(advice optional)", "0.5", "0.8", "0.9", "1\n(auto-accept)"], fontsize=8)
     ax.set_xlim(-0.08, 1.18)
     ax.set_ylim(-0.15, 1.12)
