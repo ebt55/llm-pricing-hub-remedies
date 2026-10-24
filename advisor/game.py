@@ -32,6 +32,7 @@ class GameConfig:
     max_retries: int = 3
     last_k: int = 20  # rounds in the primary metric
     price_scale: float = 1.0  # alpha (Fish et al.): all prices and costs scaled
+    show_wtp: bool = True  # "No customer would pay more than $X" line (confound check C1: False removes it)
 
 
 class AgentCallError(RuntimeError):
@@ -112,7 +113,12 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
     records = _read(path)
     if records and records[0].get("arm") != arm.name:
         raise RuntimeError(f"{path} belongs to arm {records[0].get('arm')}, not {arm.name}")
-    if records and (records[0].get("game") != asdict(cfg) or records[0].get("arm_spec") != asdict(arm)):
+    def _cfg_matches(old: dict) -> bool:  # fields added after a run started must still be at their defaults
+        new = asdict(cfg)
+        return all(new.get(k) == v for k, v in old.items()) and all(
+            k in old or new[k] == GameConfig.__dataclass_fields__[k].default for k in new)
+
+    if records and (not _cfg_matches(records[0].get("game", {})) or records[0].get("arm_spec") != asdict(arm)):
         raise RuntimeError(f"{path} was started with a different config; use a new --tag or delete the file")
     if records and records[-1].get("type") == "summary":
         return records[-1]
@@ -157,7 +163,7 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
                         for i in range(n)]
             elif arm.advisor == "llm":
                 system = ADVISOR_SYSTEM[arm.objective]
-                prompts = [advisor_prompt(i, t, history, market.unit_cost, market.p_max, cfg.window, arm.data,
+                prompts = [advisor_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None, cfg.window, arm.data,
                                           cfg.stale_lag, public_lag) for i in range(n)]
                 outs = list(pool.map(lambda u: ask(advisor_provider, system, u, "advisor", cfg.max_retries),
                                      prompts))
@@ -170,7 +176,7 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
             if arm.adherence == "auto":
                 prices = list(recs)
             else:
-                prompts = [firm_prompt(i, t, history, market.unit_cost, market.p_max, cfg.window,
+                prompts = [firm_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None, cfg.window,
                                        recs[i] if recs else None, public_lag, announced) for i in range(n)]
                 outs = list(pool.map(lambda u: ask(firm_provider, FIRM_SYSTEM, u, "firm", cfg.max_retries),
                                      prompts))

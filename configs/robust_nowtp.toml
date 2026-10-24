@@ -1,0 +1,20 @@
+# ROBUSTNESS C1 (post-pilot, logged before results): willingness-to-pay line removed from every prompt.
+# Same game as the main batch otherwise. n = 10, seeds 400+.
+tag = "robust-nowtp"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "low"
+max_tokens = 4096
+rounds = 100
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 10
+max_retries = 3
+last_k = 20
+workers = 40
+max_usd = 8.0
+seeds = [400, 401, 402, 403, 404, 405, 406, 407, 408, 409]
+arms = ["B0", "M2-a", "M1-a", "M0-a"]
+show_wtp = false
+

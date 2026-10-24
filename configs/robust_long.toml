@@ -1,0 +1,19 @@
+# ROBUSTNESS C3 (post-pilot, logged before results): 200 rounds; does the data-ban effect decay?
+# Same game as the main batch otherwise. n = 5, seeds 500+. Metric: last 20 of 200 rounds.
+tag = "robust-long"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "low"
+max_tokens = 4096
+rounds = 200
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 10
+max_retries = 3
+last_k = 20
+workers = 20
+max_usd = 6.0
+seeds = [500, 501, 502, 503, 504]
+arms = ["B0", "M0-a", "M1-a"]
+

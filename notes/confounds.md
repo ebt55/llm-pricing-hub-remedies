@@ -1,0 +1,20 @@
+# Confound watch: is it "too good"?
+
+*A running checklist. Each item names a suspected confound, the evidence for it, the test, and its status. Started 25 Oct 2026 ~00:05 IST, from reading the hub's reasoning in pilot2 (`results/pilot2/*/s0.thoughts.jsonl`).*
+
+| # | Suspected confound | Evidence | Test | Status |
+|---|---|---|---|---|
+| C1 | **The willingness-to-pay line gives the hub its target.** "No customer would pay more than $2.89" is read as a linear-demand choke price, so the monopoly estimate is the midpoint (1 + 2.89)/2 ≈ 1.94 | M1-a round 14: "Assuming a linear demand curve with a choke price of 2.89…". M2-a uses the same reasoning | Robustness batch with the line **removed** (B0, M2-a, M1-a, M0-a). If the hub still finds supra-competitive prices from data alone, the effect isn't an artefact of the cue | **Planned** after the main batch |
+| C2 | **The hub is told to maximise combined profit**, so "it colludes because we told it to" | The hub's reasoning says "joint monopoly price … combined collusive profit" | Not removable without breaking the design. The client-objective arms (R) bound it: same data, client goal → no harm. A softer "portfolio" objective would need to tell the advisor that it serves both firms, which breaks our own independence rule (no prompt mentions shared software), so we don't run it. **The paper states plainly that the hub's objective is the modelling assumption that stands for RealPage's alleged incentive** | Addressed in framing; limitation |
+| C3 | **Horizon: the data ban may decay.** M0-a stays near Nash for most of the run, but one run creeps up late, and its reasoning says "client and rival seem to be tacitly raising prices together in steady $0.02 steps". The hub infers the rival's behaviour from its own quantities | M0-a s0, round 101 | Long-horizon check: M0-a and B0 at 200 rounds | **Planned** |
+| C4 | **Stale data equals current data once prices are flat.** The hub raises prices from theory and the shared objective, and needs data only to *confirm* that the rival followed. Ten-round-old data confirms a stable rival just as well | M1-a round 14 goes to 1.94 before any stale data shows the rival rising | Mechanism, not a confound, but it bounds the claim: stale-data rules may bind only when prices move. Optional test: a demand shock mid-episode, so old data is misleading | Discussion; shock test if time allows |
+| C5 | **Identical hubs.** Both firms' advisors are the same model with the same prompt, so they act alike without any data (monoculture) | Built into the design (one vendor, as in RealPage) | Report the dispersion between the two recommendations. Replicate on other model families (OpenAI, DeepSeek), *running* | Replications running |
+| C6 | **The adherence remedy may be too effective.** Our firms are cautious and follow only recommendations near their current price; real landlords reportedly followed RealPage most of the time | M2-d follow rate 0.36; S-mono 0.01 | Limitation. Optional: a firm prompt variant that trusts the software more | Limitation |
+| C7 | **Detection is too easy on reasoning text.** With an explicit joint objective, the hub *says* "collusive" | Reasoning above | The detection add-on must report this, and focus on price-based signals and on the "compliant" arms | Note for the detection section |
+| C8 | **Prompt differences beyond data.** The no-data arm's prompt adds "You do not observe its prices or sales" | Product block | That sentence is part of the manipulation, and true in that arm. Prompt length differs by the competitor block. Accepted | Accepted, noted |
+
+## If it is still "too good" after C1 and C3
+
+Tell the user. Options they offered:
+- more DeepSeek credit, for a bigger cross-family replication;
+- an open-weights model on Modal (their $48 credits), for an open-model replication.

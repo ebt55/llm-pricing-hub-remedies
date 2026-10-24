@@ -278,3 +278,15 @@ The pun titles were dropped as unclear. The title is now **Can Antitrust Remedie
 ### 2026-10-24 23:55: title chosen
 
 **S'all Good, Man? Do Antitrust Remedies Stop an AI Pricing Cartel?** *Testing the RealPage settlement on LLM pricing advisors.* The repository was renamed to `ebt55/sall-good-man`, matching the title. GitHub redirects the earlier names.
+
+### 2026-10-25 00:00: confound checks (post-pilot robustness, logged before any of their results)
+
+Reading the hub's reasoning in pilot2 raised suspected confounds; see `notes/confounds.md`. Two checks were launched alongside the main batch. They are robustness checks decided after the pilot, so they are reported as such, not as pre-registered confirmatory tests.
+
+- **C1, the willingness-to-pay anchor** (`configs/robust_nowtp.toml`). The hub reads "No customer would pay more than $2.89" as a demand choke price, so its monopoly estimate ≈ (1 + 2.89)/2. The check removes the line from every prompt and runs B0, M2-a, M1-a, M0-a, n = 10.
+  - **If the hub effect (M2-a − B0) and the stale-data result (M1-a ≈ M2-a) survive**, they come from the data and the objective, not the cue.
+  - **If they shrink a lot**, we report the anchor as a key moderator.
+- **C3, decay of the data ban** (`configs/robust_long.toml`). One M0-a pilot run crept up late. The check runs 200 rounds of B0, M0-a and M1-a, n = 5, with the metric over the last 20 rounds.
+  - **If M0-a drifts up**, the data ban only *delays* coordination.
+
+**OpenAI replication.** It hit the 2.4M-token daily cap within about 4 minutes, because all 20 runs started in parallel; the cap held, at 2.41M tokens that day. The runs resume after 00:00 UTC. At 2.4M tokens a day the replication will finish at n = 3 per arm (seeds 200–202) rather than 5, unless the user's allowance turns out to be 10M a day.
