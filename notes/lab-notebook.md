@@ -286,3 +286,47 @@ Haiku's cautious hub is the exception, not the rule. That strengthens the headli
 | Gemini 3.8 Flash | ≈ 0% |
 | GPT-5.4 mini | pending (05:30) |
 | Qwen3.8 Flash, Nemotron 3.5 Lightning | pending (OpenRouter key) |
+
+**~03:10 Guardrails (Haiku; pre-registered 03:05)**
+
+| Arm | Δ | Harm retained | Median round to 0.95·p_M |
+|---|---|---|---|
+| ±3% band (n = 20) | 0.997 | 101% | 8 |
+| ±1% band (n = 10) | 0.999 | 101% | 18.5 |
+| Plain auto-accept | — | — | 4 |
+
+Parameterised auto-accept, §V.A.1's remedy, only delays the hub.
+
+**~03:20 Qwen3.8 Flash ladder** (n = 4)
+
+| Arm | Δ |
+|---|---|
+| B0 | 0.15 |
+| M2-a | 0.97 |
+| M1-a | 0.28 |
+| M0-a | 0.28 |
+
+Data limits remove 84–85% (wide CI, 54–130%). Together with Haiku, this makes data limits model-dependent, not uniformly failing.
+
+**~03:22 Gemini Flash-Lite firm discretion: prediction failed.** M2-d removes 55% at n = 6, and 57% (27–84%) at n = 12; 4/12 runs reach monopoly.
+
+**~03:25 Brainstorm and red-team** (three Fable agents; `notes/brainstorm-2026-10-25.md`). The skeptic's top catch: at `effort = low`, Gemini Flash-Lite does not think at all (35 output tokens per call, 0.9 s). Confirmed by a probe.
+
+**~03:45 The ratchet (pre-registered 03:30).** A scripted recommender: the client's last price plus 1, 3 or 10 cents, under firm discretion.
+
+| Firm model | Δ for +1 / +3 / +10 cents |
+|---|---|
+| Haiku (n = 10) | 0.05 / 0.03 / 0.03 |
+| Gemini Flash-Lite (n = 6) | 1.00 / 0.99 / 0.93 |
+
+- **The firm side is causal.** Haiku firms refuse nudges of any size; Gemini firms accept them.
+- **Data ban + discretion** (Gemini) removes 60% (16–98%).
+- **Drift disclosure** removes 38% (−4% to 76%). We predicted it would help; it didn't.
+
+**~03:58 Gemini with thinking on** (partial; stopped by the project's monthly spending cap). K1-d 1.00 (n = 3); M2-d 1.00 (n = 2). Reasoning firms accept *more* of the 1–2-cent increases (84–88% vs 69%). Pushing back is a model disposition, not a reasoning budget.
+
+**Where the story stands (04:00).**
+- The hub harms through its objective.
+- Data limits bind only some models.
+- Per-round guardrails and partial adherence leave the ratchet intact.
+- Firm discretion works only if the firm model pushes back. Haiku's does; Gemini's doesn't, with or without thinking.
