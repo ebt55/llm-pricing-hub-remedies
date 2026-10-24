@@ -88,3 +88,16 @@ The findings are the remedy contrasts, and those are mixed, not too clean:
 The suspiciously clean one is M2-d (C6: our firms are cautious). Still to check:
 - C3, long horizon (running);
 - cross-family replications (DeepSeek running; OpenAI at 05:30).
+
+**~00:30 Confound C3: long horizon (200 rounds, n = 5; last 20 rounds)**
+
+| Arm | Δ at 200 rounds | Δ at 100 rounds (main batch) |
+|---|---|---|
+| B0 | 0.05 | 0.06 |
+| M1-a (stale data) | 0.87 | 0.79 |
+| M0-a (data ban) | 0.44 (SD 0.46) | 0.35 |
+
+- **M0-a is bimodal.** Some runs reach cartel prices and others stay near Nash.
+- **Reading:** the data ban **delays** coordination rather than preventing it. Over a longer horizon, more no-data hubs infer that the rival is following (from their own quantities) and climb.
+- Stale data gets slightly *more* harmful with time.
+- **For the paper:** report "harm removed" as horizon-dependent. The 100-round figures (21% and 69%) are upper bounds on what these remedies achieve.
