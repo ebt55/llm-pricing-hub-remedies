@@ -1,0 +1,17 @@
+# Rational joint-profit hub benchmark (scripted, no LLM calls, $0). Added 25 Oct ~01:10 after the judge simulation.
+tag = "benchmark"
+firm_model = "anthropic:claude-haiku-5-5"
+advisor_model = "anthropic:claude-haiku-5-5"
+effort = "low"
+max_tokens = 4096
+rounds = 100
+window = 20
+stale_lag = 10
+public_lag = 0
+prior_steps = 10
+max_retries = 3
+last_k = 20
+workers = 20
+max_usd = 0.01
+seeds = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119]
+arms = ["J2-a", "J1-a", "J0-a"]

@@ -59,6 +59,11 @@ ARMS = {a.name: a for a in [
     # mechanical controls (no LLM calls): validate demand, metric and auto-accept wiring
     Arm("S-mono-a", "static", static="mono", adherence="auto", role="mechanical up: price = monopoly"),
     Arm("D-BR-a", "br", "current", "auto", role="mechanical down: best-response dynamics -> Nash"),
+    # Rational benchmark (no LLM): a scripted hub that maximises combined profit given the rival price it can
+    # see under each data regime (current t-1 / stale t-stale_lag / none -> assumes the rival stays at Nash).
+    Arm("J2-a", "jbr", "current", "auto", role="rational joint-profit hub, current data (benchmark)"),
+    Arm("J1-a", "jbr", "stale", "auto", role="rational joint-profit hub, stale data (benchmark)"),
+    Arm("J0-a", "jbr", "own", "auto", role="rational joint-profit hub, no rival data: assumes rival at Nash"),
     # triopoly stretch: aggregation remedy on the market-aligned hub
     Arm("M2-3a", "llm", "current", "auto", "joint", n_firms=3, role="triopoly hub, per-firm current data"),
     Arm("M3-3a", "llm", "agg", "auto", "joint", n_firms=3, role="triopoly hub, aggregated current data only"),

@@ -60,7 +60,7 @@ def load_runs(tags):
             if not lines or lines[-1].get("type") != "summary":
                 continue
             cfg, summ = lines[0], lines[-1]
-            if cfg["arm_spec"]["advisor"] in ("static", "br") and cfg["arm_spec"]["adherence"] == "auto":
+            if cfg["arm_spec"]["advisor"] in ("static", "br", "jbr") and cfg["arm_spec"]["adherence"] == "auto":
                 continue  # mechanical controls: no LLM decides anything, so nothing to detect
             play = [r for r in lines if r.get("type") == "round" and r["kind"] == "play"]
             k = cfg["game"]["last_k"]

@@ -306,3 +306,27 @@ Reading the hub's reasoning in pilot2 raised suspected confounds; see `notes/con
 Results and caveats are in `results/detection/summary.md` and `notes/lab-notebook.md`. This analysis is exploratory and was not pre-registered.
 
 **Independence.** We use no best-response-consistency audit, because zerocommcartel's issue #33 lists one. Reasoning monitoring is a general method (CoT monitoring), and our use differs: monitors are scored against known labels across remedy arms in a repeated market.
+
+### 2026-10-25 01:10: rational joint-hub benchmark (post hoc, from the judge simulation)
+
+**The point raised.** An independent judge-simulation review argued that a joint-profit objective makes raising prices individually optimal, even without rival data: the joint-profit best response to a rival at Nash is 1.746, giving Δ ≈ 0.81.
+
+**What we built.** Scripted benchmark arms with no LLM calls:
+- **J2-a:** the joint best response to the rival's t−1 price;
+- **J1-a:** the joint best response to the rival's price at t − stale_lag;
+- **J0-a:** the joint best response assuming the rival stays at Nash.
+
+Each was run at n = 20 (`configs/benchmark.toml`, `results/benchmark`).
+
+| Arm | Δ |
+|---|---|
+| J2-a | 1.00 |
+| J1-a | 1.00 |
+| J0-a | 0.82 |
+
+**Reading.**
+- **For a rational market-aligned hub, the data remedies are structurally weak.** Stale data only delays it, and even with no data it reaches Δ 0.82 under a myopic belief, or 1.0 if it assumes a symmetric rival.
+- **What the LLM arms show is how much of the rational hub's harm each model realises:**
+  - Haiku's M0-a (0.35) falls far short of J0-a (0.82): its hesitation ("risks losing volume to a competitor") is a failure to optimise its own objective.
+  - DeepSeek's M0-a (0.85, n = 3) matches J0-a.
+- **Reframed headline:** data bans appear to work only while the model under-optimises its objective. This is reported as a post-hoc reinterpretation, not a pre-registered test.

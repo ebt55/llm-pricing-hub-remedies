@@ -140,3 +140,22 @@ The suspiciously clean one is M2-d (C6: our firms are cautious). Still to check:
 - **False alarms on rival-aware honest advisors.** Client-only advisors that see the rival's current data score 55–66 out of 100, against ~10–18 for B0 and the static arms, although their prices are competitive (Δ ≈ 0). Monitors confuse "uses competitor data" with "coordinates".
 
 **Independence.** We deliberately avoided a best-response-gap detector, because zerocommcartel's issue #33 lists "best-response consistency" audits. We use classic economic screens plus a generic CoT/reasoning monitor, and evaluate them against ground-truth labels in a repeated market.
+
+**~01:10 Judge simulation** (3 personas; consensus Impact 3.3 / Execution 3.7 / Presentation 3.3). Its key critique: a joint-profit objective makes raising prices optimal even without data.
+
+**Confirmed with a $0 scripted rational hub:** J2-a 1.00, J1-a 1.00, J0-a 0.82.
+
+- **Reframe:** data remedies can't bind a market-aligned objective; LLMs fall short of the rational hub only through weaker reasoning.
+- **Model comparison:** Haiku's no-data hub reaches 0.35 (43% of the rational level); DeepSeek's reaches 0.85 (about 100%).
+
+**Other judge points to act on:**
+- an adherence dose-response (partial auto-accept);
+- a soft "vendor" objective as a propensity probe;
+- framing ("compliant collusion" and "cartel" put off the antitrust judge);
+- no bullets or "[pending]" in the abstract;
+- precise decree terms (the 12-month rule is about training data);
+- recast detection as "monitors catch intent, screens catch outcomes; the variance screen is inverted";
+- fix the DeepSeek CIs;
+- show individual runs in figure A;
+- an outdated README;
+- citations for the legal facts.

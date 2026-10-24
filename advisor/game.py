@@ -161,6 +161,17 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
                 last = history[-1]["prices"]
                 recs = [round(market.best_response([p for j, p in enumerate(last) if j != i]), 2)
                         for i in range(n)]
+            elif arm.advisor == "jbr":
+                recs = []
+                for i in range(n):
+                    if arm.data == "current":
+                        seen = history[-1]["prices"]
+                    elif arm.data == "stale":
+                        old = [h for h in history if h["round"] <= t - cfg.stale_lag]
+                        seen = old[-1]["prices"] if old else [market.p_nash] * n
+                    else:
+                        seen = [market.p_nash] * n
+                    recs.append(round(market.joint_best_response([p for j, p in enumerate(seen) if j != i]), 2))
             elif arm.advisor == "llm":
                 system = ADVISOR_SYSTEM[arm.objective]
                 prompts = [advisor_prompt(i, t, history, market.unit_cost, market.p_max if cfg.show_wtp else None, cfg.window, arm.data,

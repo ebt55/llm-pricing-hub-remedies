@@ -86,3 +86,16 @@ class LogitMarket:
             return 1 - (p - self.unit_cost) * (1 - s) / (self.mu * self.alpha)
 
         return float(brentq(foc, self.unit_cost + 1e-6, self.unit_cost + 10 * self.alpha))
+
+    def joint_best_response(self, rival_prices) -> float:
+        """Own price maximising the COMBINED profit of this firm and its rivals, holding rival prices fixed
+        (one round, myopic). The scripted benchmark for a perfectly rational market-aligned hub."""
+        from scipy.optimize import minimize_scalar
+
+        rivals = list(rival_prices)
+
+        def neg_joint(p):
+            return -float(self.profits([p] + rivals).sum())
+
+        lo, hi = self.unit_cost, self.unit_cost + 10 * self.alpha
+        return float(minimize_scalar(neg_joint, bounds=(lo, hi), method="bounded", options={"xatol": 1e-6}).x)
