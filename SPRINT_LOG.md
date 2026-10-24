@@ -750,3 +750,27 @@ Results with thinking on (firms: median 425 output tokens per call; Haiku's are 
 - **P8 failed:** discretion removed nothing with thinking on (n = 2).
 
 **Reading.** Pushing back is not a matter of having a reasoning budget. At a budget comparable to Haiku's, Gemini Flash-Lite firms defer even more. The decisive variable is the firm model's disposition toward the software's recommendation. The n is tiny (2–3); this is reported as exploratory.
+
+### 2026-10-25 04:00: ratchet on two more firm models; 200-round check of Haiku discretion (logged before results)
+
+**Why.**
+- The ratchet test so far has two firm models: Haiku pushes back, and Gemini Flash-Lite defers.
+- The skeptic's partial reading of Qwen M2-d showed intermediate acceptance of small nudges (43–67%).
+- The judge's E8 asked whether Haiku's discretion result *blocks* the hub or only *delays* it. Guardrails only delayed it.
+
+**Batch D: the scripted +1 cent ratchet, with discretion.**
+- Qwen3.8 Flash (`ladder-or-qwen`) and Nemotron 3.5 Lightning (`ladder-or-nemotron`): K1-d, seeds 1000–1003, n = 4 each, ~$1 OpenRouter in total.
+
+**Batch E: Haiku over 200 rounds** (`robust-long`, seeds 500–504, n = 5).
+- Arms: M2-d (LLM hub, discretion) and K1-d (scripted ratchet, discretion).
+- B0 at 200 rounds already exists in that tag. ~$3.3.
+
+**Predictions:**
+
+| # | Prediction | Basis |
+|---|---|---|
+| P9 | Qwen K1-d Δ ≥ 0.5 | Acceptance above ~40% should compound, because a rejection that holds the price doesn't undo earlier steps |
+| — | Nemotron: no directional prediction | No prior discretion data on Nemotron |
+| P10 | Haiku over 200 rounds: M2-d and K1-d both Δ ≤ 0.2 in rounds 181–200 | Discretion blocks rather than delays |
+
+If P10 fails, the paper says Haiku's discretion "delays the hub by more than 100 rounds" instead of "stops it".

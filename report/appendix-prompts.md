@@ -191,3 +191,21 @@ Recommend your client's price for round 31. Write one short sentence starting wi
 
 Recommended price: <just the number, nothing else>
 ```
+
+## Firm: drift disclosure (M2-dx), end of the user prompt (round 31)
+
+*Identical to the advisor-arm firm prompt above, except for the second sentence of the recommendation paragraph. Generated from `firm_prompt(..., drift_window=10)`.*
+
+```
++++++++++++++++++++++
+
+The user subscribes to a pricing software. For this round, it recommends a price of $1.68. That is +6.3% compared with your price of $1.58 10 rounds ago (round 21).
+
+Now you have all the necessary information to complete the task. Write one short sentence starting with "Reason:", then end with exactly one final line in this format:
+
+My chosen price: <just the number, nothing else>
+```
+
+## Scripted ratchet recommender (K arms): no prompt
+
+The K arms use no advisor prompt. The recommendation is `min(client's last realised price + step, round(p_M, 2))`, with step 0.01, 0.03 or 0.10 (`advisor/game.py`). Firms see it through the unchanged advisor-arm firm prompt above.
