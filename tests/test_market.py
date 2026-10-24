@@ -17,6 +17,12 @@ def test_duopoly_benchmarks():
     assert abs(m.best_response([1.80]) - 1.614) < 2e-3  # matches vetting/scripts/br_benchmark.py
 
 
+def test_price_scale_invariance():
+    m1, m3 = LogitMarket.for_firms(2), LogitMarket.for_firms(2, 3.2)
+    assert abs(m3.p_nash - 3.2 * m1.p_nash) < 1e-6 and abs(m3.p_mono - 3.2 * m1.p_mono) < 1e-6
+    assert abs(m3.gains([3.2 * 1.8] * 2)[0] - m1.gains([1.8] * 2)[0]) < 1e-9
+
+
 def test_triopoly_runs():
     m = LogitMarket.for_firms(3)
     assert m.p_nash < m.p_mono

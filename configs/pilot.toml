@@ -1,17 +1,18 @@
-# Pilot (gate G-A then G-B): all core arms x 3 seeds x 100 rounds. Measures per-arm SD to set N.
-tag = "pilot"
+# Pilot v2 (design after baseline diagnostics + independent review, 24 Oct 23:45 IST).
+# 10 rounds of competitive pre-adoption history, then 100 rounds. 3 runs per arm; sets SD -> N for the main batch.
+tag = "pilot2"
 firm_model = "anthropic:claude-haiku-5-5"
 advisor_model = "anthropic:claude-haiku-5-5"
 effort = "low"
-max_tokens = 2048
+max_tokens = 4096
 rounds = 100
 window = 20
 stale_lag = 10
 public_lag = 0
-prior_steps = 1
+prior_steps = 10
 max_retries = 3
 last_k = 20
-workers = 16
-max_usd = 10.0
+workers = 40
+max_usd = 12.0
 seeds = [0, 1, 2]
-arms = ["B0", "R0-d", "R1-d", "R2-d", "R0-a", "R2-a", "S-nash", "S-mono", "D-BR", "PC"]
+arms = ["B0", "B0-cold", "R0-d", "R2-d", "R2-a", "M2-a", "M1-a", "M0-a", "M2-d", "S-nash", "S-mono", "S-mono-a", "D-BR-a"]

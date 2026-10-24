@@ -41,7 +41,7 @@ def estimate(arms, seeds, cfg: GameConfig, firm_spec, advisor_spec, out_tokens=(
     rows, tot_calls, lo, hi = [], 0, 0.0, 0.0
     for name in arms:
         arm = ARMS[name]
-        m = LogitMarket.for_firms(arm.n_firms)
+        m = LogitMarket.for_firms(arm.n_firms, cfg.price_scale)
         fake = [{"round": r, "kind": "play", "prices": [1.61] * m.n, "quantities": [38.17] * m.n,
                  "profits": [23.28] * m.n, "recs": [1.6] * m.n} for r in range(1, 41)]
         n_adv = m.n if arm.advisor_calls else 0
@@ -50,11 +50,11 @@ def estimate(arms, seeds, cfg: GameConfig, firm_spec, advisor_spec, out_tokens=(
         tin = 0
         if n_adv:
             tin += n_adv * (len(ADVISOR_SYSTEM[arm.objective]) + len(
-                advisor_prompt(0, 41, fake, m.c, m.p_max, cfg.window, arm.data, cfg.stale_lag, cfg.public_lag))) / 3
+                advisor_prompt(0, 41, fake, m.unit_cost, m.p_max, cfg.window, arm.data, cfg.stale_lag, cfg.public_lag))) / 3
         if n_firm:
             rec = 1.6 if arm.advisor else None
             tin += n_firm * (len(FIRM_SYSTEM) + len(
-                firm_prompt(0, 41, fake, m.c, m.p_max, cfg.window, rec, cfg.public_lag))) / 3
+                firm_prompt(0, 41, fake, m.unit_cost, m.p_max, cfg.window, rec, cfg.public_lag))) / 3
         per_round_in = tin
         calls_per_round = n_adv + n_firm
         cost = []
@@ -82,12 +82,17 @@ def main():
     ap.add_argument("--max_usd", type=float, default=None, help="stop launching new runs past this spend")
     ap.add_argument("--model", default=None, help="override firm_model and advisor_model, e.g. deepseek:deepseek-flash")
     ap.add_argument("--tag", default=None, help="override the config's results tag")
+    ap.add_argument("--set", nargs="*", default=[], metavar="KEY=VALUE",
+                    help="override config values, e.g. --set rounds=40 prior_steps=10 price_scale=3.2")
     ap.add_argument("--dry", action="store_true", help="mock models, $0, writes to results/dry/")
     ap.add_argument("-y", "--yes", action="store_true", help="skip the cost confirmation")
     args = ap.parse_args()
 
     load_dotenv(os.path.join(HERE, ".env"), override=True)
     c = load_config(args.config)
+    for kv in args.set:
+        k, _, v = kv.partition("=")
+        c[k] = type(c[k])(v) if k in c else (float(v) if "." in v else int(v))
     tag = args.tag or c["tag"]
     arms = args.arms.split(",") if args.arms else c["arms"]
     seeds = args.seeds if args.seeds is not None else c["seeds"]

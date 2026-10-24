@@ -81,7 +81,9 @@ def make_provider(spec: str, effort: str = EFFORT, max_tokens: int = 4096):
     if kind == "anthropic":
         return AnthropicProvider(model, effort=effort, max_tokens=max_tokens)
     if kind in OpenAICompatProvider.ENDPOINTS:
-        return OpenAICompatProvider(kind, model, effort=effort, max_tokens=max_tokens)
+        # DeepSeek thinking at effort low still runs to 4-5k tokens on advisor prompts; 4096 truncates to empty answers
+        mt = max(max_tokens, 16384) if kind == "deepseek" else max_tokens
+        return OpenAICompatProvider(kind, model, effort=effort, max_tokens=mt)
     raise ValueError(f"unknown provider spec {spec!r}")
 
 

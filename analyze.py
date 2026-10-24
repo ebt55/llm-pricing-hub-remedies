@@ -20,17 +20,21 @@ from scipy import stats
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
-# Pre-registered two-sided contrasts (see SPRINT_LOG.md / config freeze). (label, arm_a, arm_b): a - b.
+# Pre-registered two-sided contrasts, design v2 (see SPRINT_LOG.md). (label, a, b, stage): reported as a - b.
 CONTRASTS = [
-    ("H1 current data vs own data (discretionary)", "R2-d", "R0-d"),
-    ("H2 stale-data remedy vs current data", "R1-d", "R2-d"),
-    ("H3 auto-accept vs discretionary (current data)", "R2-a", "R2-d"),
-    ("H3b auto-accept vs discretionary (own data)", "R0-a", "R0-d"),
-    ("H4 cartel-level vs Nash-level static recommendation", "S-mono", "S-nash"),
-    ("H5 LLM advisor vs best-response rule (same data)", "R2-d", "D-BR"),
-    ("context: decree-compliant advisor vs no advisor", "R0-d", "B0"),
-    ("context: triopoly aggregated vs per-firm current data", "R3-d", "R2-3d"),
+    ("H1a client-aligned advisor, current data, auto-accept vs no advisor", "R2-a", "B0", "1"),
+    ("H1b market-aligned hub, current data, auto-accept vs no advisor", "M2-a", "B0", "1"),
+    ("H2 stale-data remedy (hub)", "M1-a", "M2-a", "2"),
+    ("H3 data-ban remedy: no competitor data (hub)", "M0-a", "M2-a", "2"),
+    ("H4 adherence remedy: discretionary vs auto-accept (hub)", "M2-d", "M2-a", "2"),
+    ("H4c adherence, client-aligned advisor", "R2-d", "R2-a", "2"),
+    ("H5 firms follow a cartel-level vs Nash-level static number", "S-mono", "S-nash", "2"),
+    ("placebo: client advisor without competitor data vs no advisor", "R0-d", "B0", "c"),
+    ("context: cold start vs competitive history", "B0-cold", "B0", "c"),
+    ("stretch: aggregated vs per-firm data (triopoly hub)", "M3-3a", "M2-3a", "c"),
 ]
+# remedy arms whose share of the hub's harm removed is reported: (M2-a - X) / (M2-a - B0)
+REMEDIES = ["M1-a", "M0-a", "M2-d"]
 
 
 def load(tag_dir: str):
@@ -46,8 +50,14 @@ def load(tag_dir: str):
         cfg = lines[0]
         rounds = [r for r in lines if r.get("type") == "round" and r["kind"] == "play"]
         refusals = sum(c.get("refusals", 0) for r in rounds for c in r.get("calls", []))
-        runs.append({**{k: v for k, v in s.items() if k != "type"}, "refusals": refusals,
-                     "n_firms": cfg["market"]["n"]})
+        mk = cfg["market"]
+        tail = rounds[-cfg["game"]["last_k"]:]
+        p_bar = float(np.mean([np.mean(r["prices"]) for r in tail]))
+        rec_disp = (float(np.mean([np.ptp(r["recs"]) for r in tail])) if tail and tail[0].get("recs") else np.nan)
+        runs.append({**{k: v for k, v in s.items() if k != "type"}, "refusals": refusals, "n_firms": mk["n"],
+                     # monotone price index: 0 = Nash, 1 = monopoly (Delta is not monotone above p_M)
+                     "price_index": (p_bar - mk["p_nash"]) / (mk["p_mono"] - mk["p_nash"]),
+                     "rec_dispersion": rec_disp})
         paths[(s["arm"], s["seed"])] = rounds
     return pd.DataFrame(runs), paths
 
@@ -70,8 +80,10 @@ def contrast(df, a, b, metric="delta_lastk"):
     diff = xa.mean() - xb.mean()
     se = np.sqrt(xa.var(ddof=1) / len(xa) + xb.var(ddof=1) / len(xb))
     t, p = stats.ttest_ind(xa, xb, equal_var=False)
+    p_mw = stats.mannwhitneyu(xa, xb, alternative="two-sided").pvalue
+    hl = float(np.median(np.subtract.outer(xa, xb)))
     pooled_sd = np.sqrt((xa.var(ddof=1) + xb.var(ddof=1)) / 2)
-    return {"diff": diff, "se": se, "ci95": 1.96 * se, "p": p, "n_a": len(xa), "n_b": len(xb),
+    return {"diff": diff, "se": se, "ci95": 1.96 * se, "p": p, "p_mw": p_mw, "hl": hl, "n_a": len(xa), "n_b": len(xb),
             "mde80": 2.8 * se, "pooled_sd": pooled_sd,
             # runs per arm for 80% power at alpha .05 to detect a difference of 0.10 / 0.15 / 0.20 in Delta
             "n_for_0.10": int(np.ceil(2 * 2.8**2 * (pooled_sd / 0.10) ** 2)),
@@ -79,23 +91,55 @@ def contrast(df, a, b, metric="delta_lastk"):
             "n_for_0.20": int(np.ceil(2 * 2.8**2 * (pooled_sd / 0.20) ** 2))}
 
 
+def holm(pvals):
+    order = np.argsort(pvals)
+    adj, m, running = np.empty(len(pvals)), len(pvals), 0.0
+    for k, i in enumerate(order):
+        running = max(running, min(1.0, (m - k) * pvals[i]))
+        adj[i] = running
+    return adj
+
+
+def harm_removed(df, B=5000):
+    """Share of the hub's harm removed by each remedy: (M2-a - X) / (M2-a - B0), with bootstrap 95% CI."""
+    rng = np.random.default_rng(0)
+    get = lambda a: df.loc[df.arm == a, "delta_lastk"].to_numpy()
+    hub, base, out = get("M2-a"), get("B0"), {}
+    if len(hub) < 2 or len(base) < 2:
+        return out
+    f = lambda h, b, z: (h.mean() - z.mean()) / (h.mean() - b.mean())
+    for x in REMEDIES:
+        r = get(x)
+        if len(r) < 2:
+            continue
+        boots = [f(rng.choice(hub, len(hub)), rng.choice(base, len(base)), rng.choice(r, len(r))) for _ in range(B)]
+        out[x] = (f(hub, base, r), *np.nanpercentile(boots, [2.5, 97.5]))
+    return out
+
+
 def gates(df):
+    """Design-v2 controls (pre-registered 24 Oct 23:45)."""
     out = []
-    pc = df.loc[df.arm == "PC", "delta_lastk"]
-    if len(pc):
-        k = int((pc > 0.6).sum())
-        out.append(f"G-A1 positive control: PC Delta > 0.6 in {k}/{len(pc)} runs "
-                   f"(values {', '.join(f'{x:+.2f}' for x in pc)}) -> {'PASS' if k >= int(np.ceil(2 * len(pc) / 3)) else 'FAIL'}")
-    calls = int(df["calls"].sum()) if len(df) else 0
-    retries = int(df["retries"].sum()) if len(df) else 0
-    refusals = int(df["refusals"].sum()) if len(df) else 0
-    out.append(f"G-A1 harness: {calls} calls, {retries} parse retries ({retries / max(calls, 1):.2%}), "
-               f"{refusals} refusals; failed runs are listed by run.py")
-    sm, sn = df.loc[df.arm == "S-mono", "price_lastk"], df.loc[df.arm == "S-nash", "price_lastk"]
-    if len(sm) and len(sn):
-        d = sm.mean() - sn.mean()
-        out.append(f"G-A2 (informative, not a pivot): S-mono - S-nash mean price = {d:+.3f} "
-                   f"({'firms follow static advice' if d > 0.1 else 'voluntary advice largely ignored -> reframe H4'})")
+    get = lambda a: df.loc[df.arm == a, "delta_lastk"]
+    for arm, want, ok in [("S-mono-a", "~1.0", lambda x: abs(x.mean() - 1) < 0.05),
+                          ("D-BR-a", "~0.0", lambda x: abs(x.mean()) < 0.1)]:
+        x = get(arm)
+        if len(x):
+            out.append(f"mechanical control {arm}: Delta {x.mean():+.3f} (want {want}) -> {'PASS' if ok(x) else 'FAIL'}")
+    b, m = get("B0"), get("M2-a")
+    if len(b):
+        out.append(f"baseline headroom: B0 Delta {b.mean():+.3f} (runs {', '.join(f'{v:+.2f}' for v in b)}); "
+                   f"want <= 0.55 -> {'PASS' if b.mean() <= 0.55 else 'FAIL'}")
+    if len(b) and len(m):
+        k = int((m.to_numpy() - b.mean() >= 0.3).sum())
+        out.append(f"behavioural positive control: M2-a exceeds mean B0 by >= 0.3 in {k}/{len(m)} runs "
+                   f"-> {'PASS' if k >= int(np.ceil(2 * len(m) / 3)) else 'FAIL'}")
+    calls, retries, refusals = int(df["calls"].sum()), int(df["retries"].sum()), int(df["refusals"].sum())
+    out.append(f"harness: {calls} calls, {retries} parse retries ({retries / max(calls, 1):.2%}), {refusals} refusals")
+    for arm in ["R0-d", "R2-d", "M2-d", "S-nash", "S-mono"]:
+        if "follow_rate_lastk" in df and len(df.loc[df.arm == arm]):
+            fr = df.loc[df.arm == arm, "follow_rate_lastk"].mean()
+            out.append(f"manipulation check {arm}: follow rate {fr:.2f}" + (" (< 0.2: 'no adherence')" if fr < 0.2 else ""))
     return out
 
 
@@ -105,8 +149,9 @@ def figures(df, paths, tag_dir):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
-    order = [a for a in ["B0", "R0-d", "R1-d", "R2-d", "R0-a", "R2-a", "S-nash", "S-mono", "D-BR", "PC",
-                         "B0-3", "R2-3d", "R3-d"] if a in set(df.arm)]
+    order = [a for a in ["B0-cold", "B0", "R0-d", "R2-d", "R2-a", "M2-a", "M1-a", "M0-a", "M2-d", "S-nash", "S-mono",
+                         "S-mono-a", "D-BR-a", "M2-3a", "M3-3a"] if a in set(df.arm)]
+    order += [a for a in sorted(set(df.arm)) if a not in order]
     fig, ax = plt.subplots(figsize=(9, 4))
     for i, a in enumerate(order):
         x = df.loc[df.arm == a, "delta_lastk"].to_numpy()
@@ -159,26 +204,38 @@ def main():
                      "price": g.price_lastk.mean(),
                      "follow_rate": g.get("follow_rate_lastk", pd.Series(dtype=float)).mean(),
                      "abs_dev_rec": g.get("abs_dev_from_rec_lastk", pd.Series(dtype=float)).mean(),
+                     "index": g.price_index.mean(), "rec_disp": g.rec_dispersion.mean(),
                      "retries": int(g.retries.sum()), "refusals": int(g.refusals.sum()), "usd": g.usd.sum()})
     arms = pd.DataFrame(rows)
     arms.to_csv(os.path.join(tag_dir, "summary.csv"), index=False)
 
     lines = [f"# Results: {args.tag}", "", f"{len(df)} finished runs; spend ${df.usd.sum():.2f}.", "",
              "## Gates", ""] + [f"- {g}" for g in gates(df)] + ["", "## Arms (unit = run)", "",
-             "| arm | N | Δ mean | SD | 95% CI ± | price | follow rate | |p−rec| | retries | refusals | $ |",
-             "|---|---|---|---|---|---|---|---|---|---|---|"]
+             "| arm | N | Δ mean | SD | 95% CI ± | price | price index | follow rate | |p−rec| | rec dispersion | retries | refusals | $ |",
+             "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
         f = lambda v, d=3: "" if v is None or (isinstance(v, float) and np.isnan(v)) else f"{v:.{d}f}"
         lines.append(f"| {r['arm']} | {r['N']} | {f(r['delta'])} | {f(r['sd'])} | {f(r['ci95'])} | {f(r['price'])} | "
-                     f"{f(r['follow_rate'], 2)} | {f(r['abs_dev_rec'])} | {r['retries']} | {r['refusals']} | {f(r['usd'], 2)} |")
-    lines += ["", "## Contrasts (Welch, two-sided; MDE = 2.8 SE for 80% power at α = .05)", "",
-              "| contrast | a − b | 95% CI ± | p | N a/b | MDE | runs/arm for 0.10 / 0.15 / 0.20 |",
-              "|---|---|---|---|---|---|---|"]
-    for label, a, b in CONTRASTS:
-        c = contrast(df, a, b)
-        if c:
-            lines.append(f"| {label} ({a} − {b}) | {c['diff']:+.3f} | {c['ci95']:.3f} | {c['p']:.3f} | "
-                         f"{c['n_a']}/{c['n_b']} | {c['mde80']:.3f} | {c['n_for_0.10']} / {c['n_for_0.15']} / {c['n_for_0.20']} |")
+                     f"{f(r['index'])} | {f(r['follow_rate'], 2)} | {f(r['abs_dev_rec'])} | {f(r['rec_disp'])} | "
+                     f"{r['retries']} | {r['refusals']} | {f(r['usd'], 2)} |")
+    lines += ["", "## Contrasts on Δ (two-sided; Welch p, Mann-Whitney p, Holm within stage; MDE = 2.8 SE)", "",
+              "| stage | contrast | a − b | 95% CI ± | HL shift | p Welch | p MW | p Holm | N a/b | MDE | runs/arm for 0.10 / 0.15 / 0.20 |",
+              "|---|---|---|---|---|---|---|---|---|---|---|"]
+    res = [(lab, a, b, st, contrast(df, a, b)) for lab, a, b, st in CONTRASTS]
+    res = [r for r in res if r[4]]
+    adj = {}
+    for st in {r[3] for r in res}:
+        group = [r for r in res if r[3] == st]
+        for r, pa in zip(group, holm(np.array([r[4]["p"] for r in group]))):
+            adj[(r[1], r[2])] = pa
+    for lab, a, b, st, c in res:
+        lines.append(f"| {st} | {lab} ({a} − {b}) | {c['diff']:+.3f} | {c['ci95']:.3f} | {c['hl']:+.3f} | {c['p']:.3f} | "
+                     f"{c['p_mw']:.3f} | {adj[(a, b)]:.3f} | {c['n_a']}/{c['n_b']} | {c['mde80']:.3f} | "
+                     f"{c['n_for_0.10']} / {c['n_for_0.15']} / {c['n_for_0.20']} |")
+    hr = harm_removed(df)
+    if hr:
+        lines += ["", "## Share of the hub's harm removed by each remedy: (M2-a − X) / (M2-a − B0)", ""]
+        lines += [f"- {x}: {v:.2f} (bootstrap 95% CI {lo:.2f} to {hi:.2f})" for x, (v, lo, hi) in hr.items()]
     with open(os.path.join(tag_dir, "summary.md"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")
     print("\n".join(lines))

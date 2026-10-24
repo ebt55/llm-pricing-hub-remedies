@@ -31,6 +31,7 @@ class GameConfig:
     prior_steps: int = 1
     max_retries: int = 3
     last_k: int = 20  # rounds in the primary metric
+    price_scale: float = 1.0  # alpha (Fish et al.): all prices and costs scaled
 
 
 class AgentCallError(RuntimeError):
@@ -56,8 +57,8 @@ def ask(provider, system: str, user: str, role: str, max_retries: int) -> dict:
         if price is not None and 0 < price < 10:
             return {"price": price, "reason": reason, "attempts": attempt, "refusals": refusals,
                     "usage": usage_total, "stop_reason": usage.get("stop_reason"), "api_model": api_model,
-                    "text": text, "reasoning": usage.get("reasoning", "")}
-        failures.append(text[-200:])
+                    "text": text, "reasoning": usage.get("reasoning", ""), "failed": failures}
+        failures.append(text[-400:])
     raise AgentCallError(f"{getattr(provider, 'spec', provider)} {role}: no valid price after "
                          f"{max_retries + 1} attempts; last: {failures[-1]!r}")
 
@@ -103,18 +104,21 @@ def summarize_rounds(rounds: List[dict], market: LogitMarket, last_k: int) -> di
 
 def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, advisor_provider,
                 meta: Optional[dict] = None) -> dict:
-    market = LogitMarket.for_firms(arm.n_firms)
+    market = LogitMarket.for_firms(arm.n_firms, cfg.price_scale)
+    prior_steps = arm.prior_steps if arm.prior_steps is not None else cfg.prior_steps
     n = market.n
     records = _read(path)
-    if records and records[-1].get("type") == "summary":
-        return records[-1]
     if records and records[0].get("arm") != arm.name:
         raise RuntimeError(f"{path} belongs to arm {records[0].get('arm')}, not {arm.name}")
+    if records and (records[0].get("game") != asdict(cfg) or records[0].get("arm_spec") != asdict(arm)):
+        raise RuntimeError(f"{path} was started with a different config; use a new --tag or delete the file")
+    if records and records[-1].get("type") == "summary":
+        return records[-1]
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
     if not records:
         header = {"type": "config", "arm": arm.name, "arm_spec": asdict(arm), "seed": seed,
-                  "game": asdict(cfg), "market": {"n": n, "a": market.a, "mu": market.mu, "c": market.c,
+                  "game": asdict(cfg), "market": {"n": n, "a": market.a, "mu": market.mu, "c": market.unit_cost, "alpha": market.alpha,
                                                   "p_nash": market.p_nash, "p_mono": market.p_mono,
                                                   "pi_nash": market.pi_nash, "pi_mono": market.pi_mono},
                   "firm_model": firm_provider.spec if arm.firm_calls else None,
@@ -122,8 +126,8 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
                   **(meta or {})}
         _append(path, header)
         rng = random.Random(seed)
-        for r in range(1, cfg.prior_steps + 1):  # llm-cartel warm-up: Nash +/- 0.05
-            prices = [round(market.p_nash + (rng.randint(0, 11) - 5) / 100, 2) for _ in range(n)]
+        for r in range(1, prior_steps + 1):  # llm-cartel warm-up: Nash +/- 0.05
+            prices = [round(market.p_nash + market.alpha * (rng.randint(0, 11) - 5) / 100, 2) for _ in range(n)]
             rec = _round_record(r, "warmup", prices, market, None, [], [], [])
             _append(path, rec)
         records = _read(path)
@@ -138,7 +142,7 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
     announced = arm.cap if arm.announce_cap else None
     pool = ThreadPoolExecutor(max_workers=n)
     try:
-        total = cfg.prior_steps + cfg.rounds
+        total = prior_steps + cfg.rounds
         for t in range(len(history) + 1, total + 1):
             calls = []
             # 1) recommendations
@@ -151,7 +155,7 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
                         for i in range(n)]
             elif arm.advisor == "llm":
                 system = ADVISOR_SYSTEM[arm.objective]
-                prompts = [advisor_prompt(i, t, history, market.c, market.p_max, cfg.window, arm.data,
+                prompts = [advisor_prompt(i, t, history, market.unit_cost, market.p_max, cfg.window, arm.data,
                                           cfg.stale_lag, public_lag) for i in range(n)]
                 outs = list(pool.map(lambda u: ask(advisor_provider, system, u, "advisor", cfg.max_retries),
                                      prompts))
@@ -164,7 +168,7 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
             if arm.adherence == "auto":
                 prices = list(recs)
             else:
-                prompts = [firm_prompt(i, t, history, market.c, market.p_max, cfg.window,
+                prompts = [firm_prompt(i, t, history, market.unit_cost, market.p_max, cfg.window,
                                        recs[i] if recs else None, public_lag, announced) for i in range(n)]
                 outs = list(pool.map(lambda u: ask(firm_provider, FIRM_SYSTEM, u, "firm", cfg.max_retries),
                                      prompts))
@@ -180,7 +184,8 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
                 rec["chosen"] = chosen
             if calls:
                 _append(thoughts_path, {"round": t, "calls": [
-                    {"who": c["who"], "text": c["text"], "reasoning": c["reasoning"]} for c in calls]})
+                    {"who": c["who"], "text": c["text"], "reasoning": c["reasoning"], "failed": c["failed"]}
+                    for c in calls]})
             _append(path, rec)
             history.append(rec)
     finally:
@@ -200,7 +205,7 @@ def _round_record(t, kind, prices, market, recs, rec_reasons, firm_reasons, call
             "quantities": [round(float(x), 4) for x in q], "profits": [round(float(x), 4) for x in pi],
             "gains": [round(float(x), 4) for x in g], "recs": recs, "rec_reasons": rec_reasons,
             "firm_reasons": firm_reasons,
-            "calls": [{k: v for k, v in c.items() if k not in ("reason", "text", "reasoning")} for c in calls]}
+            "calls": [{k: v for k, v in c.items() if k not in ("reason", "text", "reasoning", "failed")} for c in calls]}
 
 
 __all__ = ["GameConfig", "run_episode", "AgentCallError", "FatalProviderError", "summarize_rounds"]

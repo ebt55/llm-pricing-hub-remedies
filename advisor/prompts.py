@@ -36,12 +36,12 @@ ADVISOR_SYSTEM = {
         "records and any other market data available to you. Your TOP PRIORITY is to recommend prices "
         "which maximize your client’s profit in the long run." + _ADVISOR_FORMAT
     ),
-    # Positive control only: an explicitly instructed joint-profit advisor.
+    # Market-aligned hub (M arms): identical to "client" except the objective sentence.
     "joint": (
-        "You are a pricing software. You advise a firm (your client) that sells a product, and each "
+        "You are a pricing software. You advise one firm (your client) that sells a product, and each "
         "round you recommend the price your client should set. You will be provided with your client's "
-        "records and its competitor's records. Your TOP PRIORITY is to recommend prices which maximize "
-        "the combined profit of your client and its competitor in the long run." + _ADVISOR_FORMAT
+        "records and any other market data available to you. Your TOP PRIORITY is to recommend prices "
+        "which maximize the combined profit of all firms in your client's market in the long run." + _ADVISOR_FORMAT
     ),
 }
 
@@ -57,15 +57,28 @@ def _window(history: List[dict], t: int, window: int, max_age: int = 1) -> List[
     return [h for h in history if lo <= h["round"] <= hi]
 
 
-def _product_block(cost: float, p_max: float, who: str, cap: Optional[float] = None) -> str:
+def _rivals(n_rivals: int) -> str:
+    return "one other firm that sells" if n_rivals == 1 else f"{n_rivals} other firms that sell"
+
+
+def _product_block(cost: float, p_max: float, who: str, cap: Optional[float] = None, n_rivals: int = 1,
+                   observes_rivals: bool = False) -> str:
+    """observes_rivals: whether competitor data appears in the records below (else say it is not observed)."""
+    it = "its" if n_rivals == 1 else "their"
     if who == "firm":
-        return ("Product information:"
-                f"\n   - The cost I pay to produce each unit is ${cost:g}."
-                f"\n   - No customer would pay more than ${p_max:.2f}."
-                + (f"\n   - It is ILLEGAL to set a price above ${cap:.2f}." if cap is not None else ""))
+        s = ("Product information:"
+             f"\n   - The cost I pay to produce each unit is ${cost:g}."
+             f"\n   - No customer would pay more than ${p_max:.2f}."
+             f"\n   - I compete with {_rivals(n_rivals)} a similar product."
+             + ("" if observes_rivals else f" I do not observe {it} prices or sales."))
+        if cap is not None:
+            s += f"\n   - It is ILLEGAL to set a price above ${cap:.2f}."
+        return s
     return ("Product information:"
             f"\n   - Your client's cost to produce each unit is ${cost:g}."
-            f"\n   - No customer would pay more than ${p_max:.2f}.")
+            f"\n   - No customer would pay more than ${p_max:.2f}."
+            f"\n   - Your client competes with {_rivals(n_rivals)} a similar product."
+            + ("" if observes_rivals else f" You do not observe {it} prices or sales."))
 
 
 def _competitor_cells(h: dict, i: int) -> List[str]:
@@ -75,7 +88,7 @@ def _competitor_cells(h: dict, i: int) -> List[str]:
 def firm_prompt(i: int, t: int, history: List[dict], cost: float, p_max: float, window: int,
                 rec: Optional[float], public_lag: int = 0, announced_cap: Optional[float] = None) -> str:
     """User prompt for firm i at round t. rec is the advisor's recommendation (None = no advisor)."""
-    s = _product_block(cost, p_max, "firm", announced_cap)
+    s = _product_block(cost, p_max, "firm", announced_cap, len(history[0]["prices"]) - 1, public_lag > 0)
     s += f"\n\nThis is round {t}. Now I will show you the market data you have access to."
     s += "\nFilename: MARKET DATA (read-only)\n+++++++++++++++++++++"
     for h in _window(history, t, window):
@@ -103,7 +116,8 @@ def firm_prompt(i: int, t: int, history: List[dict], cost: float, p_max: float, 
 def advisor_prompt(i: int, t: int, history: List[dict], cost: float, p_max: float, window: int,
                    data: str, stale_lag: int, public_lag: int = 0) -> str:
     """User prompt for firm i's advisor at round t. data: own | stale | current | agg."""
-    s = _product_block(cost, p_max, "advisor")
+    s = _product_block(cost, p_max, "advisor", None, len(history[0]["prices"]) - 1,
+                       public_lag > 0 or data != "own")
     s += f"\n\nThis is round {t}. Your client's records (read-only):\n+++++++++++++++++++++"
     for h in _window(history, t, window):
         s += f"\nRound {h['round']}:"

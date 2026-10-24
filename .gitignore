@@ -11,3 +11,4 @@ __pycache__/
 
 # scratch runs (pilot/main results are committed; dry runs are not)
 results/dry/
+logs/

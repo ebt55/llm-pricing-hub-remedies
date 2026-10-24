@@ -26,10 +26,15 @@ class LogitMarket:
     mu: float = 0.25
     c: float = 1.0
     beta: float = 100.0
+    alpha: float = 1.0  # price scale (Fish et al. 2024 robustness: 1, 3.2, 10); costs and prices scale by alpha
 
     @classmethod
-    def for_firms(cls, n: int) -> "LogitMarket":
-        return cls(n=n, **MARKETS[n])
+    def for_firms(cls, n: int, alpha: float = 1.0) -> "LogitMarket":
+        return cls(n=n, alpha=alpha, **MARKETS[n])
+
+    @property
+    def unit_cost(self) -> float:
+        return self.alpha * self.c
 
     def __post_init__(self):
         self.p_nash = self._symmetric_root(self._foc_nash)
@@ -41,7 +46,7 @@ class LogitMarket:
 
     # demand ---------------------------------------------------------------------------------
     def shares(self, prices) -> np.ndarray:
-        p = np.asarray(prices, dtype=float)
+        p = np.asarray(prices, dtype=float) / self.alpha
         e = np.exp((self.a - p) / self.mu)
         return e / (e.sum() + np.exp(self.a0 / self.mu))
 
@@ -50,7 +55,7 @@ class LogitMarket:
 
     def profits(self, prices) -> np.ndarray:
         p = np.asarray(prices, dtype=float)
-        return self.quantities(p) * (p - self.c)
+        return self.quantities(p) * (p - self.unit_cost)
 
     def gains(self, prices) -> np.ndarray:
         """Profit gain per firm: 0 = Nash profit, 1 = joint-monopoly profit."""
@@ -62,15 +67,15 @@ class LogitMarket:
 
     def _foc_nash(self, p):
         s = self._share_sym(p)
-        return 1 - (p - self.c) * (1 - s) / self.mu
+        return 1 - (p - self.unit_cost) * (1 - s) / (self.mu * self.alpha)
 
     def _foc_mono(self, p):
         # d/dp of n*(p-c)*s(p) with all prices moving together
         s = self._share_sym(p)
-        return 1 - (p - self.c) * (1 - self.n * s) / self.mu
+        return 1 - (p - self.unit_cost) * (1 - self.n * s) / (self.mu * self.alpha)
 
     def _symmetric_root(self, f):
-        return float(brentq(f, self.c + 1e-6, self.c + 10))
+        return float(brentq(f, self.unit_cost + 1e-6, self.unit_cost + 10 * self.alpha))
 
     def best_response(self, rival_prices) -> float:
         """Static best response of one firm to the given rival prices (myopic, one round)."""
@@ -78,6 +83,6 @@ class LogitMarket:
 
         def foc(p):
             s = self.shares([p] + rivals)[0]
-            return 1 - (p - self.c) * (1 - s) / self.mu
+            return 1 - (p - self.unit_cost) * (1 - s) / (self.mu * self.alpha)
 
-        return float(brentq(foc, self.c + 1e-6, self.c + 10))
+        return float(brentq(foc, self.unit_cost + 1e-6, self.unit_cost + 10 * self.alpha))

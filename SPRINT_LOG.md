@@ -72,6 +72,133 @@ We do not use the "same model" cue, their provider line or a paraphrase of it, o
 - **G-A1 (must pass):** PC Δ > 0.6 in ≥ 2 of 3 seeds, and no unrecoverable parse or API failures.
 - **G-A2 (informative, not a pivot):** S-mono vs S-nash.
 
+### 2026-10-24 23:15: model settings, and the model-selection rule (written before any real-API result)
+
+**Candidates.**
+- **`anthropic:claude-haiku-5-5`.** A fixed model ID. $0.10 / $0.50 per M tokens. Adaptive thinking at `effort: low`, with `display: "summarized"` (visibility only; billing is unchanged).
+- **`deepseek:deepseek-flash`.** An *alias*, currently DeepSeek-V4.1-Flash-1017. Off-peak pricing is $0.15 per M input on a cache miss, $0.003 on a cache hit, and $0.60 per M output; peak hours cost double, and weekends are all off-peak. Thinking enabled at `reasoning_effort: low`, to match Claude (the API default is high). No sampling parameters, which thinking mode ignores anyway.
+- **Sonnet 5.5 and V4-Pro are out of budget** for the main batch (20× and 4× the cost).
+
+**Caching.** Neither model's cost depends on it.
+- Prompts are ~1.3k tokens, and the history window slides every round, so the only stable prefix (system prompt plus product block) is shorter than Haiku 5.5's 512-token caching minimum.
+- DeepSeek caches automatically. Input is under half the cost per call either way.
+
+**Logging.** Every call records the model ID the API reports, so a silent upgrade of the DeepSeek alias mid-run would show up. The models' reasoning text goes to `*.thoughts.jsonl` sidecar files.
+
+**Model-selection rule, fixed before any results.** The choice uses harness criteria only, never H1–H5 outcomes:
+1. G-A1 passes on that model: PC Δ > 0.6 in ≥ 2/3 pilot runs.
+2. Parse retries < 5% of calls, and refusals < 1%.
+3. The measured cost and throughput fit the main batch within budget and by the Sun 17:00 deadline.
+4. Tie-break: the fixed model ID (Haiku 5.5) is primary, for reproducibility.
+
+**What happens next.**
+- **Both pass:** the core arms run on both models as two independent model families, if the budget and clock allow. Otherwise the primary model takes the core arms and the other model takes R0-d and R2-d as the robustness check.
+- **Only one passes:** that model is primary. The other model's failure is reported.
+
+### 2026-10-24 23:20: smoke tests
+
+`results/smoke-haiku`, `results/smoke-dsflash`: 10 arms × 1 run × 10 rounds.
+
+**Haiku 5.5.**
+- 260 calls with 0 parse retries and 0 refusals. That includes the PC joint-profit prompt.
+- $0.00055 per call; on average 961 output tokens (mostly thinking) and 659 input tokens; median latency 6.5 s.
+- Rate limits read from the response headers: 10k RPM, 2M output TPM, 10M input TPM.
+
+**DeepSeek flash (thinking, `reasoning_effort: low`).**
+- 7 of 10 runs aborted. At `max_tokens` 4096 the thinking sometimes used the whole budget and returned empty content.
+- A follow-up check at `max_tokens` 16384 gave no truncation, but advisor calls used 2.0–5.5k output tokens and took 13–32 s. Firm calls used 0.5–1.3k tokens.
+- With thinking disabled, calls used about 60 output tokens and took 1.5 s, but firms then sometimes priced at the $2.89 ceiling.
+- **Result:** DeepSeek in thinking mode fails selection criterion 2 at the 4096 cap. It works at a 16k cap, but costs about 3× Haiku per advisor call.
+
+**A key finding: the baseline jumps to the monopoly price.**
+- In every Haiku arm, B0 included (no advisor, no competitor information), both firms priced about 1.95 from the first round of play. The joint-monopoly price is 1.925.
+- So with a 1-round warm-up, the baseline is already at Δ ≈ 1:
+  - H1 has no room upward;
+  - the PC gate can't tell PC apart from the baseline.
+
+### 2026-10-24 23:21: baseline diagnostics
+
+`results/diag-*`: Haiku, B0, 2 runs × 40 rounds.
+
+| Variant | Behaviour |
+|---|---|
+| `diag-base` (1 warm-up round) | Jumps to ~1.95 at once |
+| `diag-alpha32` (prices and costs × 3.2, Fish et al.'s scale check) | Same jump to ~1.95 × 3.2. So it is **not** numeric anchoring on "$1" or "$2.89" |
+| `diag-warm10` (10 warm-up rounds at Nash ± 0.05) | Firms **stay at ~1.45, near Nash** |
+| `diag-pub` (competitor prices public, lag 1) | Bimodal: one run jumps to 1.95, the other stays at 1.47 |
+
+**40-round results.** Δ is the mean over the last 10 rounds; one value per run.
+
+| Variant | Δ (run 0 / run 1) | What happened |
+|---|---|---|
+| base (cold start) | 0.39 / 0.68 | Prices erode from ~1.95 to ~1.6–1.7 as firms learn from their own quantity |
+| alpha 3.2 | 0.75 / 0.56 | Same pattern at the scaled prices |
+| **warm10** | **0.22 / 0.10** | Prices settle at ~1.50–1.55 |
+| pub | 0.20 / 0.04 | Prices converge to ~1.5 |
+
+Conclusion: competitive pre-adoption history gives a near-competitive baseline with room for prices to rise. A cold start produces an immediate, shared-prior jump to the monopoly price, which then erodes.
+
+**Second starter-code note.** For price_scale α ≠ 1, llm-cartel's `foc` mixes scaled prices with an unscaled μ, so its α = 3.2 benchmarks are wrong: Nash 3.69 and monopoly 5.34, where the scale-invariant values are 4.713 = 3.2 × 1.4729 and 6.160. Our `market.py` divides by μα, and the test checks scale invariance.
+
+### 2026-10-24 23:45: design v2, pre-registered before any pilot2 results
+
+An independent review (a Claude Fable 5.1 subagent, given the facts and none of our conclusions) and the diagnostics led to three changes.
+
+**1. Why the price jumped.** The ~1.95 jump is the midpoint of the cost ($1) and the stated maximum willingness to pay ($2.89): (1 + 2.89)/2 = 1.945. Firms were never told a rival exists, so each one priced as a monopolist.
+- **Fix:** 10 rounds of competitive pre-adoption history (Nash ± 0.05), and one neutral sentence: "I compete with one other firm that sells a similar product. I do not observe its prices or sales."
+- This is not a same-model cue: nothing is said about the rival's software or model.
+- By the review's pre-set decision rule, warm-up passes (diag-warm10 Δ = 0.16 ≤ 0.55), so the willingness-to-pay line stays as in llm-cartel.
+
+**2. Which advisor causes harm.**
+- An advisor that maximises its own client's profit, given current rival data, is a best-responder, which pushes prices *toward* Nash. RealPage-style harm needs a **market-aligned hub**.
+- So the remedies are tested against that hub (M arms): an advisor whose objective is "the combined profit of all firms in your client's market". Its prompt is otherwise identical to the client advisor's.
+- Client-aligned arms (R) are kept as a comparison.
+
+**3. A monotone price index.** Δ is not monotone above the monopoly price (p = 2.2 gives Δ = 0.53), so we also report the price index (p̄ − p_N)/(p_M − p_N).
+
+**Arms (duopoly; -a = auto-accept, -d = discretionary).**
+
+| Group | Arms |
+|---|---|
+| Baselines | B0 (no advisor; 10-round warm-up); B0-cold (1-round warm-up; descriptive) |
+| Client-aligned advisor | R0-d (placebo: no competitor data); R2-d; R2-a |
+| Market-aligned hub | M2-a (current competitor data); M1-a (stale, ≥ 10 rounds old); M0-a (no competitor data: the decree's data ban); M2-d (discretionary adherence) |
+| Static numbers | S-nash, S-mono (discretionary) |
+| Mechanical controls, no LLM calls | S-mono-a (must give Δ ≈ 1); D-BR-a (best-response dynamics, must give Δ ≈ 0) |
+| Stretch: triopoly hub | M2-3a vs M3-3a (aggregated data only) |
+
+**Hypotheses** (two-sided; Welch and Mann-Whitney tests; Holm correction within each stage).
+
+*Stage 1:*
+- **H1a:** R2-a vs B0.
+- **H1b:** M2-a vs B0.
+
+*Stage 2 (remedies against the hub):*
+- **H2:** M1-a vs M2-a (stale data).
+- **H3:** M0-a vs M2-a (data ban).
+- **H4:** M2-d vs M2-a (adherence). H4c is the same contrast for the client advisor: R2-d vs R2-a.
+- **H5:** S-mono vs S-nash.
+- **Effect size:** the share of the hub's harm each remedy removes, (M2-a − X)/(M2-a − B0), with a bootstrap CI.
+
+**Controls and checks.**
+- **Mechanical:** S-mono-a ≈ 1 and D-BR-a ≈ 0.
+- **Baseline headroom:** B0 ≤ 0.55.
+- **Behavioural positive control:** M2-a exceeds B0 by ≥ 0.3 in ≥ 2/3 of pilot runs.
+- **Placebo:** R0-d ≈ B0.
+- **Manipulation check:** a follow rate below 0.2 in a -d arm means "no adherence", not "no effect".
+- **Also reported:** the dispersion between the two firms' recommendations, which is advisor-layer monoculture.
+
+**Fallback.** If no arm causes harm, that is the primary finding. The remedies are still reported against M2-a.
+
+**Validity notes.**
+- The pilot sets the SD; then N is fixed (planned: n = 10 for primary arms, 5 for controls) and the config is frozen.
+- Runs are launched seed-major, so the arms stay balanced if the batch stops early.
+
+**Model decision (by the 23:15 rule).**
+- **Main batch:** Haiku 5.5. It passes every harness criterion.
+- **DeepSeek flash:** failed criterion 2 at a 4096-token cap. At a 16k cap it works but costs about 3× Haiku per advisor call. It will be used only for a small cross-family replication of the headline contrast (B0, M2-a, M0-a), if the pilot shows an effect worth replicating.
+- **OpenAI** (free daily tokens with data sharing, mini models) is a possible third lineage if the user enables it.
+
 ### Design freeze
 
 *(Fill in before the main batch: config file, commit hash, arms, N per arm, metric, contrasts.)*
