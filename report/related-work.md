@@ -28,4 +28,9 @@
 - *Gibson v. Cendyn Group*, 148 F.4th 1069 (9th Cir. 2025), cert. denied (20 Apr 2026).
 - *Cornish-Adebiyi v. Caesars Entertainment*, No. 24-3006 (3d Cir. 29 Jul 2026).
 
-**Unverified / please check:** (1) Our notes list auto-accept only as an *alleged* feature in the RealPage complaints; the reported DOJ settlement terms are data restrictions (runtime ban, 12-month data age, no reporting below state level, no surveys). Before the title or text calls ending auto-accept a settlement remedy, confirm it against the final judgment, the Greystar judgment ("certification conditions") or the private MDL terms ("not using the software to set rents"). (2) The RealPage settlement terms come from law-firm summaries; the Federal Register notice and the entry order were not seen. (3) The Gibson and Cornish-Adebiyi opinions were not fetched; their holdings come from law-firm summaries. (4) Abrantes-Metz et al. (2006): the volume, issue and pages are from memory. (5) zerocommcartel: the notes record no author names or paper title, and no numbers from it are quoted. (6) Berger et al. (2025): the paper note says the article was read in full, but the legal note says only the abstract was accessible. (7) Riemer et al. (2026): the arXiv-to-OpenReview match rests on identical title and authors. (8) Arike et al. (2026) studies single-agent sabotage, not collusion.
+**Verification (25 Oct, ~05:50 IST).** A verification agent checked every reference against primary or public sources: Crossref, arXiv, the court opinions and CourtListener. All exist. Corrections were applied in `draft.md`:
+- the RealPage URL now points to the entered Final Judgment;
+- the full captions for *Gibson* (cert. denied, Apr 2026) and *Cornish-Adebiyi* (reversed and remanded, precedential);
+- the Abrantes-Metz DOI, Fish et al. (EC 2026) and Idowu et al. (*Knowledge-Based Systems*).
+
+Still unverified: the page range of Berger et al. (the ABA page returned 403). This file's own reference list predates those corrections; `draft.md` is the canonical list.

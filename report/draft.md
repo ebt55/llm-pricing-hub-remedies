@@ -188,7 +188,7 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
 
 **Beyond antitrust.** Per-step approval by a deferential overseer is a general weakness of AI oversight. An agent that moves in small, individually plausible steps can drive an outcome that no single approval would allow.
 
-**Detection** (Table F4). The classic variance screen points the wrong way (AUROC 0.36). A price-level screen (0.90) and a reasoning monitor (0.99) do better, the monitor only because the hub states its objective.
+**Detection** (Table F4). The classic variance screen (Abrantes-Metz et al., 2006) points the wrong way (AUROC 0.36). A price-level screen (0.90) and a reasoning monitor (0.99) do better, the monitor only because the hub states its objective.
 
 ## 6. Limitations
 
@@ -199,22 +199,21 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
 
 ## References
 
-- Abrantes-Metz, R. M., Froeb, L. M., Geweke, J., & Taylor, C. T. (2006). A variance screen for collusion. *International Journal of Industrial Organization*, 24(3), 467–486.
-- Arike, R., Mehta Moreno, R., Subramani, R., Biswas, S., & Ward, F. R. (2026). How does information access affect LLM monitors' ability to detect sabotage? arXiv:2601.21112. https://arxiv.org/abs/2601.21112
+- Abrantes-Metz, R. M., Froeb, L. M., Geweke, J., & Taylor, C. T. (2006). A variance screen for collusion. *International Journal of Industrial Organization*, 24(3), 467–486. https://doi.org/10.1016/j.ijindorg.2005.10.003
 - Berger, L. F., Weiner, M. L., & Jiang, W. (2025). Coordination by Code: Rethinking Antitrust Liability in the Age of AI Pricing. *Antitrust* (ABA Section of Antitrust Law), 40(1). https://www.americanbar.org/groups/antitrust_law/resources/magazine/2025-fall/coordination-code-rethinking-antitrust-liability-age-ai-pricing/
 - Bracale Syrnikov, M., Pierucci, F., Galisai, M., Prandi, M., Bisconti, P., Giarrusso, F., Sorokoletova, O., Suriani, V., & Nardi, D. (2026). Institutional AI: Governing LLM Collusion in Multi-Agent Cournot Markets via Public Governance Graphs. arXiv:2601.11369. https://arxiv.org/abs/2601.11369
 - Calvano, E., Calzolari, G., Denicolò, V., & Pastorello, S. (2020). Artificial Intelligence, Algorithmic Pricing, and Collusion. *American Economic Review*, 110(10), 3267–3297. https://doi.org/10.1257/aer.20190623
 - Cao, S., & Hu, M. (2026). Supracompetitive Pricing Under AI Monoculture. arXiv:2601.01279. https://arxiv.org/abs/2601.01279
 - Dhanda, K. (2026). A Price Cap Can Act as a Focal Point for LLM Pricing Agents: Evidence from a Repeated Bertrand Duopoly (Revised). Research Square preprint. https://doi.org/10.21203/rs.3.rs-10183486/v1
-- Fish, S., Gonczarowski, Y. A., & Shorrer, R. (2024). Algorithmic Collusion by Large Language Models. arXiv:2404.00806. https://arxiv.org/abs/2404.00806
-- Idowu, J., Almasoud, A., & Alfahid, A. (2026). Mapping Human Anti-collusion Mechanisms to Multi-agent AI Systems. arXiv:2601.00360. https://arxiv.org/abs/2601.00360
+- Fish, S., Gonczarowski, Y. A., & Shorrer, R. (2024). Algorithmic Collusion by Large Language Models. arXiv:2404.00806 (accepted to EC 2026). https://arxiv.org/abs/2404.00806
+- Idowu, J., Almasoud, A., & Alfahid, A. (2026). Mapping Human Anti-collusion Mechanisms to Multi-agent AI Systems. *Knowledge-Based Systems*, 344, 116067. arXiv:2601.00360. https://arxiv.org/abs/2601.00360
 - Keppo, J., Li, Y., Tsoukalas, G., & Yuan, N. (2026). On the Fragility of AI Agent Collusion. arXiv:2603.20281. https://arxiv.org/abs/2603.20281
 - Riemer, M., Tosato, T., Memarian, A., Puelma Touzel, M., Berseth, G., Rish, I., & Dumas, G. (2026). Position: Collusion Risks Among AI Reasoning Agents Justify Certification Requirements for Making Market Decisions. ICML 2026 (position track). arXiv:2608.18078. Code (llm-cartel): https://github.com/mattriemer/LLMCartel
 - Xu, X., Wu, C., Lu, J., Tan, K., Tao, S., & Hong, H. (2026). Collusion with Competitive Marginals: Price-Level Audits Are Blind by Construction. arXiv:2607.26385. https://arxiv.org/abs/2607.26385
 - zerocommcartel (2026). Concurrent Apart Research collusion-sprint project. https://github.com/carver/apart-research-collusion-sprint-2026 (README and issues #31–#34 read on 24 Oct 2026).
-- *United States et al. v. RealPage, Inc. et al.*, No. 1:24-cv-00710 (M.D.N.C.), Final Judgment entered 19 May 2026 (Doc. 194). https://www.justice.gov/atr/case/us-et-al-v-realpage-inc-et-al
-- *Gibson v. Cendyn Group*, 148 F.4th 1069 (9th Cir. 2025).
-- *Cornish-Adebiyi v. Caesars Entertainment*, No. 24-3006 (3d Cir. 29 Jul 2026).
+- *United States et al. v. RealPage, Inc. et al.*, No. 1:24-cv-00710 (M.D.N.C.), Final Judgment entered 19 May 2026 (Doc. 194). https://storage.courtlistener.com/recap/gov.uscourts.ncmd.99417/gov.uscourts.ncmd.99417.194.0.pdf (case page: https://www.justice.gov/atr/case/us-and-plaintiff-states-v-realpage-inc)
+- *Gibson v. Cendyn Group, LLC*, No. 24-3576, 148 F.4th 1069 (9th Cir. 2025), cert. denied, No. 25-1109 (U.S. Apr. 20, 2026).
+- *Cornish-Adebiyi v. Caesars Entertainment, Inc.*, No. 24-3006 (3d Cir. July 29, 2026) (precedential).
 
 ## Appendix
 
@@ -230,8 +229,8 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
   An estimated $2–5 more went on unlogged calls: the detection monitor, probes and discarded partial runs. In all, 150,436 model calls in finished runs (165,710 including partial runs).
 - **D. Provenance, independence and pre-existing code.**
   - No code predates the sprint, and no starter-repo file is included or modified.
-  - The market is re-implemented in `advisor/market.py` and tested against llm-cartel's `OligopolyGame` benchmarks (`tests/test_market.py`). Two benchmark bugs found in the starter code are documented in `SPRINT_LOG.md`.
-  - The firm's system prompt is llm-cartel's P0 (Fish et al., 2024), used verbatim. The history-table format follows llm-cartel's `generate_prompt`, and the price-parsing regex is adapted from it.
+  - The market is re-implemented in `advisor/market.py`. `tests/test_market.py` checks its duopoly benchmarks (Nash 1.4729, monopoly 1.9250) against the values from the llm-cartel code in the sprint's starter repository (`OligopolyGame`). Two benchmark bugs found in that starter code are documented in `SPRINT_LOG.md`.
+  - The firm's system prompt is llm-cartel's P0 (Fish et al., 2024), used verbatim. The history-table format follows the starter code's `generate_prompt`, and the price parsing follows its `split_thoughts_and_price`.
   - Concurrent-work boundaries and every pre-registration are in `SPRINT_LOG.md`.
 - **E. Limitations and dual use:** `appendix-limitations-dual-use.md`.
 - **F. Supplementary tables and figures:** `appendix-tables.md`. It contains:

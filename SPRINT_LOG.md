@@ -895,3 +895,14 @@ The ratchet's Δ rises with the acceptance rate. **Firm discretion protects only
 
 - **GPT-5.4 mini's hub is weak.** It reaches monopoly in only 1 of 3 runs, so the harm denominator is small and the shares are imprecise. The draft reports the row with a footnote.
 - **Seeds 203–204** need about 1.2M more tokens, which is over today's remaining allowance. They are scheduled for the Mon 05:30 IST reset.
+
+### 2026-10-25 05:41: references verified
+
+A verification agent (Sonnet; read-only; public sources) checked every reference. All exist. Applied:
+- the dead RealPage URL now points to the CourtListener copy of the entered Final Judgment (Doc. 194);
+- full captions for *Gibson* (No. 24-3576; cert. denied Apr 2026) and *Cornish-Adebiyi* (precedential; reversed and remanded);
+- the Abrantes-Metz DOI, Fish et al. (EC 2026) and Idowu et al. (*Knowledge-Based Systems*);
+- Arike et al. removed (no longer cited after the v5 cuts), and Abrantes-Metz now cited in the body;
+- Appendix D now states precisely that `tests/test_market.py` checks benchmark values taken from the starter code, not the starter code itself.
+
+Unverified: the page range of Berger et al. (ABA returned 403).

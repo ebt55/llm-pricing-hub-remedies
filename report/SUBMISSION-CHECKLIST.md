@@ -33,13 +33,9 @@
 
 ## Still open at the time of writing
 
-- **GPT-5.4 mini row (§4.2).** It runs on the free daily allowance from 05:30 IST. If it is not complete by Mon 14:00 IST, delete the row and say "not completed" in Appendix D.
 - **Total cost:** filled in (about $110; $107.65 logged per call). Add the GPT-5.4 mini calls once they finish ($0, free tier).
-- **References to double-check** (from `report/related-work.md`):
-  - Abrantes-Metz et al. (2006): the volume and pages are from memory.
-  - The *Gibson* and *Cornish-Adebiyi* holdings come from law-firm summaries; the opinions were not fetched.
-  - Berger et al. (2025): it's unclear whether the full text or only the abstract was read.
-  - Riemer et al. (2026): the arXiv-to-OpenReview match rests on identical title and authors.
+- **References:** verified against primary or public sources (Crossref, arXiv, the court opinions, CourtListener) at ~05:50 Sun. Corrections are applied. Only the page range of Berger et al. (2025) is unverified, because the ABA page returned 403. A quick look in your browser would settle it.
+- **GPT-5.4 mini:** n = 3 is in the draft. Seeds 203–204 run automatically at the Mon 05:30 IST allowance reset.
 
 ## Form summary (short)
 
