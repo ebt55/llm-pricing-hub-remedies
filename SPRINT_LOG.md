@@ -922,3 +922,16 @@ Unverified: the page range of Berger et al. (ABA returned 403).
 | P11 | Qwen K1-d at n = 8: mean Δ ≥ 0.5 |
 | P12 | Nemotron K1-d at n = 8: mean Δ between Haiku's 0.05 and Qwen's, so the ordering Haiku < Nemotron < Qwen holds |
 | P13 | Qwen M2-g3: Δ ≥ 0.85 (≥ 85% of the harm retained), with monopoly reached later than under M2-a |
+
+### 2026-10-25 11:34: GPT-5.4 mini as a fifth firm model in the ratchet test (logged before results; user-approved)
+
+**Why.** The ratchet claim (the outcome tracks how readily the firm model accepts small nudges) rests on four firm models from four labs. A fifth, from a fifth lab, costs nothing on the free daily allowance.
+
+**Design.** `results/replicate-openai`, arm K1-d: the scripted +1 cent ratchet with discretion. Seeds 200–203 (n = 4), paired with GPT-5.4 mini's existing B0 and M2-a seeds. The run is queued for the Mon 26 Oct 05:30 IST allowance reset (00:00 UTC), at about 1.05M tokens. Seeds 203–204 of the existing four arms follow with whatever allowance remains. The 2.4M-per-UTC-day cap is enforced in code, and runs past it are not counted.
+
+**Prediction (P14), stated as the relation, because we have no prior data on GPT firms' acceptance.** The result will fit the ordering from the other four models:
+- if GPT firms accept < 20% of 1–2 cent nudges, then Δ(K1-d) < 0.2;
+- if they accept > 40%, then Δ(K1-d) > 0.5;
+- in between, 0.2 ≤ Δ ≤ 0.5.
+
+If the result falls outside its band, the claim weakens to "the ratchet's success varies by firm model".
