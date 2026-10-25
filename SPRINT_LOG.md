@@ -906,3 +906,19 @@ A verification agent (Sonnet; read-only; public sources) checked every reference
 - Appendix D now states precisely that `tests/test_market.py` checks benchmark values taken from the starter code, not the starter code itself.
 
 Unverified: the page range of Berger et al. (ABA returned 403).
+
+### 2026-10-25 11:27: extra runs for the two weak spots the reviewer named (logged before results; user-approved)
+
+**Why.** The Fable reviewer named two weak spots: the discretion claim rests on 4 runs each for Qwen and Nemotron, and guardrails were tested on Haiku only. The user approved about $1.40 of OpenRouter runs. OpenRouter spend so far is $7.16 against the $9.00 cap.
+
+**Batch F (OpenRouter, ~$1.25 estimated):**
+- Qwen3.8 Flash and Nemotron 3.5 Lightning: K1-d (scripted +1 cent ratchet, discretion), seeds 1004–1007. This takes each to n = 8.
+- Qwen3.8 Flash: M2-g3 (hub with current data, auto-accept within ±3% per round), seeds 1000–1003, paired with Qwen's M2-a (Δ 0.97).
+
+**Predictions:**
+
+| # | Prediction |
+|---|---|
+| P11 | Qwen K1-d at n = 8: mean Δ ≥ 0.5 |
+| P12 | Nemotron K1-d at n = 8: mean Δ between Haiku's 0.05 and Qwen's, so the ordering Haiku < Nemotron < Qwen holds |
+| P13 | Qwen M2-g3: Δ ≥ 0.85 (≥ 85% of the harm retained), with monopoly reached later than under M2-a |
