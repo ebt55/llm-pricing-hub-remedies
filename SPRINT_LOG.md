@@ -935,3 +935,20 @@ Unverified: the page range of Berger et al. (ABA returned 403).
 - in between, 0.2 ≤ Δ ≤ 0.5.
 
 If the result falls outside its band, the claim weakens to "the ratchet's success varies by firm model".
+
+### 2026-10-25 11:45: Gemini thinking-on batch resumed (user raised the AI Studio cap to INR 3,500)
+
+**Context.** The user raised the project's spend cap to ₹3,500. Billing showed ₹2,861.60 against our $25.82 logged Gemini spend, so billing runs about 1.25–1.3× our per-call estimate (tax and exchange rate).
+
+**Hard stop.** `PROVIDER_CAPS_USD["gemini"]` is set to $29.40 logged, about ₹3,280 billed. Every Gemini call checks it.
+
+**Plan.** We resume batch C (pre-registered at 03:36: P7 and P8). Both predictions already failed on the partial n = 2–3. This extension was decided **after seeing those partial results**, at the user's request to firm up the thin batch. The predictions are unchanged.
+
+| Order | Arm | Runs | Target n |
+|---|---|---|---|
+| 1 | K1-d | Finish s1003; add s1004–s1005 | 6 |
+| 1 | M2-d | Finish s1002–s1004 | 5 |
+| 2 | B0 | Finish s1003–s1004 | 5 |
+| 2 | M2-a | Finish s1003–s1004 | 5 |
+
+Estimated about $3.4 logged (about ₹390 billed).

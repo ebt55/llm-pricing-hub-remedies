@@ -69,7 +69,7 @@ class BudgetExceeded(FatalProviderError):
 
 # Hard lifetime caps per provider, counting spend already recorded in results/ (user instruction 24 Oct:
 # DeepSeek strictly under $10 in total). Enforced before every call.
-PROVIDER_CAPS_USD = {"deepseek": 9.50, "gemini": 40.00, "openrouter": 9.00}  # gemini: GCP credits; openrouter: $10 credit
+PROVIDER_CAPS_USD = {"deepseek": 9.50, "gemini": 29.40, "openrouter": 9.00}  # gemini: user spend cap INR 3,500 (billing runs ~1.3x our logged cost); openrouter: $10 credit
 
 # OpenRouter: one full-precision backend per model, no fallbacks (results must come from one deployment).
 OPENROUTER_PIN = {"minimax/minimax-m3.1-flash": "minimax", "qwen/qwen3.8-flash": "alibaba",
