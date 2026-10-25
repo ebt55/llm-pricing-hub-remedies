@@ -4,7 +4,7 @@
 
 **Question.** The DOJ's settlement with RealPage limits what a shared pricing advisor may use: no competitors' current non-public data at runtime, training data at least 12 months old, and no reporting narrower than state level. The complaints also targeted auto-accept. Do these remedies stop an LLM pricing advisor whose objective is aligned with the whole market, the incentive alleged against RealPage?
 
-**Main findings** (details in [report/draft.md](report/draft.md); Claude Haiku 5.5 with n = 20 per arm unless noted; 666 runs on seven models):
+**Main findings** (details in [report/draft.md](report/draft.md); Claude Haiku 5.5 with n = 20 per arm unless noted; more than 700 runs on seven models):
 
 1. **The hub causes the harm.** A market-aligned hub drives a competitive market to joint monopoly (profit gain Δ 0.06 → 0.99). An advisor that serves only its own client is pro-competitive (Δ −0.01).
 2. **Data limits help unevenly.** A competitor-data ban removes:
@@ -14,7 +14,7 @@
 
    Stale data removes 21% for Haiku, and a market average removes none. A scripted rational hub with no data still raises prices.
 3. **Guardrails and partial adherence keep the harm.** Auto-accept within ±1–3% per round, the Final Judgment's "user-set parameters", retains all of it on Haiku and 88% on Qwen, and only delays monopoly (Haiku: round 4 → 8–19). At 50–90% acceptance, 73–94% remains.
-4. **The hub works as a ratchet, and firm discretion breaks it only when firms push back.** We swap in a scripted recommender that adds 1 cent per round:
+4. **Firm discretion works only when firms refuse small nudges.** We swap in a scripted recommender that adds 1 cent per round:
    - Haiku firms stay competitive (Δ 0.05).
    - Gemini Flash-Lite firms follow it to monopoly (Δ 1.00), with or without thinking.
 

@@ -43,13 +43,13 @@
 
 ## Still open at the time of writing
 
-- **Total cost:** filled in (about $110; $107.65 logged per call). Add the GPT-5.4 mini calls once they finish ($0, free tier).
+- **Total cost:** filled in (about $115; $112.50 logged per call). The GPT-5.4 mini calls are $0 (free tier).
 - **References:** verified against primary or public sources (Crossref, arXiv, the court opinions, CourtListener) at ~05:50 Sun. Corrections are applied. Only the page range of Berger et al. (2025) is unverified, because the ABA page returned 403. A quick look in your browser would settle it.
 - **GPT-5.4 mini:** n = 3 is in the draft. Its ratchet test (n = 4), then seeds 203–204, run automatically at the Mon 05:30 IST allowance reset (see "Monday morning" above).
 
 ## Form summary (short)
 
-> We test whether the remedies in the DOJ's 2026 RealPage Final Judgment stop an LLM pricing hub that is told to maximise its clients' combined profit, in a repeated Bertrand duopoly (666 runs, seven models from six labs, pre-registered main batch).
+> We test whether the remedies in the DOJ's 2026 RealPage Final Judgment stop an LLM pricing hub that is told to maximise its clients' combined profit, in a repeated Bertrand duopoly (more than 700 runs, seven models from six labs, pre-registered main batch).
 >
 > - **Data bans** remove 69–92% of the hub's harm on three models and ≤ 10% on two.
 > - **Auto-accept within ±1–3% per round** keeps 88–101% of it (Haiku, Qwen).

@@ -16,7 +16,7 @@
 
 ## Abstract
 
-Shared pricing software can align competitors' prices without any agreement; that is the theory of the US case against RealPage. Its 2026 Final Judgment limits what the software may see (no current rival data) and do (auto-accept only within user-set parameters). We test these remedies on an LLM pricing hub told to maximise its clients' combined profit, in a repeated logit Bertrand duopoly (666 runs; seven models from six labs; pre-registered main batch). With Claude Haiku 5.5 the hub raises profit gain Δ (1 = joint monopoly) from 0.06 to 0.99 (n = 20 per arm). Each remedy's effect depends on the model. A data ban removes 69–92% of the harm for Haiku, Qwen3.8 Flash and Nemotron 3.5 Lightning, but at most 10% for DeepSeek V4.1 Flash and Gemini 3.5 Flash-Lite. Auto-accept within ±1–3% per round retains 88–101% of it and only delays monopoly (Haiku, Qwen). Firm discretion removes 95% for Haiku (holding over 200 rounds) and ~100% for Qwen, but 57% for Gemini Flash-Lite (95% CI 27–84; n = 12) and none when its firms think (n = 6). The hub works as a ratchet of small steps: a scripted recommender adding 1 cent per round, under discretion, gives Δ 0.05, 0.28, 0.73 and 1.00 for Haiku, Nemotron, Qwen and Gemini Flash-Lite, in the order of how often each firm model accepts 1–2-cent nudges (12% to 61%). Remedies should constrain the advisor's objective and audit acceptance and outcomes; our open harness lets a court-appointed monitor run that test on a vendor's model.
+Shared pricing software can align competitors' prices without any agreement, the theory of the US case against RealPage. Its 2026 Final Judgment limits what the software may see (no current rival data) and do (auto-accept only within user-set parameters). We test these remedies on an LLM pricing hub told to maximise its clients' combined profit, in a repeated logit Bertrand duopoly (more than 700 runs; seven models from six labs; pre-registered main batch). With Claude Haiku 5.5 the hub raises profit gain Δ (1 = joint monopoly) from 0.06 to 0.99 (n = 20 per arm). Each remedy's effect depends on the model. A data ban removes 69–92% of the harm for Haiku, Qwen3.8 Flash and Nemotron 3.5 Lightning, but at most 10% for DeepSeek V4.1 Flash and Gemini 3.5 Flash-Lite. Auto-accept within ±1–3% per round retains 88–101% of it and only delays monopoly (Haiku, Qwen). Firm discretion removes 95% for Haiku (holding over 200 rounds) and ~100% for Qwen, but 57% for Gemini Flash-Lite (95% CI 27–84; n = 12) and none when its firms think (n = 6). Discretion fails against a ratchet of small steps: a scripted recommender adding 1 cent per round gives Δ 0.05, 0.28, 0.73 and 1.00 with Haiku, Nemotron, Qwen and Gemini Flash-Lite firms deciding, in the order of how often each accepts 1–2-cent nudges (12% to 61%). Remedies should constrain the advisor's objective and audit acceptance and outcomes; our open harness lets a court-appointed monitor run that test on a vendor's model.
 
 ## 1. Introduction
 
@@ -30,12 +30,12 @@ We ask a policy question conditional on the premise: if such a hub exists, do th
 
 **Contributions:**
 1. **A test of the Final Judgment's terms on LLM advisors.** A data ban removes 69–92% of the hub's harm on three models and at most 10% on two. Parameterised auto-accept and partial adherence retain 73–101% (Haiku).
-2. **A mechanism with a causal test.** The hub raises prices by a ratchet of small steps. With the recommender fixed by script, four firm models' outcomes (Δ 0.05 to 1.00) rise with how often they accept 1–2-cent nudges (12% to 61%).
+2. **A mechanism with a causal test.** Under discretion, prices rise only if firms accept small steps. With the recommender fixed by script, four firm models' outcomes (Δ 0.05 to 1.00) rise with how often they accept 1–2-cent nudges (12% to 61%).
 3. **An open, pre-registered harness** that a court-appointed monitor could run on a vendor's model before approving a remedy.
 
 ## 2. Related work
 
-**LLM pricing collusion.** Q-learning agents learn supracompetitive prices in a repeated logit Bertrand market (Calvano et al., 2020). So do GPT-4 agents (Fish et al., 2024) and reasoning models (Riemer et al., 2026, whose llm-cartel code we build on). Such collusion erodes when agents differ (Keppo et al., 2026).
+**LLM pricing collusion.** Q-learning agents learn supracompetitive prices in a repeated logit Bertrand market (Calvano et al., 2020). So do GPT-4 agents (Fish et al., 2024) and reasoning models (Riemer et al., 2026, whose llm-cartel design and prompts we re-implement; Appendix D). Such collusion erodes when agents differ (Keppo et al., 2026).
 
 **Shared algorithms and the law.** Sellers sharing one AI model can price supracompetitively when its recommendations are correlated enough (Cao and Hu, 2026). Liability turns on pooled non-public data and on adherence (Berger et al., 2025). *Gibson v. Cendyn* (9th Cir. 2025) upheld dismissal where recommendations were optional. *Cornish-Adebiyi v. Caesars* (3d Cir. 2026) revived a claim that cited pooled data and about 90% acceptance.
 
@@ -68,8 +68,8 @@ We ask a policy question conditional on the premise: if such a hub exists, do th
 
 **Statistics.**
 - Welch t tests and intervals, plus Mann-Whitney, with Holm correction within each pre-registered stage.
-- Share of harm removed = (Δ_M2-a − Δ_X)/(Δ_M2-a − Δ_B0), with a bootstrap 95% CI. The MDE is reported for every contrast.
-- n = 20 per primary Haiku arm (raised from 10 after the pilot), and n = 3–12 for the other models.
+- Share of harm removed = (Δ_hub − Δ_remedy)/(Δ_hub − Δ_no advisor), where "hub" is the market-aligned hub with current data on auto-accept, with a bootstrap 95% CI. The MDE for every contrast is in the per-arm tables (Appendix B).
+- n = 20 per primary Haiku arm (raised from 10 after the pilot), and n = 3–12 for the other models. The main batch's arms, contrasts and seed lists were frozen before it ran (commit `5aa9f79`); every later batch was logged with a prediction before launch (`SPRINT_LOG.md`).
 
 ## 4. Results
 
@@ -103,8 +103,8 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 *Figure 2. Data limits across models.* Price index over the last 20 of 100 rounds: 0 is Nash and 1 is joint monopoly. Bars are 95% t-intervals where n ≥ 4. The dashed line is a scripted rational joint-profit hub with no rival data.
 
 - **Aggregation.** In the triopoly (n = 10), a market-average feed removes nothing: Δ 0.98 vs 0.92 with per-firm data.
-- **Rational benchmark.** A scripted joint-profit hub reaches Δ 1.00 with current or stale data, and 0.82 with none. Under a joint objective, raising one's own price is profitable even without information about the rival.
-- **A hypothesis for the spread.** The data ban binds hubs that hesitate to act on their objective without information. Haiku's no-data hub writes "deviating upward risks losing volume to a competitor", while the DeepSeek and Gemini Flash-Lite hubs price at or above p_M within a few rounds. The spread does not track reasoning budget: DeepSeek's hub thinks as much as Haiku's (928 vs 778 output tokens). With five models, this stays a hypothesis.
+- **Rational benchmark.** A scripted joint-profit hub reaches Δ 1.00 with current or stale data, and 0.82 with none (price index 0.60, the dashed line in Figure 2). Under a joint objective, raising one's own price is profitable even without information about the rival.
+- **A hypothesis for the spread.** The data ban binds hubs that hesitate to act on their objective without information. Haiku's no-data hub writes "deviating upward risks losing volume to a competitor", while the DeepSeek and Gemini Flash-Lite hubs price at or above p_M within a few rounds. The spread does not track reasoning budget: DeepSeek's hub thinks as much as Haiku's (928 vs 778 output tokens). With six models, this stays a hypothesis.
 
 ### 4.3 Guardrails and partial adherence keep the harm *(Haiku; guardrails also on Qwen)*
 
@@ -156,7 +156,7 @@ So whether discretion protects depends on the deciding firm and on how patient t
 
 **Is it reasoning?** At our settings Gemini Flash-Lite does not think at all (35 output tokens per call). With thinking switched on (408 tokens per firm call, comparable to Haiku's 557):
 - the 1-cent ratchet still reaches monopoly (Δ 1.00 in 6/6 runs);
-- the firms accept *more* of its 1–2-cent increases (84% vs 61%);
+- the firms accept *more* of the ratchet's 1–2-cent increases (84% vs 61%) and more of the LLM hub's 3–5-cent steps (71% vs 46%; Table F2);
 - discretion against the LLM hub removes none of the harm (Δ 1.00 in 6/6 runs, against 0.41 without thinking; the baselines are B0 0.05 and auto-accept 0.98, n = 3).
 
 Pushing back is a matter of the firm model's disposition toward the recommendation, not of its reasoning budget.
@@ -221,20 +221,20 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
 
 - **A. Prompts (verbatim):** `appendix-prompts.md`.
 - **B. Per-arm tables:** `results/*/summary.md`.
-- **C. Costs.** $107.65 logged per call across five providers:
+- **C. Costs.** $112.50 logged per call across five providers:
   - Anthropic: $66.80;
-  - Google Gemini: $25.82, from credits;
+  - Google Gemini: $29.42, from credits;
   - DeepSeek: $7.87;
-  - OpenRouter: $7.16;
+  - OpenRouter: $8.41;
   - OpenAI: $0, on the free data-sharing tier.
 
-  An estimated $2–5 more went on unlogged calls: the detection monitor, probes and discarded partial runs. In all, 150,436 model calls in finished runs (165,710 including partial runs).
+  An estimated $2–5 more went on unlogged calls: the detection monitor, probes and discarded partial runs. In all, about 170,000 model calls.
 - **D. Provenance, independence and pre-existing code.**
   - No code predates the sprint, and no starter-repo file is included or modified.
   - The market is re-implemented in `advisor/market.py`. `tests/test_market.py` checks its duopoly benchmarks (Nash 1.4729, monopoly 1.9250) against the values from the llm-cartel code in the sprint's starter repository (`OligopolyGame`). Two benchmark bugs found in that starter code are documented in `SPRINT_LOG.md`.
   - The firm's system prompt is llm-cartel's P0 (Fish et al., 2024), used verbatim. The history-table format follows the starter code's `generate_prompt`, and the price parsing follows its `split_thoughts_and_price`.
   - Concurrent-work boundaries and every pre-registration are in `SPRINT_LOG.md`.
-- **E. Limitations and dual use:** `appendix-limitations-dual-use.md`.
+- **E. Limitations and Dual-Use / Ethical Considerations:** `appendix-limitations-dual-use.md`.
 - **F. Supplementary tables and figures:** `appendix-tables.md`. It contains:
   - F1: measured reasoning budgets;
   - F2: acceptance by recommended step;

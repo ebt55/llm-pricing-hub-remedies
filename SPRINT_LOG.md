@@ -1008,3 +1008,26 @@ Gemini is now closed for the sprint.
 - Guardrails now hold on two models.
 
 **Updated with these numbers:** draft (abstract, §4.3, §4.4 table and text, Discussion, limitations), Fig 3, appendix E, FAQ, README and checklist. OpenRouter spend: $8.41 logged, against a $9.00 cap.
+
+### 2026-10-25 23:45: fresh-eyes final review (Fable 5.1, read-only) applied
+
+**What the reviewer checked.** Every headline number against the log, `analyze.py` and `ratchet_curve.py`. All matched. The 18 edits it proposed fix the text around the numbers. Applied:
+
+- **Abstract (now 248 words).** "the hub works as a ratchet of small steps" becomes "Discretion fails against a ratchet of small steps". The LLM hubs do not all step in small increments: Haiku's hub, when ignored, keeps recommending large increases, and Gemini's mostly holds. The ratchet is our scripted instrument. Contribution 2 and the deck's ratchet slide are reworded to match.
+- **Counts and costs.**
+  - Counts are stated so they stay true after Monday: "more than 700 runs" and "about 170,000 calls".
+  - Costs are updated to $112.50 logged per call: Anthropic $66.80, Gemini $29.42, DeepSeek $7.87, OpenRouter $8.41.
+- **§3:**
+  - harm removed is defined without arm codes;
+  - the MDE is pointed to the per-arm tables;
+  - the pre-registration commit and seed-list freeze are stated in Methods.
+- **§2.** The Riemer et al. citation now says we re-implement llm-cartel's design and prompts, matching Appendix D.
+- **Smaller fixes:**
+  - "six models";
+  - the rational hub's price index (0.60) is linked to Fig 2's dashed line;
+  - the thinking-on acceptance claim is made precise (ratchet 84% vs 61%; LLM hub 3–5 cent steps 71% vs 46%);
+  - Appendix E: the required title "Limitations and Dual-Use / Ethical Considerations", n = 3–12, "designed post hoc, logged before they ran", and three 200-round checks.
+- **Fig 1** label "advice optional" becomes "firm discretion"; the earlier relabel had not applied.
+- **Per-arm `summary.md`** regenerated for ratchet, robust-long, ladder-gem-lite, ladder-gem-lite-hi, ladder-or-qwen, ladder-or-nemotron and replicate-openai.
+
+**Not changed.** The code link returns 404 because the repo is still private. The user makes it public before submitting (checklist step 4).

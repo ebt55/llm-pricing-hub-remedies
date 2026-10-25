@@ -1,4 +1,4 @@
-# Appendix: Limitations and Dual Use
+# Appendix E: Limitations and Dual-Use / Ethical Considerations
 
 ## Limitations
 
@@ -16,7 +16,7 @@
 | Auto-accept only within user-set parameters (§V.A.1) | Auto-accept clipped to ±1% or ±3% of the firm's last price | Close for per-period limits; cumulative limits untested |
 | Overrides protected, no acceptance incentives (§V.A.5, §V.C) | Firm discretion: the firm sets every price after seeing the recommendation | Close; "discretion" is our strongest version of these terms |
 
-**3. Firm behaviour drives the adherence results.** Whether firm discretion protects depends on how often the deciding firm model accepts small recommended increases. Exact-match rates for 1–2 cent increases:
+**3. Firm behaviour drives the adherence results.** Whether firm discretion protects depends on how often the deciding firm model accepts small recommended increases. Exact-match rates for the scripted ratchet's 1–2 cent increases:
 
 | Firm model | Accepts | Discretion vs a patient ratchet |
 |---|---|---|
@@ -30,14 +30,14 @@ Our firm models stand in for human or AI deciders whose deference we do not meas
 **4. Simulated market.**
 - One stylised logit Bertrand market with symmetric costs, one product and no entry.
 - Demand noise was tested only in one robustness batch.
-- Horizons are 100 rounds (200 in two checks), so the "harm removed" figures are horizon-dependent:
+- Horizons are 100 rounds (200 in three Haiku checks), so the "harm removed" figures are horizon-dependent:
   - longer runs make the data ban weaker;
   - one Gemini discretion run took off only at round 85.
 
 **5. Models and prompts.**
 - **Results depend on the model.**
   - The data ban removes 69–92% of the harm for three models and ≤ 10% for two.
-  - Replications are small (n = 2–12), and most robustness checks are on Haiku.
+  - Replications are small (n = 3–12), and most robustness checks are on Haiku.
   - Gemini 3.8 Flash's no-advisor baseline is unstable (two of four runs reach monopoly unaided), so its harm shares cannot be estimated.
 - **Reasoning budgets differ and were not all honoured.** Measured median output tokens per call range from 35 (Gemini 3.5 Flash-Lite at low effort, no thinking) to 6,376 (Nemotron, whose 1,024-token budget was not enforced). We report measured tokens. One batch (Gemini Flash-Lite at high effort, n = 6) shows that a Haiku-like budget does not make Gemini firms push back. Its baselines stayed at n = 3 when the batch reached our spending cap.
 - **Prompts.** We use one firm prompt (P0 from Fish et al. 2024, plus one neutral sentence about the competitor) and one advisor prompt per objective. LLM pricing is known to be sensitive to prompts.
@@ -47,7 +47,7 @@ Our firm models stand in for human or AI deciders whose deference we do not meas
 **6. Analysis.**
 - **Confirmatory:** the main batch was pre-registered and frozen (commit `5aa9f79`).
 - **Exploratory:** everything else, including the rational benchmark, the dose-response, guardrails, the vendor arms, robustness, the model ladder, the ratchet tests and detection. Each batch was logged with a prediction before it ran, and failed predictions are reported (firm discretion on Gemini; drift disclosure; reasoning making firms push back).
-- **The ratchet tests are post hoc.** They were designed after the Gemini discretion result.
+- **The ratchet tests were designed post hoc**, after the Gemini discretion result, and logged with predictions before they ran.
 - N for the primary arms was raised from 10 to 20 after the pilot.
 - Δ is not monotone above the monopoly price, so cross-model comparisons use the price index.
 
@@ -70,4 +70,4 @@ Our firm models stand in for human or AI deciders whose deference we do not meas
 - measure acceptance and outcomes, not just the permission to override;
 - don't rely on data limits or per-period bands alone.
 
-**Scope and cost.** Every experiment runs in a simulated market; no real firm, consumer or price is involved. Total API spend was about **$110**: $107.65 logged per call across Anthropic, Google (credits), DeepSeek, OpenRouter and OpenAI (free data-sharing tier), plus an estimated $2–5 of unlogged monitor, probe and discarded calls. Prompts and model outputs are logged and released with the code.
+**Scope and cost.** Every experiment runs in a simulated market; no real firm, consumer or price is involved. Total API spend was about **$115**: $112.50 logged per call across Anthropic, Google (credits), DeepSeek, OpenRouter and OpenAI (free data-sharing tier), plus an estimated $2–5 of unlogged monitor, probe and discarded calls. Prompts and model outputs are logged and released with the code.

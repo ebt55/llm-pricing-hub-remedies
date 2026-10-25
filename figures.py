@@ -29,7 +29,7 @@ MODELS = [("main", "Claude Haiku 5.5", SLOT[0]), ("replicate-dsflash", "DeepSeek
           ("replicate-openai", "GPT-5.4 mini", SLOT[2])]
 ARM_COLOR = {"B0": SLOT[0], "M2-a": SLOT[1], "M1-a": SLOT[2], "M0-a": SLOT[3], "M2-d": SLOT[4]}  # entity, not rank
 LADDER = [("B0", "No advisor"), ("R2-a", "Client-only\nadvisor,\ncurrent data"), ("M2-a", "Hub,\ncurrent data"),
-          ("M1-a", "Hub,\nstale data"), ("M0-a", "Hub,\nno rival data"), ("M2-d", "Hub,\nadvice optional")]
+          ("M1-a", "Hub,\nstale data"), ("M0-a", "Hub,\nno rival data"), ("M2-d", "Hub,\nfirm discretion")]
 
 plt.rcParams.update({"font.size": 9, "axes.edgecolor": MUTED, "axes.labelcolor": INK2, "xtick.color": INK2,
                      "ytick.color": INK2, "axes.spines.top": False, "axes.spines.right": False,

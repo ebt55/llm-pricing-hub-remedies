@@ -16,7 +16,7 @@ Our question: if the hub is an AI model whose goal is the whole market's profit,
 
 **5. Guardrails.** Second finding: the court still allows auto-accept, as long as each landlord sets the limits. We tested per-round bands of 3 percent and 1 percent. They keep all of the harm and only slow the climb, from round 4 to round 8 or 18. Accepting only part of the time also keeps most of it. Only full firm discretion, where the shop sets every price itself, removes the harm, at least for Claude Haiku. On Qwen, the 3 percent band also kept 88 percent of the harm.
 
-**6. The ratchet.** Third and main finding: why this happens. The hub doesn't jump to the monopoly price; it nudges the price up a cent or two at a time. To test whether that is the mechanism, we replaced the AI hub with a script that recommends last round's price plus one cent, and gave every shop model full discretion. The outcome tracks one thing: how readily each shop model accepts small nudges.
+**6. The ratchet.** Third and main finding: why this happens. Under discretion, the AI hub anchors on the shop's current price and steps up from it. To test whether small steps are what gets past a deciding shop, we replaced the AI hub with a script that recommends last round's price plus one cent, and gave every shop model full discretion. The outcome tracks one thing: how readily each shop model accepts small nudges.
 - Haiku accepts 12 percent and stays competitive.
 - Gemini Flash-Lite accepts 61 percent and walks all the way to monopoly, even when it is allowed to think.
 - Qwen is the telling case. It refuses the AI hub's big jumps, so discretion works against that hub, but a patient one-cent ratchet gets through.
