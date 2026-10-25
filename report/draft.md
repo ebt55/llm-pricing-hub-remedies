@@ -16,7 +16,7 @@
 
 ## Abstract
 
-Shared pricing software can align competitors' prices without any agreement; that is the theory of the US case against RealPage. Its 2026 Final Judgment limits what the software may see (no current rival data) and do (auto-accept only within user-set parameters). We test these remedies on an LLM pricing hub told to maximise its clients' combined profit, in a repeated logit Bertrand duopoly (666 runs; seven models from six labs; pre-registered main batch). With Claude Haiku 5.5 the hub raises profit gain Δ (1 = joint monopoly) from 0.06 to 0.99 (n = 20 per arm). Each remedy's effect depends on the model. A data ban removes 69–92% of the harm for Haiku, Qwen3.8 Flash and Nemotron 3.5 Lightning, but at most 10% for DeepSeek V4.1 Flash and Gemini 3.5 Flash-Lite. Auto-accept within ±1–3% per round retains all of it and only delays monopoly (Haiku). Firm discretion removes 95% for Haiku (holding over 200 rounds) and ~100% for Qwen, but 57% for Gemini Flash-Lite (95% CI 27–84; n = 12). The hub works as a ratchet of small steps: a scripted recommender adding 1 cent per round, under discretion, gives Δ 0.05, 0.35, 0.64 and 1.00 for Haiku, Nemotron, Qwen and Gemini Flash-Lite, in the order of how often each firm model accepts 1–2-cent nudges (12% to 61%). Remedies should constrain the advisor's objective and audit acceptance and outcomes; our open harness lets a court-appointed monitor run that test on a vendor's model.
+Shared pricing software can align competitors' prices without any agreement; that is the theory of the US case against RealPage. Its 2026 Final Judgment limits what the software may see (no current rival data) and do (auto-accept only within user-set parameters). We test these remedies on an LLM pricing hub told to maximise its clients' combined profit, in a repeated logit Bertrand duopoly (666 runs; seven models from six labs; pre-registered main batch). With Claude Haiku 5.5 the hub raises profit gain Δ (1 = joint monopoly) from 0.06 to 0.99 (n = 20 per arm). Each remedy's effect depends on the model. A data ban removes 69–92% of the harm for Haiku, Qwen3.8 Flash and Nemotron 3.5 Lightning, but at most 10% for DeepSeek V4.1 Flash and Gemini 3.5 Flash-Lite. Auto-accept within ±1–3% per round retains all of it and only delays monopoly (Haiku). Firm discretion removes 95% for Haiku (holding over 200 rounds) and ~100% for Qwen, but 57% for Gemini Flash-Lite (95% CI 27–84; n = 12) and none when its firms think (n = 6). The hub works as a ratchet of small steps: a scripted recommender adding 1 cent per round, under discretion, gives Δ 0.05, 0.35, 0.64 and 1.00 for Haiku, Nemotron, Qwen and Gemini Flash-Lite, in the order of how often each firm model accepts 1–2-cent nudges (12% to 61%). Remedies should constrain the advisor's objective and audit acceptance and outcomes; our open harness lets a court-appointed monitor run that test on a vendor's model.
 
 ## 1. Introduction
 
@@ -69,7 +69,7 @@ We ask a policy question conditional on the premise: if such a hub exists, do th
 **Statistics.**
 - Welch t tests and intervals, plus Mann-Whitney, with Holm correction within each pre-registered stage.
 - Share of harm removed = (Δ_M2-a − Δ_X)/(Δ_M2-a − Δ_B0), with a bootstrap 95% CI. The MDE is reported for every contrast.
-- n = 20 per primary Haiku arm (raised from 10 after the pilot), n = 4–12 for the other models, and n = 2–3 for the Gemini thinking-on batch, which stopped at a spending cap.
+- n = 20 per primary Haiku arm (raised from 10 after the pilot), and n = 3–12 for the other models.
 
 ## 4. Results
 
@@ -124,7 +124,7 @@ For calibration, the DOJ complaint alleges that final prices were within 1% of R
 - **Qwen3.8 Flash:** it removes all of it (Δ 0.10 vs B0 0.15 and auto-accept 0.97; n = 4). The prediction holds.
 - **Gemini 3.5 Flash-Lite:** it removes only **57%** (27–84; n = 12), and 4 of 12 runs end near monopoly (Δ 0.89–1.00). The prediction fails.
 
-**How the hub raises prices.** Under discretion, the hub anchors each recommendation on the client's current price and steps up from it. In the Gemini runs that reached monopoly, the hub kept nudging and the firms kept accepting: Gemini firms accept 69% of the LLM hub's 1–2-cent increases, against 16% for Haiku firms (Table F2). In the other runs, either the hub stopped pushing (its notes call 1.52 "the stable collusive price") or the firms refused.
+**How the hub raises prices.** Under discretion, the hub anchors each recommendation on the client's current price and steps up from it. In the Gemini runs that reached monopoly, the hub kept nudging and the firms kept accepting: Gemini firms accept 67% of the LLM hub's 1–2-cent increases, against 16% for Haiku firms (Table F2). In the other runs, either the hub stopped pushing (its notes call 1.52 "the stable collusive price") or the firms refused.
 
 **A causal test with a scripted ratchet** (pre-registered). We replace the LLM hub with a script that recommends the client's own last price plus a fixed step. The recommender is now identical across models, so only the firm differs. Δ over the last 20 rounds:
 
@@ -152,12 +152,12 @@ For calibration, the DOJ complaint alleges that final prices were within 1% of R
 
 So whether discretion protects depends on the deciding firm and on how patient the hub is, not on the rule.
 
-**Is it reasoning?** At our settings Gemini Flash-Lite does not think at all (35 output tokens per call). With thinking switched on (425 tokens per firm call, comparable to Haiku's 557):
-- the 1-cent ratchet still reaches monopoly (3/3 runs);
-- discretion against the LLM hub removes none of the harm (2/2 runs);
-- firms accept *more* 1–2-cent increases (84% vs 61% from the ratchet).
+**Is it reasoning?** At our settings Gemini Flash-Lite does not think at all (35 output tokens per call). With thinking switched on (408 tokens per firm call, comparable to Haiku's 557):
+- the 1-cent ratchet still reaches monopoly (Δ 1.00 in 6/6 runs);
+- the firms accept *more* of its 1–2-cent increases (84% vs 61%);
+- discretion against the LLM hub removes none of the harm (Δ 1.00 in 6/6 runs, against 0.41 without thinking; the baselines are B0 0.05 and auto-accept 0.98, n = 3).
 
-The batch stopped at the Gemini project's monthly spending cap, so this is exploratory. As far as it goes, pushing back is a matter of the firm model's disposition, not of reasoning budget.
+Pushing back is a matter of the firm model's disposition toward the recommendation, not of its reasoning budget.
 
 **Two candidate fixes, on Gemini Flash-Lite** (n = 6, exploratory):
 - **Stacking the decree's remedies** (data ban + discretion) removes 60% (16–98), no more than discretion alone.
@@ -194,7 +194,7 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
 
 *The full list is in Appendix E.*
 - **The hub's objective is a premise.** We instruct it, and §4.5 is our only test without it.
-- **The discretion result depends on firm models' deference,** which stands in for human or AI deciders we did not measure. Replications are small (n = 4–12; 2–3 with thinking on), reasoning budgets differ by model, guardrails were tested on Haiku only, and Gemini 3.8 Flash's baseline is unstable.
+- **The discretion result depends on firm models' deference,** which stands in for human or AI deciders we did not measure. Replications are small (n = 3–12), reasoning budgets differ by model, guardrails were tested on Haiku only, and Gemini 3.8 Flash's baseline is unstable.
 - **Remedy mappings are analogues:** rounds stand for months, and a runtime lag for a training-data rule. There is one market model, and harm can rise after round 100, so our shares are upper bounds. The mechanism tests were designed after the Gemini result and pre-registered before they ran.
 
 ## References

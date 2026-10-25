@@ -952,3 +952,36 @@ If the result falls outside its band, the claim weakens to "the ratchet's succes
 | 2 | M2-a | Finish s1003–s1004 | 5 |
 
 Estimated about $3.4 logged (about ₹390 billed).
+
+### 2026-10-25 12:00: Gemini thinking-on batch complete for the priority arms (P7, P8)
+
+**Spend.** $3.60 logged; the hard stop held at $29.42 logged Gemini lifetime, about ₹3,270 billed by our 1.3× factor. The B0 and M2-a extensions (s1003–s1004) were stopped by the cap and stay partial, so those arms remain at n = 3.
+
+| Arm, thinking on | n | Δ | Note |
+|---|---|---|---|
+| K1-d | 6 | **1.000** | all 6 runs at monopoly |
+| M2-d | 6 | **0.998** | removes −2% of the harm (−5 to 0) |
+| B0 | 3 | 0.051 | — |
+| M2-a | 3 | 0.983 | — |
+
+**Acceptance of 1–2 cent increases:**
+
+| Recommender | Thinking on | Thinking off |
+|---|---|---|
+| Scripted ratchet | 84% (n = 607) | 61% |
+| LLM hub | 52% (n = 235) | 67% (n = 531, recomputed on all 12 runs) |
+
+For the LLM hub's 3–5 cent increases: 71% with thinking against 46% without.
+
+- **P7 failed** (reasoning firms do not accept fewer nudges from the ratchet).
+- **P8 failed** (discretion removes nothing with thinking on, against 57% without).
+- **Reading.** At a budget comparable to Haiku's (408 output tokens per firm call), Gemini Flash-Lite firms defer to the hub as much or more, and discretion fails completely. Pushing back is the firm model's disposition, not its reasoning budget.
+
+**Draft updated:**
+- abstract ("and none when its firms think, n = 6");
+- §4.4;
+- Table F1 (now 408 / 816 tokens);
+- Table F2, with the no-thinking row recomputed on all 12 discretion runs plus M0-d and M2-dx (67%; it was 69% on 6 runs);
+- limitations.
+
+Gemini is now closed for the sprint.

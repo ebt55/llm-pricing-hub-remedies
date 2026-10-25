@@ -14,7 +14,7 @@ Median output tokens per call, with thinking included (`tools/token_table.py`). 
 | GPT-5.4 mini | Low effort | 196 / 169 |
 | Gemini 3.8 Flash | Low effort | 142 / 122 |
 | Gemini 3.5 Flash-Lite | Low effort | **35 / 39 (no thinking)** |
-| Gemini 3.5 Flash-Lite | High effort (thinking-on batch) | 425 / 794 |
+| Gemini 3.5 Flash-Lite | High effort (thinking-on batch) | 408 / 816 |
 
 ## Table F2. Acceptance of the LLM hub's recommended increases, under firm discretion
 
@@ -24,8 +24,8 @@ The share of recommended increases (recommendation minus the firm's last price) 
 |---|---|---|---|---|
 | Claude Haiku 5.5 | 16% (n = 529) | 8% (981) | 4% (599) | 4% (1,383) |
 | Qwen3.8 Flash | 40% (15) | 23% (93) | 50% (12) | 18% (114) |
-| Gemini 3.5 Flash-Lite, no thinking | 69% (157) | 63% (60) | 25% (8) | 21% (24) |
-| Gemini 3.5 Flash-Lite, thinking on | 88% (58) | 92% (36) | — | — |
+| Gemini 3.5 Flash-Lite, no thinking | 67% (531) | 46% (304) | 18% (45) | 8% (147) |
+| Gemini 3.5 Flash-Lite, thinking on | 52% (235) | 71% (157) | 14% (21) | 17% (6) |
 
 Cell sizes differ by model because the hubs recommend different steps. Haiku's hub, when ignored, keeps recommending large increases, while Gemini's mostly recommends holding.
 
