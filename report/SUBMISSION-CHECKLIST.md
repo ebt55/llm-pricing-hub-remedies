@@ -42,7 +42,7 @@
 > We test whether the remedies in the DOJ's 2026 RealPage Final Judgment stop an LLM pricing hub that is told to maximise its clients' combined profit, in a repeated Bertrand duopoly (666 runs, seven models from six labs, pre-registered main batch).
 >
 > - **Data bans** remove 69–92% of the hub's harm on three models and ≤ 10% on two.
-> - **Auto-accept within ±1–3% per round** keeps all of it (Haiku).
+> - **Auto-accept within ±1–3% per round** keeps 88–101% of it (Haiku, Qwen).
 > - **Firm discretion** works only when firms refuse small nudges.
 >
 > A scripted 1-cent-per-round ratchet leaves Haiku firms competitive but walks Qwen and Gemini firms most or all of the way to monopoly. Remedies should target the advisor's objective and audit acceptance and outcomes. Code, logs and every pre-registration: https://github.com/ebt55/llm-pricing-hub-remedies

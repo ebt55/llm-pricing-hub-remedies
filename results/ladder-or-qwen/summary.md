@@ -1,12 +1,13 @@
 # Results: ladder-or-qwen
 
-20 finished runs; spend $2.77.
+32 finished runs; spend $4.12.
 
 ## Gates
 
 - baseline headroom: B0 Delta +0.150 (runs +0.02, +0.04, -0.01, +0.54); want <= 0.55 -> PASS
 - behavioural positive control: M2-a exceeds mean B0 by >= 0.3 in 4/4 runs -> PASS
-- harness: 4800 calls, 29 parse retries (0.60%), 0 refusals
+- harness: 7200 calls, 31 parse retries (0.43%), 0 refusals
+- manipulation check K1-d: follow rate 0.42 (last rounds); follow rate when the recommendation moves the price by > $0.05: 0.92 (n = 12 decisions)
 - manipulation check M2-d: follow rate 0.76 (last rounds); follow rate when the recommendation moves the price by > $0.05: 0.32 (n = 175 decisions)
 
 ## Arms (unit = run)
@@ -14,10 +15,12 @@
 | arm | N | Δ mean | SD | 95% CI ± | price | price index | follow rate | |p−rec| | rec dispersion | retries | refusals | $ |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | B0 | 4 | 0.150 | 0.263 | 0.419 | 1.519 | 0.102 |  |  |  | 1 | 0 | 0.39 |
+| K1-d | 8 | 0.731 | 0.310 | 0.259 | 1.772 | 0.661 | 0.42 | 0.010 | 0.110 | 2 | 0 | 0.83 |
 | M0-a | 4 | 0.275 | 0.249 | 0.396 | 1.593 | 0.265 | 1.00 | 0.000 | 0.053 | 1 | 0 | 0.40 |
 | M1-a | 4 | 0.278 | 0.370 | 0.588 | 1.584 | 0.245 | 1.00 | 0.000 | 0.052 | 8 | 0 | 0.52 |
 | M2-a | 4 | 0.968 | 0.033 | 0.052 | 1.970 | 1.101 | 1.00 | 0.000 | 0.016 | 7 | 0 | 0.52 |
 | M2-d | 4 | 0.095 | 0.046 | 0.073 | 1.508 | 0.078 | 0.76 | 0.056 | 0.102 | 12 | 0 | 0.94 |
+| M2-g3 | 4 | 0.869 | 0.260 | 0.413 | 1.843 | 0.819 | 1.00 | 0.000 | 0.006 | 0 | 0 | 0.52 |
 
 ## Contrasts on Δ (two-sided; Welch p, Mann-Whitney p, Holm within stage; MDE = 2.8 SE)
 

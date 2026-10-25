@@ -21,8 +21,8 @@
 | Firm model | Accepts | Discretion vs a patient ratchet |
 |---|---|---|
 | Haiku | 12% | Works |
-| Nemotron | 26% | Partial |
-| Qwen | 46% | Fails |
+| Nemotron | 20% | Partial |
+| Qwen | 52% | Fails |
 | Gemini Flash-Lite | 61% | Fails |
 
 Our firm models stand in for human or AI deciders whose deference we do not measure. Real landlords' acceptance is reported as 40–50% within 1% of the recommendation (DOJ complaint) and 80–90% (former employees, private plaintiffs).

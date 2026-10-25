@@ -16,7 +16,7 @@
 
 ## Abstract
 
-Shared pricing software can align competitors' prices without any agreement; that is the theory of the US case against RealPage. Its 2026 Final Judgment limits what the software may see (no current rival data) and do (auto-accept only within user-set parameters). We test these remedies on an LLM pricing hub told to maximise its clients' combined profit, in a repeated logit Bertrand duopoly (666 runs; seven models from six labs; pre-registered main batch). With Claude Haiku 5.5 the hub raises profit gain Δ (1 = joint monopoly) from 0.06 to 0.99 (n = 20 per arm). Each remedy's effect depends on the model. A data ban removes 69–92% of the harm for Haiku, Qwen3.8 Flash and Nemotron 3.5 Lightning, but at most 10% for DeepSeek V4.1 Flash and Gemini 3.5 Flash-Lite. Auto-accept within ±1–3% per round retains all of it and only delays monopoly (Haiku). Firm discretion removes 95% for Haiku (holding over 200 rounds) and ~100% for Qwen, but 57% for Gemini Flash-Lite (95% CI 27–84; n = 12) and none when its firms think (n = 6). The hub works as a ratchet of small steps: a scripted recommender adding 1 cent per round, under discretion, gives Δ 0.05, 0.35, 0.64 and 1.00 for Haiku, Nemotron, Qwen and Gemini Flash-Lite, in the order of how often each firm model accepts 1–2-cent nudges (12% to 61%). Remedies should constrain the advisor's objective and audit acceptance and outcomes; our open harness lets a court-appointed monitor run that test on a vendor's model.
+Shared pricing software can align competitors' prices without any agreement; that is the theory of the US case against RealPage. Its 2026 Final Judgment limits what the software may see (no current rival data) and do (auto-accept only within user-set parameters). We test these remedies on an LLM pricing hub told to maximise its clients' combined profit, in a repeated logit Bertrand duopoly (666 runs; seven models from six labs; pre-registered main batch). With Claude Haiku 5.5 the hub raises profit gain Δ (1 = joint monopoly) from 0.06 to 0.99 (n = 20 per arm). Each remedy's effect depends on the model. A data ban removes 69–92% of the harm for Haiku, Qwen3.8 Flash and Nemotron 3.5 Lightning, but at most 10% for DeepSeek V4.1 Flash and Gemini 3.5 Flash-Lite. Auto-accept within ±1–3% per round retains 88–101% of it and only delays monopoly (Haiku, Qwen). Firm discretion removes 95% for Haiku (holding over 200 rounds) and ~100% for Qwen, but 57% for Gemini Flash-Lite (95% CI 27–84; n = 12) and none when its firms think (n = 6). The hub works as a ratchet of small steps: a scripted recommender adding 1 cent per round, under discretion, gives Δ 0.05, 0.28, 0.73 and 1.00 for Haiku, Nemotron, Qwen and Gemini Flash-Lite, in the order of how often each firm model accepts 1–2-cent nudges (12% to 61%). Remedies should constrain the advisor's objective and audit acceptance and outcomes; our open harness lets a court-appointed monitor run that test on a vendor's model.
 
 ## 1. Introduction
 
@@ -106,7 +106,7 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 - **Rational benchmark.** A scripted joint-profit hub reaches Δ 1.00 with current or stale data, and 0.82 with none. Under a joint objective, raising one's own price is profitable even without information about the rival.
 - **A hypothesis for the spread.** The data ban binds hubs that hesitate to act on their objective without information. Haiku's no-data hub writes "deviating upward risks losing volume to a competitor", while the DeepSeek and Gemini Flash-Lite hubs price at or above p_M within a few rounds. The spread does not track reasoning budget: DeepSeek's hub thinks as much as Haiku's (928 vs 778 output tokens). With five models, this stays a hypothesis.
 
-### 4.3 Guardrails and partial adherence keep the harm *(Haiku)*
+### 4.3 Guardrails and partial adherence keep the harm *(Haiku; guardrails also on Qwen)*
 
 | Adherence (hub with current data) | Δ | Harm retained | Rounds to 0.95·p_M (median) |
 |---|---|---|---|
@@ -115,6 +115,8 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 | Auto-accept within ±1% per round (n = 10) | 1.00 | 101% | 18.5 |
 | Partial adherence, q = 0.9 / 0.8 / 0.5 | 0.94 / 0.90 / 0.74 | 94 / 90 / 73% | — |
 | **Firm discretion** | **0.11** | **5%** | never (0/20) |
+
+On Qwen3.8 Flash, the ±3% band retains 88% of the harm (Δ 0.87 vs 0.97 under plain auto-accept; n = 4) and delays monopoly from a median round of 45 to 56.
 
 For calibration, the DOJ complaint alleges that final prices were within 1% of RealPage's recommendation for 40–50% of new leases, and former employees and private plaintiffs put acceptance at 80–90%. Both sit where most of the harm remains in our model (Appendix Figure A1).
 
@@ -131,8 +133,8 @@ For calibration, the DOJ complaint alleges that final prices were within 1% of R
 | Firm model | Accepts +1–2 cent nudges* | +1 cent | +3 cents | +10 cents | LLM hub (for comparison) |
 |---|---|---|---|---|---|
 | Claude Haiku 5.5 | 12% | **0.05** (n = 10) | 0.03 | 0.03 | 0.11 (n = 20) |
-| Nemotron 3.5 Lightning | 26% | **0.35** (n = 4) | — | — | — |
-| Qwen3.8 Flash | 46% | **0.64** (n = 4) | — | — | 0.10 (n = 4) |
+| Nemotron 3.5 Lightning | 20% | **0.28** (n = 8) | — | — | — |
+| Qwen3.8 Flash | 52% | **0.73** (n = 8) | — | — | 0.10 (n = 4) |
 | Gemini 3.5 Flash-Lite | 61% | **1.00** (n = 6) | 0.99 | 0.93 | 0.41 (n = 12) |
 
 \*Share of the ratchet's 1–2-cent recommended increases that the firm matched exactly (`tools/ratchet_curve.py`). Firms that do not match often move part of the way.
@@ -148,7 +150,7 @@ For calibration, the DOJ complaint alleges that final prices were within 1% of R
 **How far the ratchet gets tracks how often the firm model accepts small nudges** (Figure 3):
 - **Haiku firms refuse even a patient 1-cent ratchet.** Every Haiku ratchet arm sits at or below the no-advisor baseline (Δ 0.03–0.05 vs 0.06). The result holds over 200 rounds: Δ 0.03 for both the LLM hub and the ratchet in rounds 181–200 (n = 5).
 - **Gemini Flash-Lite firms follow nudges of any size.** They reach p_M at the pace of the step (Figure 3a). Exact matches fall with step size, but firms that don't match move part of the way.
-- **Qwen firms show why step size matters.** They refuse the LLM hub's large jumps and remove all of its harm. A patient 1-cent ratchet still takes 3 of 4 Qwen markets most of the way to monopoly (Δ 0.72, 0.87 and 0.90; the fourth stays at 0.05).
+- **Qwen firms show why step size matters.** They refuse the LLM hub's large jumps and remove all of its harm. A patient 1-cent ratchet still takes 7 of 8 Qwen markets most of the way to monopoly (Δ 0.55–1.00; the eighth stays at 0.05).
 
 So whether discretion protects depends on the deciding firm and on how patient the hub is, not on the rule.
 
@@ -175,7 +177,7 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
 
 **Why data limits work on some models and not others.** Data limits are written for software whose behaviour depends on the data it sees. An LLM hub's behaviour depends mainly on its objective, and data mostly confirms that the rival has followed. So a data limit binds only if the model hesitates to pursue its objective blind. We call the harm that survives the data rules **data-compliant coordination**.
 
-**Why guardrails miss.** The ratchet lives inside the band: a per-round limit bounds each step, not where the steps lead. A ±1% band delayed monopoly by about 15 rounds and changed nothing else. We tested bands only on Haiku; whether other hubs keep pushing inside a band is open.
+**Why guardrails miss.** The ratchet lives inside the band: a per-round limit bounds each step, not where the steps lead. On Haiku a ±1% band delayed monopoly by about 15 rounds and changed nothing else. On Qwen a ±3% band retained 88% of the harm.
 
 **Why discretion is not a remedy by itself.** Firm discretion works the way a human in the loop works: only if whoever is in the loop has their own interest and acts on it. A deciding firm that refuses small nudges breaks the ratchet; one that defers is auto-accept with an extra step. Which kind a firm is depends on the model, not on the rule, and showing the firm the cumulative drift did not change that.
 
@@ -194,7 +196,7 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
 
 *The full list is in Appendix E.*
 - **The hub's objective is a premise.** We instruct it, and §4.5 is our only test without it.
-- **The discretion result depends on firm models' deference,** which stands in for human or AI deciders we did not measure. Replications are small (n = 3–12), reasoning budgets differ by model, guardrails were tested on Haiku only, and Gemini 3.8 Flash's baseline is unstable.
+- **The discretion result depends on firm models' deference,** which stands in for human or AI deciders we did not measure. Replications are small (n = 3–12), reasoning budgets differ by model, guardrails were tested on two models, and Gemini 3.8 Flash's baseline is unstable.
 - **Remedy mappings are analogues:** rounds stand for months, and a runtime lag for a training-data rule. There is one market model, and harm can rise after round 100, so our shares are upper bounds. The mechanism tests were designed after the Gemini result and pre-registered before they ran.
 
 ## References

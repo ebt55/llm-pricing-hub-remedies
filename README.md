@@ -13,7 +13,7 @@
    - ≤ 10% for DeepSeek V4.1 Flash and Gemini 3.5 Flash-Lite.
 
    Stale data removes 21% for Haiku, and a market average removes none. A scripted rational hub with no data still raises prices.
-3. **Guardrails and partial adherence keep the harm.** Auto-accept within ±1–3% per round, the Final Judgment's "user-set parameters", retains all of it and only delays monopoly (round 4 → 8–19). At 50–90% acceptance, 73–94% remains.
+3. **Guardrails and partial adherence keep the harm.** Auto-accept within ±1–3% per round, the Final Judgment's "user-set parameters", retains all of it on Haiku and 88% on Qwen, and only delays monopoly (Haiku: round 4 → 8–19). At 50–90% acceptance, 73–94% remains.
 4. **The hub works as a ratchet, and firm discretion breaks it only when firms push back.** We swap in a scripted recommender that adds 1 cent per round:
    - Haiku firms stay competitive (Δ 0.05).
    - Gemini Flash-Lite firms follow it to monopoly (Δ 1.00), with or without thinking.
