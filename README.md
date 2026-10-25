@@ -20,7 +20,7 @@
 
    With an LLM hub, discretion removes 95% of the harm for Haiku and 57% for Gemini Flash-Lite. Stacking the data ban on top, or showing firms the cumulative drift, doesn't fix the Gemini case.
 5. **Coordination needs no joint instruction.** Advice to "avoid a race to the bottom" also raises prices (Δ 0.45 without rival data, n = 10).
-6. **Detection.** The price-level screen catches outcomes (AUROC 0.90). The classic variance screen points the wrong way (0.36). A reasoning monitor catches the hub's *stated* intent, but also flags honest advisors that watch rivals.
+6. **Detection.** The price-level screen catches outcomes (AUROC 0.90). Two classic instruments point the wrong way: the variance screen (0.36), and a monitor of single price moves, which ranks the hub's guardrailed and ratcheting climbs as *less* suspicious than honest play (0.05–0.22). A reasoning monitor catches the hub's *stated* intent, but also flags honest advisors that watch rivals.
 
 ## Repository
 

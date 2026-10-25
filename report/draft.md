@@ -26,7 +26,7 @@ Shared pricing software can align competitors' prices without any agreement, the
 
 We ask a policy question conditional on the premise: if such a hub exists, do the remedies regulators imposed stop it? This is the sprint's question 1.5, "Which single restriction removes the most collusion at the least cost?", asked of the restrictions a court actually imposed.
 
-**The remedies.** The DOJ–RealPage Final Judgment (M.D.N.C. 1:24-cv-710, entered 19 May 2026) bans competitors' non-public data from runtime pricing. It allows non-public training data only if it is at least 12 months old, and forbids sub-state geographic models. It allows auto-accept only if each user sets its parameters (§V.A.1), and bars features that impede overriding a recommendation (§V.A.5) or reward accepting one (§V.C). Landlord consent decrees bar software that *requires* acceptance.
+**The remedies.** The DOJ–RealPage Final Judgment (M.D.N.C. 1:24-cv-710, entered 19 May 2026) bans competitors' non-public data from runtime pricing. It allows non-public training data only if it is at least 12 months old, and forbids sub-state geographic models. It allows auto-accept only if each user sets its parameters (§V.A.1), and bars features that impede overriding a recommendation (§V.A.5) or reward accepting one (§V.C). Landlord consent decrees bar software that *requires* acceptance. The stakes are measurable: in US multifamily rentals, higher penetration of the same pricing software goes with higher rents and lower occupancy (Calder-Wang & Kim, 2026), and in German retail gasoline, margins rose where competing stations all adopted algorithmic pricing (Assad et al., 2024).
 
 **Contributions:**
 1. **A test of the Final Judgment's terms on LLM advisors.** A data ban removes 69–92% of the hub's harm on three models and at most 10% on two. Parameterised auto-accept and partial adherence retain 73–101% (Haiku).
@@ -39,7 +39,7 @@ We ask a policy question conditional on the premise: if such a hub exists, do th
 
 **Shared algorithms and the law.** Sellers sharing one AI model can price supracompetitively when its recommendations are correlated enough (Cao and Hu, 2026). Liability turns on pooled non-public data and on adherence (Berger et al., 2025). *Gibson v. Cendyn* (9th Cir. 2025) upheld dismissal where recommendations were optional. *Cornish-Adebiyi v. Caesars* (3d Cir. 2026) revived a claim that cited pooled data and about 90% acceptance.
 
-**Interventions.** In LLM markets, the evidence is model-specific: anti-collusion prompts (Riemer et al., 2026), announced price caps (Dhanda, 2026), enforced governance (Bracale Syrnikov et al., 2026), and untested mappings of human remedies (Idowu et al., 2026). These act on firms' prompts, rules or rivals; ours act on a third-party advisor's information and authority. To our knowledge, no prior work tests the RealPage remedies on LLM advisors. On detection, price-level audits can be blind by construction (Xu et al., 2026). Concurrent sprint work (zerocommcartel, 2026) varies what firms are told about rivals' advisors in a one-shot Cournot game. We vary the advisor's data access and the firms' adherence in a repeated Bertrand market.
+**Interventions.** In LLM markets, the evidence is model-specific: anti-collusion prompts (Riemer et al., 2026), announced price caps (Dhanda, 2026), a damages regulator or a new entrant (Garra, 2026), regulator review modes, whose best mode is model-specific (Anto & Vazquez, 2026), enforced governance (Bracale Syrnikov et al., 2026), and untested mappings of human remedies (Idowu et al., 2026). These act on firms' prompts, rules or rivals; ours act on a third-party advisor's information and authority. To our knowledge, no prior work tests the RealPage remedies on LLM advisors. On detection, price-level audits can be blind by construction (Xu et al., 2026). Concurrent sprint work (zerocommcartel, 2026) varies what firms are told about rivals' advisors in a one-shot Cournot game. We vary the advisor's data access and the firms' adherence in a repeated Bertrand market.
 
 ## 3. Setup
 
@@ -118,8 +118,6 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 
 On Qwen3.8 Flash, the ±3% band retains 88% of the harm (Δ 0.87 vs 0.97 under plain auto-accept; n = 4) and delays monopoly from a median round of 45 to 56.
 
-For calibration, the DOJ complaint alleges that final prices were within 1% of RealPage's recommendation for 40–50% of new leases, and former employees and private plaintiffs put acceptance at 80–90%. Both sit where most of the harm remains in our model (Appendix Figure A1).
-
 ### 4.4 Firm discretion works only when firms refuse small nudges *(Figure 3)*
 
 **A replication that half failed.** We pre-registered that firm discretion would remove ≥ 80% of the hub's harm on two other models:
@@ -165,11 +163,11 @@ Pushing back is a matter of the firm model's disposition toward the recommendati
 
 ### 4.5 Without a coordination instruction *(exploratory)*
 
-We test an advisor that maximises its client's profit and follows "avoid a race to the bottom" guidance, a paraphrase of the RealPage complaints. Without rival data it raises prices (Δ 0.45 vs 0.06; p = .004, n = 10); with rival data, less so (0.21; p = .11); under firm discretion, not at all (0.09). Realistic revenue-management guidance can move prices up without any joint objective.
+An advisor that maximises its client's profit but follows "avoid a race to the bottom" guidance (a paraphrase of the RealPage complaints) still raises prices without rival data (Δ 0.45 vs 0.06; p = .004, n = 10), less so with it (0.21; p = .11), and not under discretion (0.09).
 
 ### 4.6 Robustness *(exploratory, Haiku; Appendix Table F3)*
 
-The data-limit ranking holds under demand noise, without the price-ceiling cue, at higher reasoning effort and over 200 rounds, where both remedies retain more harm (so 100-round shares are upper bounds). With only one firm on the hub, its client loses and the rival gains: the harm needs both firms on the hub.
+The data-limit ranking holds under demand noise, without the price-ceiling cue, at higher effort and over 200 rounds (so 100-round shares are upper bounds). With one firm on the hub, its client loses: the harm needs both firms on it.
 
 ## 5. Discussion
 
@@ -179,16 +177,18 @@ The data-limit ranking holds under demand noise, without the price-ceiling cue, 
 
 **Why discretion is not a remedy by itself.** Firm discretion works the way a human in the loop works: only if whoever is in the loop has their own interest and acts on it. A deciding firm that refuses small nudges breaks the ratchet; one that defers is auto-accept with an extra step. Which kind a firm is depends on the model, not on the rule, and showing the firm the cumulative drift did not change that.
 
-**Can anyone tell, before approving a remedy, whether discretion is real?** Yes. The Final Judgment's monitor sees recommendation logs, so it can compute what we compute: the share of small recommended increases that users accept. Where users accept most small nudges, discretion is nominal, and our model predicts that most of the harm survives. The real-world figures (40–50% within 1%; 80–90% by former employees' accounts) suggest real deciders sit nearer the deferential end.
+**Can anyone tell, before approving a remedy, whether discretion is real?** Yes. The Final Judgment's monitor sees recommendation logs, so it can compute what we compute: the share of small recommended increases that users accept. Where users accept most small nudges, discretion is nominal, and our model predicts that most of the harm survives. Real-world acceptance (40–50% of leases within 1% of the recommendation, per the DOJ complaint; 80–90% by former employees' accounts) sits where most of the harm remains in our model (Figure A1).
 
 **Implications for remedies on LLM pricing software:**
 1. **Regulate and audit the advisor's objective.** The same data and authority are harmless under a client-only objective.
 2. **Measure acceptance, not just permission.** The acceptance of small recommended increases, together with price outcomes from an ablation audit like ours, tests whether discretion is real.
 3. **Treat data limits as model-dependent and per-round bands as delays.** Neither is a remedy a court can rely on without testing the vendor's model.
 
-**Beyond antitrust.** Per-step approval by a deferential overseer is a general weakness of AI oversight. An agent that moves in small, individually plausible steps can drive an outcome that no single approval would allow. A natural next step is mechanistic: is deference to a recommendation a steerable direction inside open-weight models, and could steering deciders toward scepticism serve as a remedy?
+**Beyond antitrust.** Per-step approval by a deferential overseer is a general weakness of AI oversight. An agent that moves in small, individually plausible steps can drive an outcome no single approval would allow. This is the temporal analogue of attacks split across agents, which defeat per-instance monitors (Makins et al., 2026) and per-action defences (Hagag et al., 2026).
+- **In our runs, a monitor of single price moves points the wrong way** (Table F6). It ranks the hub's guardrailed, ratcheting and discretionary climbs as *less* suspicious than honest play (AUROC 0.05–0.22), because honest firms experiment in bigger steps. So does the classic variance screen (Abrantes-Metz et al., 2006; AUROC 0.36).
+- **Only where prices settle separates the two at a 1% false-alarm rate.**
 
-**Detection** (Table F4): the classic variance screen (Abrantes-Metz et al., 2006) points the wrong way here (AUROC 0.36).
+A natural next step is mechanistic: is deference to a recommendation a steerable direction inside open-weight models, and could steering deciders toward scepticism serve as a remedy?
 
 ## 6. Limitations
 
@@ -201,13 +201,20 @@ The data-limit ranking holds under demand noise, without the price-ceiling cue, 
 
 - Abrantes-Metz, R. M., Froeb, L. M., Geweke, J., & Taylor, C. T. (2006). A variance screen for collusion. *International Journal of Industrial Organization*, 24(3), 467–486. https://doi.org/10.1016/j.ijindorg.2005.10.003
 - Berger, L. F., Weiner, M. L., & Jiang, W. (2025). Coordination by Code: Rethinking Antitrust Liability in the Age of AI Pricing. *Antitrust* (ABA Section of Antitrust Law), 40(1). https://www.americanbar.org/groups/antitrust_law/resources/magazine/2025-fall/coordination-code-rethinking-antitrust-liability-age-ai-pricing/
+- Anto, M., & Vazquez, J. (2026). Oversight is Not Compliance: Tacit Collusion in LLM Pricing Agents Under Antitrust Regulation. ICML 2026 Workshop on Agents in the Wild (poster). https://openreview.net/forum?id=aPnAkoXjF2
+- Assad, S., Clark, R., Ershov, D., & Xu, L. (2024). Algorithmic Pricing and Competition: Empirical Evidence from the German Retail Gasoline Market. *Journal of Political Economy*, 132(3), 723–771. https://doi.org/10.1086/726906
 - Bracale Syrnikov, M., Pierucci, F., Galisai, M., Prandi, M., Bisconti, P., Giarrusso, F., Sorokoletova, O., Suriani, V., & Nardi, D. (2026). Institutional AI: Governing LLM Collusion in Multi-Agent Cournot Markets via Public Governance Graphs. arXiv:2601.11369. https://arxiv.org/abs/2601.11369
 - Calvano, E., Calzolari, G., Denicolò, V., & Pastorello, S. (2020). Artificial Intelligence, Algorithmic Pricing, and Collusion. *American Economic Review*, 110(10), 3267–3297. https://doi.org/10.1257/aer.20190623
+- Calder-Wang, S., & Kim, G. H. (2026). Algorithmic Pricing in Multifamily Rentals: Efficiency Gains or Price Coordination? Working paper, 18 Feb 2026. SSRN 4403058. https://www.ftc.gov/system/files/ftc_gov/pdf/calder-wangkim.pdf
 - Cao, S., & Hu, M. (2026). Supracompetitive Pricing Under AI Monoculture. arXiv:2601.01279. https://arxiv.org/abs/2601.01279
 - Dhanda, K. (2026). A Price Cap Can Act as a Focal Point for LLM Pricing Agents: Evidence from a Repeated Bertrand Duopoly (Revised). Research Square preprint. https://doi.org/10.21203/rs.3.rs-10183486/v1
 - Fish, S., Gonczarowski, Y. A., & Shorrer, R. (2024). Algorithmic Collusion by Large Language Models. arXiv:2404.00806 (accepted to EC 2026). https://arxiv.org/abs/2404.00806
+- Garra, A. (2026). Mitigating Emergent Collusion in LLM Pricing Agents. arXiv:2609.13037. https://arxiv.org/abs/2609.13037
+- Hagag, B., Anderson, W. L., Chakraborty, S., & Schroeder de Witt, C. (2026). ORBIT: A Framework for Multi-Agent Security Evaluations. NeurIPS 2026 (poster). https://neurips.cc/virtual/2026/poster/139033
 - Idowu, J., Almasoud, A., & Alfahid, A. (2026). Mapping Human Anti-collusion Mechanisms to Multi-agent AI Systems. *Knowledge-Based Systems*, 344, 116067. arXiv:2601.00360. https://arxiv.org/abs/2601.00360
 - Keppo, J., Li, Y., Tsoukalas, G., & Yuan, N. (2026). On the Fragility of AI Agent Collusion. arXiv:2603.20281. https://arxiv.org/abs/2603.20281
+- Lee, D., & Park, H. (2026). Faithful yet Collusive. Findings of EMNLP 2026. arXiv:2609.18346. https://arxiv.org/abs/2609.18346
+- Makins, O., Angelini, O., Shams, Z., & Phuong, M. (2026). Multi-Agent AI Control: Distributed Attacks Hamper Per-Instance Monitors. arXiv:2607.07368. https://arxiv.org/abs/2607.07368
 - Riemer, M., Tosato, T., Memarian, A., Puelma Touzel, M., Berseth, G., Rish, I., & Dumas, G. (2026). Position: Collusion Risks Among AI Reasoning Agents Justify Certification Requirements for Making Market Decisions. ICML 2026 (position track). arXiv:2608.18078. Code (llm-cartel): https://github.com/mattriemer/LLMCartel
 - Xu, X., Wu, C., Lu, J., Tan, K., Tao, S., & Hong, H. (2026). Collusion with Competitive Marginals: Price-Level Audits Are Blind by Construction. arXiv:2607.26385. https://arxiv.org/abs/2607.26385
 - zerocommcartel (2026). Concurrent Apart Research collusion-sprint project. https://github.com/carver/apart-research-collusion-sprint-2026 (README and issues #31–#34 read on 24 Oct 2026).
@@ -239,4 +246,5 @@ The data-limit ranking holds under demand noise, without the price-ceiling cue, 
   - F3: robustness;
   - F4: detection;
   - F5: two candidate fixes for discretion;
+  - F6: per-step vs whole-episode oversight;
   - Figure A1: partial adherence and guardrail price paths.

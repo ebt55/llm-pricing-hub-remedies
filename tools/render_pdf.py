@@ -24,7 +24,7 @@ body { font-family: Arial, Helvetica, sans-serif; font-size: 11pt; line-height: 
 h1 { font-size: 17pt; margin: 0 0 4pt; } h2 { font-size: 13pt; margin: 14pt 0 4pt; } h3 { font-size: 11.5pt; margin: 10pt 0 3pt; }
 p, li { margin: 3pt 0; } ul, ol { margin: 2pt 0 4pt 18pt; padding: 0; }
 table { border-collapse: collapse; margin: 6pt 0; font-size: 9.5pt; } th, td { border: 1px solid #bbb; padding: 2pt 5pt; }
-img { width: 100%; display: block; margin: 6pt auto 0; } img[alt="Figure 1"], img[alt="Figure 2"] { width: 70%; } img[alt="Figure 3"] { width: 92%; } code { font-size: 9.5pt; }
+img { width: 100%; display: block; margin: 6pt auto 0; } img[alt="Figure 1"], img[alt="Figure 2"] { width: 62%; } img[alt="Figure 3"] { width: 86%; } code { font-size: 9.5pt; }
 """
 
 

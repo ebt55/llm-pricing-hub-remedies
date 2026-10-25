@@ -1115,3 +1115,33 @@ We test this on existing runs only. There are no new model calls.
 **Reading.**
 - **Per-step oversight is inverted against small-step drift.** Honest firms make larger single moves while experimenting (median largest move 18%) than a hub climbing in ≤ 3% steps, so a per-step monitor ranks the hub's guardrailed, ratcheting and discretionary climbs as *less* suspicious than honest play (AUROC 0.05–0.22). This parallels the inverted variance screen (AUROC 0.36).
 - **Episode-level statistics rank well** (AUROC 0.93–0.96), but at low false-alarm rates only where prices *settle* separates them. That is the outcome audit the paper recommends.
+
+### 2026-10-26 02:57: references from the sprint talks verified and added; oversight result in the paper
+
+**Verification.** A verification agent (Sonnet, read-only, public sources) checked the papers named in the seven sprint talks (`../videos-collusion-apart-research-oct-2026/*/…-summary.md`).
+
+| Reference | What we cite | Where |
+|---|---|---|
+| Garra 2026 (arXiv 2609.13037, sole author) | Damages regulator and entrant, in a Calvano duopoly | §2 |
+| Anto & Vazquez 2026 (ICML Agents in the Wild workshop; page fetched) | Regulator review modes; the best intervention is model-specific | §2 |
+| Calder-Wang & Kim 2026 (working paper, Feb 2026, SSRN 4403058) | Same-software penetration goes with higher rents and lower occupancy | §1 |
+| Assad et al. 2024 (JPE 132(3)) | German gasoline: margins rise when all stations adopt | §1 |
+| Makins et al. 2026 (arXiv 2607.07368) | Distributed attacks hamper per-instance monitors | §5 |
+| Hagag et al. 2026 (ORBIT, NeurIPS poster) | Per-action defences gave no measurable protection against colluding agents (abstract wording only) | §5 |
+| Lee & Park 2026 (Findings of EMNLP; arXiv 2609.18346) | CoT faithfulness does not track collusion | Appendix F4 |
+
+**Not used:**
+- **Affonso 2026:** the talk's description was wrong; the paper is about buyer-side shopping agents.
+- **Colosseum's "authority is most effective" claim:** not supported in that form.
+
+**Overlap.** None found on shared LLM advisors combined with RealPage-style remedies. The closest works are Cao & Hu (theory, already cited), Keppo et al., Garra and Anto & Vazquez.
+
+**Draft changes:**
+- §5 "Beyond antitrust" now carries the oversight result (Table F6) and the Makins and ORBIT links.
+- To stay within 8 pages:
+  - §4.3's calibration paragraph merged into §5;
+  - §4.5 and §4.6 compressed;
+  - figures rendered smaller.
+- The main text renders within 8 pages (Letter, 11pt Arial) even with figure-placement gaps.
+
+**Also updated:** deck (lesson slide), video script and README (finding 6).

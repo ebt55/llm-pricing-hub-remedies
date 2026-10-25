@@ -49,7 +49,7 @@ Cell sizes differ by model because the hubs recommend different steps. Haiku's h
 | Variance screen (Abrantes-Metz et al., 2006) | **0.36** | Inverted: it points the wrong way |
 | Reasoning monitor (Claude Haiku 5.5 judge) | 0.99 | Reads stated reasons |
 
-**The monitor case is the easy one.** The hub states its objective in its notes. The monitor also flags honest advisors that watch rivals (scores 55–66, against 10–18 for baselines).
+**The monitor case is the easy one.** The hub states its objective in its notes, and chain-of-thought faithfulness need not track collusion (Lee & Park, 2026). The monitor also flags honest advisors that watch rivals (scores 55–66, against 10–18 for baselines).
 
 ## Table F5. Two candidate fixes for firm discretion (Gemini 3.5 Flash-Lite, no thinking; n = 6; exploratory)
 
@@ -60,6 +60,27 @@ Cell sizes differ by model because the hubs recommend different steps. Haiku's h
 | Discretion + drift disclosure ("+7.5% compared with your price 10 rounds ago") | 0.57 | 38% (−4 to 76) | more than discretion alone: failed |
 
 Neither fix helps. The drift sentence (Appendix A) did not make Gemini firms refuse nudges.
+
+## Table F6. Per-step vs whole-episode oversight on existing runs ($0; `tools/oversight_test.py`)
+
+**Data and monitors.** 132 runs without a market-wide hub (negatives) and 335 harmful runs (a joint-objective hub or recommender, Δ ≥ 0.5). Each monitor sees only realised prices.
+- **Per-step:** the largest single-round relative price move, which is what a per-period band or step-by-step approval inspects.
+- **Max drift:** the peak 10-round rolling mean against the warm-up price. This is the pre-registered episode statistic.
+- **Settled price:** the last-20-round mean against the warm-up price. Post hoc, and close to the harm definition by construction.
+
+AUROC by monitor:
+
+| Harmful runs (n) | Per-step | Max drift (pre-registered) | Settled price (post hoc) |
+|---|---|---|---|
+| Auto-accept hub (214) | 0.67 | 0.94 | 1.00 |
+| Partial adherence (29) | 0.87 | 0.95 | 1.00 |
+| Per-period guardrail (33) | **0.05** | 0.96 | 1.00 |
+| Firm discretion, harm realised (15) | **0.15** | 0.94 | 1.00 |
+| Scripted ratchet (44) | **0.22** | 0.93 | 1.00 |
+
+- **Per-step oversight is inverted against small-step drift.** Honest firms experiment with larger single moves (median largest move 18%) than a hub climbing in ≤ 3% steps.
+- **Max drift ranks well but fails at 1% FPR** (recall 0–6%; pre-registered prediction P16 failed). Honest firms' early price experiments set its threshold above the monopoly price.
+- **Only the settled price separates at low false-alarm rates** (recall 98–100% at 1% FPR).
 
 ## Figure A1. Partial adherence and guardrails (Claude Haiku 5.5)
 
