@@ -355,3 +355,10 @@ Data limits remove 84–85% (wide CI, 54–130%). Together with Haiku, this make
 - Per-period guardrails only delay.
 - Firm discretion works only when firms refuse small nudges.
 - The title goes to the Fable 5.1 reviewer (04:50).
+
+**~05:37 GPT-5.4 mini** (n = 3, free tier)
+- The hub is weak: Δ 0.51, reaching monopoly in 1 of 3 runs.
+- The data ban removes 87% (56–99%) of what harm there is; stale data removes 41% (wide CI).
+- Seeds 203–204 run at the Monday 05:30 reset.
+
+**~05:04 Draft v5.** The title was set by a Fable 5.1 review: "An LLM Pricing Hub Survives Data Limits on Some Models; Firm Discretion Works Only When Firms Refuse Small Nudges". About 7.8 pages. Checklist: `report/SUBMISSION-CHECKLIST.md`.
