@@ -139,7 +139,12 @@ def run_episode(arm: Arm, seed: int, cfg: GameConfig, path: str, firm_provider, 
         return all(new.get(k) == v for k, v in old.items()) and all(
             k in old or new[k] == GameConfig.__dataclass_fields__[k].default for k in new)
 
-    if records and (not _cfg_matches(records[0].get("game", {})) or records[0].get("arm_spec") != asdict(arm)):
+    def _arm_matches(old: dict) -> bool:  # Arm fields added after a run started must still be at their defaults
+        new = asdict(arm)
+        return all(new.get(k) == v for k, v in old.items()) and all(
+            k in old or new[k] == type(arm).__dataclass_fields__[k].default for k in new)
+
+    if records and (not _cfg_matches(records[0].get("game", {})) or not _arm_matches(records[0].get("arm_spec", {}))):
         raise RuntimeError(f"{path} was started with a different config; use a new --tag or delete the file")
     if records and records[-1].get("type") == "summary":
         return records[-1]
