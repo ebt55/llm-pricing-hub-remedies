@@ -225,7 +225,7 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
   - OpenRouter: $7.16;
   - OpenAI: $0, on the free data-sharing tier.
 
-  An estimated $2–5 more went on unlogged calls: the detection monitor, probes and discarded partial runs. In all, 150,436 model calls.
+  An estimated $2–5 more went on unlogged calls: the detection monitor, probes and discarded partial runs. In all, 150,436 model calls in finished runs (165,710 including partial runs).
 - **D. Provenance, independence and pre-existing code.**
   - No code predates the sprint, and no starter-repo file is included or modified.
   - The market is re-implemented in `advisor/market.py` and tested against llm-cartel's `OligopolyGame` benchmarks (`tests/test_market.py`). Two benchmark bugs found in the starter code are documented in `SPRINT_LOG.md`.
