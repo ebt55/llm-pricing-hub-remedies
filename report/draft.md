@@ -218,7 +218,14 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
 
 - **A. Prompts (verbatim):** `appendix-prompts.md`.
 - **B. Per-arm tables:** `results/*/summary.md`.
-- **C. Costs:** $[final] across five providers.
+- **C. Costs.** $107.65 logged per call across five providers:
+  - Anthropic: $66.80;
+  - Google Gemini: $25.82, from credits;
+  - DeepSeek: $7.87;
+  - OpenRouter: $7.16;
+  - OpenAI: $0, on the free data-sharing tier.
+
+  An estimated $2–5 more went on unlogged calls: the detection monitor, probes and discarded partial runs. In all, 150,436 model calls.
 - **D. Provenance, independence and pre-existing code.**
   - No code predates the sprint, and no starter-repo file is included or modified.
   - The market is re-implemented in `advisor/market.py` and tested against llm-cartel's `OligopolyGame` benchmarks (`tests/test_market.py`). Two benchmark bugs found in the starter code are documented in `SPRINT_LOG.md`.

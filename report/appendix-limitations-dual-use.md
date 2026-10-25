@@ -70,4 +70,4 @@ Our firm models stand in for human or AI deciders whose deference we do not meas
 - measure acceptance and outcomes, not just the permission to override;
 - don't rely on data limits or per-period bands alone.
 
-**Scope and cost.** Every experiment runs in a simulated market; no real firm, consumer or price is involved. Total API spend was about **$[final]** across Anthropic, DeepSeek, Google (credits), OpenAI (free data-sharing tier) and OpenRouter. Prompts and model outputs are logged and released with the code.
+**Scope and cost.** Every experiment runs in a simulated market; no real firm, consumer or price is involved. Total API spend was about **$110**: $107.65 logged per call across Anthropic, Google (credits), DeepSeek, OpenRouter and OpenAI (free data-sharing tier), plus an estimated $2–5 of unlogged monitor, probe and discarded calls. Prompts and model outputs are logged and released with the code.
