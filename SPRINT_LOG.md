@@ -1080,3 +1080,38 @@ We test this on existing runs only. There are no new model calls.
 | P15 | At 1% FPR the per-step monitor catches most auto-accept hubs (they jump within a few rounds) but ≤ 20% of guardrailed and scripted-ratchet runs |
 | P16 | The episode-level monitor catches ≥ 90% of every positive group at 1% FPR |
 | P17 | On ratchet and guardrail runs, the episode monitor fires well before prices reach 0.95·p_M |
+
+### 2026-10-26 02:52: results of the oversight test (pre-registered at the previous entry)
+
+`tools/oversight_test.py`: 132 negative runs and 335 harmful positive runs, all existing data, $0.
+
+**Pre-registered run.** Thresholds at 1% FPR: per-step 0.408, episode 0.397. These are high because honest firms experiment with large price moves early in a run; in cold-start runs, prices go up to the willingness-to-pay ceiling. Recall at 1% FPR:
+
+| Group | Per-step | Episode (max rolling mean) |
+|---|---|---|
+| Auto-accept hubs | 15% | 6% |
+| Per-period guardrails | 0% | 0% |
+| Partial adherence | 52% | 0% |
+| Discretion with harm | 0% | 0% |
+| Scripted ratchet | 7% | 0% |
+
+- **P15 is partly held.** The per-step monitor catches ≤ 20% of guardrail and ratchet runs, as predicted. It does not catch "most" auto-accept hubs (15%).
+- **P16 failed.** The episode statistic catches 0–6% at 1% FPR.
+- **P17 could not be tested,** because the pre-registered episode monitor never fired at 1% FPR.
+
+**Post hoc (labelled as such):**
+
+| Group | AUROC per-step | AUROC max-rolling | AUROC settled price | Settled-price recall @ 1% FPR |
+|---|---|---|---|---|
+| Auto-accept | 0.67 | 0.94 | 1.00 | 100% |
+| Partial | 0.87 | 0.95 | 1.00 | 100% |
+| Guardrail | **0.05** | 0.96 | 1.00 | 100% |
+| Ratchet | **0.22** | 0.93 | 1.00 | 98% |
+| Discretion | **0.15** | 0.94 | 1.00 | 100% |
+
+- "Settled price" is the last-20-round mean price relative to the warm-up mean. It is close to the harm definition by construction, the same caveat as the price screen in Appendix F4.
+- A running, spike-robust early-warning version (10-round rolling median) also fails at 1% FPR (threshold 0.435): honest exploration lasts for stretches, not single rounds.
+
+**Reading.**
+- **Per-step oversight is inverted against small-step drift.** Honest firms make larger single moves while experimenting (median largest move 18%) than a hub climbing in ≤ 3% steps, so a per-step monitor ranks the hub's guardrailed, ratcheting and discretionary climbs as *less* suspicious than honest play (AUROC 0.05–0.22). This parallels the inverted variance screen (AUROC 0.36).
+- **Episode-level statistics rank well** (AUROC 0.93–0.96), but at low false-alarm rates only where prices *settle* separates them. That is the outcome audit the paper recommends.
