@@ -11,7 +11,7 @@
 *Draft v5, Sun 25 Oct ~05:15 IST.*
 - *Title, abstract and edits from the Fable 5.1 review (SPRINT_LOG 05:04).*
 - *Confirmatory results were pre-registered before the main batch (freeze commit `5aa9f79`). Every later batch was logged in `SPRINT_LOG.md` with a prediction before it ran.*
-- ***[⧗]** marks the GPT-5.4 mini row, which runs on the free daily allowance (resumes 05:30 IST). If it is not complete by Mon 14:00 IST, the row is dropped and recorded as not completed.*
+- *GPT-5.4 mini has n = 3 (seeds 200–202). Seeds 203–204 are scheduled for the Mon 05:30 IST allowance reset, and will be added if they finish before Mon 12:00 IST.*
 -->
 
 ## Abstract
@@ -92,7 +92,9 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 | Qwen3.8 Flash (4) | 85% (54–130) | 84% (39–131) |
 | DeepSeek V4.1 Flash (8; hub 3) | 10% (1–21) | 2% (0–6) |
 | Gemini 3.5 Flash-Lite (5) | 8% (−21 to 37) | prices exceed p_M |
-| GPT-5.4 mini (3) | **[⧗]** | **[⧗]** |
+| GPT-5.4 mini (3)† | 87% (56–99) | 41% (−130 to 92) |
+
+†GPT-5.4 mini's hub reaches monopoly in only 1 of 3 runs (Δ 1.00, 0.23, 0.31), so there is little harm to remove and the shares are imprecise.
 
 **Gemini 3.8 Flash is excluded from this table.** Its firms reach monopoly without any advisor in 2 of 4 baseline runs (B0: 0.98, 1.00, 0.02, 0.02), so its harm-removed shares cannot be estimated. Its hub reaches monopoly under every data regime (Figure 2).
 

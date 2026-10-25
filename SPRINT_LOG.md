@@ -877,3 +877,21 @@ The ratchet's Δ rises with the acceptance rate. **Firm discretion protects only
 **Length:** about 6.9 pages of text plus about 0.9 pages of figures (`tools/render_pdf.py`, Letter, 11pt Arial). The renderer shows 9 pages because figures jump to the next page; in the Docs template, place the figures to fill those gaps.
 
 **Reviewer's score estimate after the edits:** impact 4.3, execution 4.1, presentation 4.2. Its biggest remaining weakness: the discretion claim rests on four firm models at n = 4–10, and the "disposition, not reasoning budget" reading rests on 2–3 runs.
+
+### 2026-10-25 05:37: GPT-5.4 mini replication (n = 3; pre-registered at the ladder entry, 02:10)
+
+**Setup.** `results/replicate-openai`, seeds 200–202: 12 runs, 1,304 calls, about 1.9M tokens on the free daily allowance, $0, 0 retries, 0 refusals.
+
+**Fixes before it ran.** The 05:32 resume failed at once. The resume check compared `arm_spec` strictly, and these runs predate the newer Arm fields. It now tolerates fields added later if they are at their defaults, the same rule the game config uses. I tested it on all 20 partial headers.
+
+**Results:**
+
+| Arm | Δ | Per run | Harm removed |
+|---|---|---|---|
+| B0 | 0.033 | — | — |
+| M2-a | **0.512** | 1.00, 0.23, 0.31 | — |
+| M1-a (stale data) | 0.315 | — | 41% (−130 to 92) |
+| M0-a (data ban) | 0.095 | — | 87% (56–99) |
+
+- **GPT-5.4 mini's hub is weak.** It reaches monopoly in only 1 of 3 runs, so the harm denominator is small and the shares are imprecise. The draft reports the row with a footnote.
+- **Seeds 203–204** need about 1.2M more tokens, which is over today's remaining allowance. They are scheduled for the Mon 05:30 IST reset.
