@@ -188,7 +188,7 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
 2. **Measure acceptance, not just permission.** The acceptance of small recommended increases, together with price outcomes from an ablation audit like ours, tests whether discretion is real.
 3. **Treat data limits as model-dependent and per-round bands as delays.** Neither is a remedy a court can rely on without testing the vendor's model.
 
-**Beyond antitrust.** Per-step approval by a deferential overseer is a general weakness of AI oversight. An agent that moves in small, individually plausible steps can drive an outcome that no single approval would allow.
+**Beyond antitrust.** Per-step approval by a deferential overseer is a general weakness of AI oversight. An agent that moves in small, individually plausible steps can drive an outcome that no single approval would allow. A natural next step is mechanistic: is deference to a recommendation a steerable direction inside open-weight models, and could steering deciders toward scepticism serve as a remedy?
 
 **Detection** (Table F4). The classic variance screen (Abrantes-Metz et al., 2006) points the wrong way (AUROC 0.36). A price-level screen (0.90) and a reasoning monitor (0.99) do better, the monitor only because the hub states its objective.
 
