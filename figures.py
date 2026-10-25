@@ -268,7 +268,8 @@ RATCHET_FIRMS = [("ratchet", "main", "Claude Haiku 5.5", SLOT[0]),
                  ("ladder-gem-lite", "ladder-gem-lite", "Gemini 3.5 Flash-Lite, no thinking", SLOT[1]),
                  ("ladder-gem-lite-hi", "ladder-gem-lite-hi", "Gemini 3.5 Flash-Lite, thinking on", SLOT[2]),
                  ("ladder-or-qwen", "ladder-or-qwen", "Qwen3.8 Flash", SLOT[3]),
-                 ("ladder-or-nemotron", "ladder-or-nemotron", "Nemotron 3.5 Lightning", SLOT[4])]
+                 ("ladder-or-nemotron", "ladder-or-nemotron", "Nemotron 3.5 Lightning", SLOT[4]),
+                 ("replicate-openai", "replicate-openai", "GPT-5.4 mini", "#6250d6")]  # 6th slot: validated with the five above
 
 
 def fig_ratchet():
