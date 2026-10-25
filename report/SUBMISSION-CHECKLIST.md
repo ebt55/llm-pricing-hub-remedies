@@ -9,6 +9,7 @@
 2. **Your name and affiliation.** Line 5 of `report/draft.md` currently says "Ebin [full name and affiliation: author to confirm]".
 3. **Copy the draft into the official template** and place the figures so they fill each page. The renderer leaves gaps because figures jump to the next page. Without the gaps, the main text is about 7.8 pages.
    - Template: https://docs.google.com/document/d/1Y5wd3VRbXU5N08BvAGiJUQTaWbMCSPjhzXsR-ozuehg/copy?usp=sharing
+   - **Paste-ready:** run `python tools/render_pdf.py` (it writes `report/draft.html` and `report/draft.pdf`). Open `draft.html` in Chrome, select from the title to the end of References, copy, and paste into the template. Headings, bold, lists and tables survive the paste. Insert the three figures by hand at their captions. `draft.pdf` is a preview: the whole draft, references included, comes to 8 pages.
    - Main text: title to Limitations in `report/draft.md`.
    - Figures: `report/figures/fig1_remedy_ladder.png`, `fig2_cross_model.png`, `fig3_ratchet.png`.
    - Appendices:
