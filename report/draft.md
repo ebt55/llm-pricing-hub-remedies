@@ -126,7 +126,7 @@ For calibration, the DOJ complaint alleges that final prices were within 1% of R
 - **Qwen3.8 Flash:** it removes all of it (Δ 0.10 vs B0 0.15 and auto-accept 0.97; n = 4). The prediction holds.
 - **Gemini 3.5 Flash-Lite:** it removes only **57%** (27–84; n = 12), and 4 of 12 runs end near monopoly (Δ 0.89–1.00). The prediction fails.
 
-**How the hub raises prices.** Under discretion, the hub anchors each recommendation on the client's current price and steps up from it. In the Gemini runs that reached monopoly, the hub kept nudging and the firms kept accepting: Gemini firms accept 67% of the LLM hub's 1–2-cent increases, against 16% for Haiku firms (Table F2). In the other runs, either the hub stopped pushing (its notes call 1.52 "the stable collusive price") or the firms refused.
+**How the hub raises prices.** Under discretion, the hub anchors on the client's current price and steps up from it. Gemini firms accept 67% of its 1–2-cent increases, Haiku firms 16% (Table F2); the Gemini runs that reached monopoly are those where the hub kept nudging and the firms kept accepting.
 
 **A causal test with a scripted ratchet** (pre-registered). We replace the LLM hub with a script that recommends the client's own last price plus a fixed step. The recommender is now identical across models, so only the firm differs. Δ over the last 20 rounds:
 
@@ -161,9 +161,7 @@ So whether discretion protects depends on the deciding firm and on how patient t
 
 Pushing back is a matter of the firm model's disposition toward the recommendation, not of its reasoning budget.
 
-**Two candidate fixes, on Gemini Flash-Lite** (n = 6, exploratory):
-- **Stacking the decree's remedies** (data ban + discretion) removes 60% (16–98), no more than discretion alone.
-- **Showing the firm the cumulative drift** ("+7.5% compared with your price 10 rounds ago") removes 38% (−4 to 76). We pre-registered an improvement; there was none.
+**Two candidate fixes did not help** on Gemini Flash-Lite: stacking the data ban on discretion, and showing the firm the cumulative drift (Table F5).
 
 ### 4.5 Without a coordination instruction *(exploratory)*
 
@@ -171,7 +169,7 @@ We test an advisor that maximises its client's profit and follows "avoid a race 
 
 ### 4.6 Robustness *(exploratory, Haiku; Appendix Table F3)*
 
-The data-limit ranking holds under demand noise, without the prompt's price-ceiling cue, at higher reasoning effort, and over 200 rounds. The data ban leaves Δ between 0.29 and 0.44, and stale data between 0.68 and 0.91. Both remedies retain more harm at 200 rounds, so the 100-round shares are upper bounds. With only one firm on the hub, the hub's client loses (gain −0.09) and the rival gains (+1.46): the harm needs both firms on the hub.
+The data-limit ranking holds under demand noise, without the price-ceiling cue, at higher reasoning effort and over 200 rounds, where both remedies retain more harm (so 100-round shares are upper bounds). With only one firm on the hub, its client loses and the rival gains: the harm needs both firms on the hub.
 
 ## 5. Discussion
 
@@ -190,7 +188,7 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
 
 **Beyond antitrust.** Per-step approval by a deferential overseer is a general weakness of AI oversight. An agent that moves in small, individually plausible steps can drive an outcome that no single approval would allow. A natural next step is mechanistic: is deference to a recommendation a steerable direction inside open-weight models, and could steering deciders toward scepticism serve as a remedy?
 
-**Detection** (Table F4). The classic variance screen (Abrantes-Metz et al., 2006) points the wrong way (AUROC 0.36). A price-level screen (0.90) and a reasoning monitor (0.99) do better, the monitor only because the hub states its objective.
+**Detection** (Table F4): the classic variance screen (Abrantes-Metz et al., 2006) points the wrong way here (AUROC 0.36).
 
 ## 6. Limitations
 
@@ -240,4 +238,5 @@ The data-limit ranking holds under demand noise, without the prompt's price-ceil
   - F2: acceptance by recommended step;
   - F3: robustness;
   - F4: detection;
+  - F5: two candidate fixes for discretion;
   - Figure A1: partial adherence and guardrail price paths.

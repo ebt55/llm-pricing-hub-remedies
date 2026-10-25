@@ -1031,3 +1031,13 @@ Gemini is now closed for the sprint.
 - **Per-arm `summary.md`** regenerated for ratchet, robust-long, ladder-gem-lite, ladder-gem-lite-hi, ladder-or-qwen, ladder-or-nemotron and replicate-openai.
 
 **Not changed.** The code link returns 404 because the repo is still private. The user makes it public before submitting (checklist step 4).
+
+### 2026-10-25 23:47: page-limit margin
+
+**Moved:** the "two candidate fixes" result (stacked remedies; drift disclosure) goes to Appendix Table F5, with a one-line pointer in §4.4.
+
+**Trimmed:** the mechanism paragraph, the robustness paragraph and the detection note.
+
+**Result:** the whole draft, references included, renders to 8 pages (Letter, 11pt Arial), so the main text is about 7.3–7.5 pages.
+
+No numbers changed.

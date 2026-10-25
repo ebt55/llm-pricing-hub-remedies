@@ -51,6 +51,16 @@ Cell sizes differ by model because the hubs recommend different steps. Haiku's h
 
 **The monitor case is the easy one.** The hub states its objective in its notes. The monitor also flags honest advisors that watch rivals (scores 55–66, against 10–18 for baselines).
 
+## Table F5. Two candidate fixes for firm discretion (Gemini 3.5 Flash-Lite, no thinking; n = 6; exploratory)
+
+| Remedy | Δ | Harm removed (95% CI) | Pre-registered prediction |
+|---|---|---|---|
+| Firm discretion alone (n = 12) | 0.41 | 57% (27–84) | — |
+| Data ban + discretion (the decree's remedies stacked) | 0.38 | 60% (16–98) | < 80% removed: held |
+| Discretion + drift disclosure ("+7.5% compared with your price 10 rounds ago") | 0.57 | 38% (−4 to 76) | more than discretion alone: failed |
+
+Neither fix helps. The drift sentence (Appendix A) did not make Gemini firms refuse nudges.
+
 ## Figure A1. Partial adherence and guardrails (Claude Haiku 5.5)
 
 ![Figure A1](figures/figA1_adherence_dose.png)
