@@ -4,9 +4,9 @@
 
 **Question.** The DOJ's settlement with RealPage limits what a shared pricing advisor may use: no competitors' current non-public data at runtime, training data at least 12 months old, and no reporting narrower than state level. The complaints also targeted auto-accept. Do these remedies stop an LLM pricing advisor whose objective is aligned with the whole market, the incentive alleged against RealPage?
 
-![Replay of two logged runs: the same scripted 1-cent ratchet recommends each firm its own last price plus one cent every round. Claude Haiku 5.5 firms refuse and prices stay near the competitive level (profit gain 0.03); Gemini 3.5 Flash-Lite firms accept and walk to joint monopoly by round 41 (profit gain 1.00).](report/figures/ratchet_replay.gif)
+![How the game works: one LLM pricing hub reads market data and recommends a price to each of two firms, whose own LLMs set prices; customers buy by price. The RealPage remedies appear as switches (the hub's goal, rival data, firm adherence), each with its measured profit gain for Claude Haiku 5.5.](report/figures/arch_playground.gif)
 
-*The ratchet, replayed from two logged runs (Haiku seed 100, Gemini Flash-Lite seed 1000; `tools/replay_gif.py`). The recommender is the same script on both sides; only the firm model that decides differs.*
+*How the game works, and what each remedy does to the outcome. Numbers are measured profit gains for Claude Haiku 5.5 (n = 20 per setting; `tools/arch_gif.py`); other models differ, as the findings below show.*
 
 **Main findings** (details in [report/draft.md](report/draft.md); Claude Haiku 5.5 with n = 20 per arm unless noted; more than 700 runs on seven models):
 
@@ -23,6 +23,10 @@
    - Gemini Flash-Lite firms follow it to monopoly (Δ 1.00), with or without thinking.
 
    With an LLM hub, discretion removes 95% of the harm for Haiku and 57% for Gemini Flash-Lite. Stacking the data ban on top, or showing firms the cumulative drift, doesn't fix the Gemini case.
+
+   ![Replay of two logged runs: the same scripted 1-cent ratchet recommends each firm its own last price plus one cent every round. Claude Haiku 5.5 firms refuse and prices stay near the competitive level (profit gain 0.03); Gemini 3.5 Flash-Lite firms accept and walk to joint monopoly by round 41 (profit gain 1.00).](report/figures/ratchet_replay.gif)
+
+   *The ratchet, replayed from two logged runs (Haiku seed 100, Gemini Flash-Lite seed 1000; `tools/replay_gif.py`). The recommender is the same script on both sides; only the firm model that decides differs.*
 5. **Coordination needs no joint instruction.** Advice to "avoid a race to the bottom" also raises prices (Δ 0.45 without rival data, n = 10).
 6. **Detection.** The price-level screen catches outcomes (AUROC 0.90). Two classic instruments point the wrong way: the variance screen (0.36), and a monitor of single price moves, which ranks the hub's guardrailed and ratcheting climbs as *less* suspicious than honest play (0.05–0.27). A reasoning monitor catches the hub's *stated* intent, but also flags honest advisors that watch rivals.
 
@@ -32,7 +36,7 @@
 |---|---|
 | `advisor/` | Market (`market.py`), model providers with spend caps (`providers.py`), prompts (`prompts.py`), arm definitions (`arms.py`), game loop (`game.py`) |
 | `run.py` | Runs arms × seeds in parallel from a TOML config; resumable; prints a cost estimate |
-| `tools/` | `ratchet_curve.py` (acceptance by recommended step), `replay_gif.py` (the README replay), `build_docx.py` (the report on the Apart template), `token_table.py` (measured reasoning budget per model), `pack_thoughts.py` |
+| `tools/` | `ratchet_curve.py` (acceptance by recommended step), `arch_gif.py` and `replay_gif.py` (the README animations), `build_docx.py` (the report on the Apart template), `token_table.py` (measured reasoning budget per model), `pack_thoughts.py` |
 | `analyze.py` | Per-arm tables, pre-registered contrasts (Welch t, Mann-Whitney, Holm), MDE, share of harm removed, gate checks |
 | `detect.py` | Detection add-on: cartel screens and the reasoning monitor, scored against ground truth |
 | `figures.py` | Paper figures, written to `report/figures/` |

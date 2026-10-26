@@ -1216,3 +1216,16 @@ We test this on existing runs only. There are no new model calls.
 - Gemini Flash-Lite, seed 1000: all six Gemini runs end at about 1.00.
 
 Each frame is one round, showing both firms' prices, the hub's recommendations and the running profit gain over the last 20 rounds. The final readouts match the logged values. The GIF (1.3 MB) is in the README under the Question paragraph. The paper and PDF are unchanged.
+
+### 2026-10-26 13:54: README architecture animation (user's request; $0)
+
+`tools/arch_gif.py` draws the game as an animated hub-and-spoke diagram:
+- the pricing hub is drawn as pricing software with an "LLM" badge;
+- the two firms are storefronts, each with an "LLM" badge;
+- customers buy by logit demand.
+
+Each of the four steps of a round is animated: the hub reads data, recommends a price, each firm's LLM decides, customers buy. The RealPage remedies appear as switches, each with its measured Haiku outcome (n = 20; values from `results/main` and `results/guardrail`, unchanged): no remedy 0.99, stale data 0.79, data ban 0.35, ±3% band 1.00, discretion 0.11, client-only goal −0.01.
+
+Process: a first version had boxes, then a dark version with icons. At the user's request, a Claude Opus 5.5 design subagent redesigned it on a white theme (0.38 MB, 19 s loop), and I checked its frames. In the data-ban scene the hub still receives its clients' own data; only rival data is banned, as in §3.
+
+README: the animation sits under the Question, and the ratchet replay moved into finding 4.
