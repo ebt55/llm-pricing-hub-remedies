@@ -26,7 +26,8 @@ from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch, Polygon,
 from PIL import Image  # noqa: E402
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-W, H = 840, 470  # the axes are in pixels: 1 data unit = 1 px
+W, H = 840, 470  # the axes are in layout pixels: 1 data unit = 1 px at 100 dpi
+SCALE = 2  # render at 2x (1680 x 940) so text stays crisp on high-resolution screens
 BG, CARD, WHITE = "#fcfcfb", "#f4f3ef", "#ffffff"
 INK, INK2, MUTED, GRID = "#0b0b0b", "#52514e", "#8a8984", "#e6e5e1"  # as in figures.py
 BLUE, ORANGE = "#2a78d6", "#eb6834"  # SLOT[0]: firms and active switches; SLOT[1]: the flow and highlights
@@ -378,7 +379,7 @@ def progress(frames):
 
 
 def main(out=os.path.join(HERE, "report", "figures", "arch_playground.gif")):
-    fig = plt.figure(figsize=(W / 100, H / 100), dpi=100, facecolor=BG)
+    fig = plt.figure(figsize=(W / 100, H / 100), dpi=100 * SCALE, facecolor=BG)
     ax = fig.add_axes([0, 0, 1, 1])
 
     def render(s, step, u, prog=0.5):
@@ -389,9 +390,10 @@ def main(out=os.path.join(HERE, "report", "figures", "arch_playground.gif")):
     frames = plan()
     # one shared palette, built from a sample of frames, so colours do not shimmer from frame to frame
     sample = [render(s, step, 0.5) for s in range(len(SCENARIOS)) for step in (1, 2)] + [render(5, 4, 1.0)]
-    sheet = Image.new("RGB", (W, H * len(sample)))
+    w, h = sample[0].size
+    sheet = Image.new("RGB", (w, h * len(sample)))
     for i, im in enumerate(sample):
-        sheet.paste(im, (0, H * i))
+        sheet.paste(im, (0, h * i))
     palette = sheet.quantize(colors=256, method=Image.Quantize.MEDIANCUT)
     images = [render(s, step, u, prog).quantize(palette=palette, dither=Image.Dither.NONE)
               for (s, step, u, _), prog in zip(frames, progress(frames))]

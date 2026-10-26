@@ -12,7 +12,7 @@
 |---|---|---|
 | Runtime ban on competitors' current non-public data | The hub sees no competitor data | Closest match |
 | Model *training* only on non-public data ≥ 12 months old | Competitor data that is ≥ 10 rounds old, at *runtime* | Rounds are not calibrated to months |
-| No geographic models narrower than state level | A market-wide average over two symmetric rivals, in a three-firm market | Hides little; a weak test |
+| No geographic models narrower than state level | The two rivals' average price and total quantity, in a three-firm market | Hides little; a weak test |
 | Auto-accept only within user-set parameters (§V.A.1) | Auto-accept clipped to ±1% or ±3% of the firm's last price | Close for per-period limits; cumulative limits untested |
 | Overrides protected, no acceptance incentives (§V.A.5, §V.C) | Firm discretion: the firm sets every price after seeing the recommendation | Close; "discretion" is our strongest version of these terms |
 
@@ -41,7 +41,7 @@ Our firm models stand in for human or AI deciders whose deference we do not meas
   - Replications are small (n = 3–12), and most robustness checks are on Haiku.
   - Gemini 3.8 Flash's no-advisor baseline is unstable (two of four runs reach monopoly unaided), so its harm shares cannot be estimated.
 - **Reasoning budgets differ and were not all honoured.** Measured median output tokens per call range from 35 (Gemini 3.5 Flash-Lite at low effort, no thinking) to 6,695 (Nemotron, whose 1,024-token budget was not enforced). We report measured tokens. One batch (Gemini Flash-Lite at high effort, n = 6) shows that a Haiku-like budget does not make Gemini firms push back. Its baselines stayed at n = 3 when the batch reached our spending cap.
-- **Prompts.** We use one firm prompt (P0 from Fish et al. 2024, plus one neutral sentence about the competitor) and one advisor prompt per objective. LLM pricing is known to be sensitive to prompts.
+- **Prompts.** We use one firm prompt (P0 from Fish et al. 2024, plus a one-line reason request and one neutral sentence about the competitor) and one advisor prompt per objective. LLM pricing is known to be sensitive to prompts.
 - **No sampling control.** Haiku's API rejects sampling parameters, and the thinking modes of the other models ignore them. Runs are independent stochastic samples, not reproducible seeds.
 - **Logging and pinning.** Model IDs are logged on every call, and OpenRouter models were pinned to one provider each.
 

@@ -18,7 +18,7 @@ Median output tokens per call, with thinking included (`tools/token_table.py`). 
 
 ## Table F2. Acceptance of the LLM hub's recommended increases, under firm discretion
 
-The share of recommended increases (recommendation minus the firm's last price) that the firm matched exactly, pooled over all finished discretionary runs with the market-aligned hub (`tools/ratchet_curve.py`).
+The share of recommended increases (recommendation minus the firm's last price) that the firm matched exactly, pooled over every decision a firm made after seeing the market-aligned hub's recommendation: discretionary runs plus, for Haiku, the partial-adherence rounds that were not auto-accepted (`tools/ratchet_curve.py`).
 
 | Firm model | +1–2 cents | +3–5 cents | +6–9 cents | ≥ +10 cents |
 |---|---|---|---|---|
@@ -39,7 +39,7 @@ Cell sizes differ by model because the hubs recommend different steps. Haiku's h
 | Higher reasoning effort (10) | — | — | 0.91 | 0.29 |
 | 200 rounds (5) | 0.05 | — | 0.87 | 0.44 |
 | 200 rounds, firm discretion (5) | — | 0.03 | — | — |
-| 200 rounds, +1 cent ratchet with discretion (5) | — | 0.03 (scripted) | — | — |
+| 200 rounds, +1 cent ratchet with discretion (5) | — | 0.03 (scripted ratchet; no rival data) | — | — |
 
 ## Table F4. Detection (200 runs; mechanical arms excluded)
 
@@ -57,7 +57,7 @@ Cell sizes differ by model because the hubs recommend different steps. Haiku's h
 |---|---|---|---|
 | Firm discretion alone (n = 12) | 0.41 | 57% (27–84) | — |
 | Data ban + discretion (the decree's remedies stacked) | 0.38 | 60% (16–98) | < 80% removed: held |
-| Discretion + drift disclosure ("+7.5% compared with your price 10 rounds ago") | 0.57 | 38% (−4 to 76) | more than discretion alone: failed |
+| Discretion + drift disclosure ("That is +7.5% compared with your price of $1.58 10 rounds ago") | 0.57 | 38% (−4 to 76) | more than discretion alone: failed |
 
 Neither fix helps. The drift sentence (Appendix A) did not make Gemini firms refuse nudges.
 
@@ -72,7 +72,7 @@ AUROC by monitor:
 
 | Harmful runs (n) | Per-step | Max drift (pre-registered) | Settled price (post hoc) |
 |---|---|---|---|
-| Auto-accept hub (215) | 0.66 | 0.94 | 1.00 |
+| Auto-accept hub or scripted recommender (215) | 0.66 | 0.94 | 1.00 |
 | Partial adherence (29) | 0.86 | 0.95 | 1.00 |
 | Per-period guardrail (33) | **0.05** | 0.96 | 1.00 |
 | Firm discretion, harm realised (15) | **0.15** | 0.95 | 1.00 |
@@ -86,6 +86,6 @@ AUROC by monitor:
 
 ![Figure A1](figures/figA1_adherence_dose.png)
 
-**(a) Partial adherence.** Δ by the probability that a firm's price is the hub's recommendation (n = 10–20 per point). The shaded bands mark the acceptance rates reported in the RealPage case.
+**(a) Partial adherence.** Δ by the probability q that a firm's price is auto-set to the hub's recommendation; otherwise the firm decides, and sometimes matches anyway (realised follow rates 0.60, 0.83 and 0.92 at q = 0.5, 0.8 and 0.9; n = 10–20 per point). The shaded bands mark the acceptance rates reported in the RealPage case.
 
 **(b) Guardrails.** Mean market price over the first 40 rounds, under auto-accept, ±3% and ±1% per-round bands, and firm discretion.

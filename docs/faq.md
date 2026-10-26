@@ -11,7 +11,7 @@
 | **1. Data ban** | The software can't use competitors' *current private* data when making recommendations | The hub sees only its own shop's data, nothing about the rival | M0-a |
 | **2. Old data only** | Competitors' private data can be used only if it's at least 12 months old | The hub sees the rival's data only from 10+ rounds ago | M1-a |
 | **3. No auto-accept** | Landlords shouldn't let the software set rents automatically; a person decides | The shop's AI sees the hub's advice but is free to ignore it | M2-d |
-| **4. Aggregated data only** | No reporting narrower than state level: no competitor-by-competitor detail | The hub sees only a market-wide average (needs 3 shops, so this is the stretch arm) | M3-3a |
+| **4. Aggregated data only** | No reporting narrower than state level: no competitor-by-competitor detail | The hub sees only the two rivals' average price and total sales (needs 3 shops, so this is the stretch arm) | M3-3a |
 
 The **harmful starting point** we compare against is the hub that sees the rival's current data and whose advice is auto-accepted (M2-a). That's the pattern the lawsuit targeted.
 
@@ -91,7 +91,7 @@ A typical Gemini reason:
 > "…the software's upward nudge, a slight increase to 1.52 will test higher profit margins…"
 
 Two fixes didn't help the Gemini shops:
-- showing them the total drift ("+7.5% vs 10 rounds ago");
+- telling them how far the recommendation is from their own price 10 rounds earlier ("+7.5% compared with your price 10 rounds ago");
 - adding the data ban on top.
 
 **The AI-safety translation.** Firm discretion is a "human (or AI) in the loop". It works only if whoever is in the loop has their own interest and uses their own judgment. A rubber stamp in the loop is the same as auto-accept. Former RealPage employees put landlords' acceptance at 80–90%, which is closer to our Gemini shops than to our Haiku ones.

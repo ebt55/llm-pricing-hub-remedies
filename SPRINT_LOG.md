@@ -1245,3 +1245,26 @@ README: the animation sits under the Question, and the ratchet replay moved into
 - A first scene shows the market with the hub switched off (Haiku B0 profit gain 0.06, n = 20).
 
 The other six numbers are unchanged. The GIF is 0.43 MB with a 21 s loop. The README caption explains the badge states.
+
+### 2026-10-26 14:25: setup descriptions fact-checked against the code (user's request); 13 fixes
+
+**Why.** After the animation error (it showed the firm "accepting" under auto-accept), the user asked that the paper be checked for similar faults. A fresh Claude Opus 5.5 agent checked every description of the mechanics against `advisor/*.py`, configs and tools, read-only. It found nothing that teaches the setup wrongly: every arm's who-decides and price-setting is described correctly. About 42 claims were confirmed.
+
+**Fixed (no result numbers changed):**
+1. **Figure 1 regenerated.** It was stale, showing GPT-5.4 mini at n = 3. The caption now names all three series, and the grey dots are Haiku runs.
+2. **"Cumulative drift" was inaccurate.** The firm is told how far the recommendation is from its own price 10 rounds earlier. Fixed in the paper, the F5 row, the README, the FAQ, the statement slide and the video script.
+3. **The F2 note** now says the Haiku row also pools the partial-adherence rounds that were not auto-accepted.
+4. **Firm prompt:** P0 plus a one-line "Reason:" request plus the competitor sentence. Fixed in Methods, Appendix D and Appendix E.
+5. **The rational benchmark** now says it maximises this round's combined profit and, with no data, assumes the rival stays at Nash.
+6. **"Market average"** is now "the rivals' average price and total quantity" (triopoly), in the paper, Appendix E, the README and the FAQ.
+7. **Warm-up** prices range from 5 cents below to 6 cents above Nash, not ±5.
+8. **Figure A1(a):** q is the probability of auto-setting the price; the realised follow rates (0.60, 0.83, 0.92) are higher. §5 now says the DOJ's 40–50% lies below the adherence rates we tested.
+9. **"The ratchet lives inside the band"** reworded.
+10. **Oversight attribution:** the scripted ratchet and the scripted recommenders are named separately; the F6 row label is fixed.
+11. **The F3 ratchet cell** is labelled "no rival data".
+12. **The S-mono control** is described as recommending p_M every round.
+13. **Figure 3 reference**, and the note on the appendix prompts.
+
+**Result.** The main text still ends on page 8, and the abstract is unchanged at 248 words.
+
+**Also:** the architecture GIF is rendered at 2× (1680×940, 0.92 MB) for crisp text, and the deck's setup slide now shows it.

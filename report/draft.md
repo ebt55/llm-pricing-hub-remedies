@@ -43,15 +43,15 @@ We ask a conditional policy question (sprint question 1.5): if such a hub exists
 
 ## 3. Methods
 
-**Market.** A logit Bertrand duopoly with Calvano et al.'s (2020) parameters (a = 2, μ = 0.25, c = 1), with Nash price p_N = 1.473 and joint-monopoly price p_M = 1.925. Every run starts from 10 rounds of competitive history (Nash ± 5 cents).
+**Market.** A logit Bertrand duopoly with Calvano et al.'s (2020) parameters (a = 2, μ = 0.25, c = 1), with Nash price p_N = 1.473 and joint-monopoly price p_M = 1.925. Every run starts from 10 rounds of competitive history (prices drawn from 5 cents below to 6 cents above Nash).
 - **Profit gain** Δ = (π − π_N)/(π_M − π_N), averaged over the last 20 of 100 rounds: 0 is competitive and 1 is joint monopoly. The unit of analysis is the run.
 - **Price index** (p̄ − p_N)/(p_M − p_N), used for cross-model comparisons because Δ falls again above p_M.
 
-**Firms.** Firms use the P0 prompt of Fish et al. (2024), via llm-cartel, plus one sentence: the firm competes with one other firm whose prices and sales it does not observe. They see their own price, quantity and profit history, plus the software's recommendations when advised (Appendix A).
+**Firms.** Firms use the P0 prompt of Fish et al. (2024), via llm-cartel, plus a one-line request for a stated reason and one sentence: the firm competes with one other firm whose prices and sales it does not observe. They see their own price, quantity and profit history, plus the software's recommendations when advised (Appendix A).
 
 **The hub** is called once per firm per round, with the same model as the firms.
 - **Objective:** either the client's long-run profit, or the *market-aligned* objective, "the combined profit of all firms in your client's market". The prompts are otherwise identical, and none says the hub advises the rival.
-- **What it sees about the rival:** price and quantity through t−1 (*current*), the same data but ≥ 10 rounds old (*stale*), nothing (*none*, the decree's data ban), or a market average (*aggregate*, triopoly only).
+- **What it sees about the rival:** price and quantity through t−1 (*current*), the same data but ≥ 10 rounds old (*stale*), nothing (*none*, the decree's data ban), or the rivals' average price and total quantity (*aggregate*, triopoly only).
 
 **Adherence regimes:**
 - **Auto-accept:** the price is the recommendation.
@@ -75,7 +75,7 @@ The mechanical controls give Δ = 1.00 (static monopoly) and 0.01 (best response
 
 ![Figure 1](figures/fig1_remedy_ladder.png)
 
-*Figure 1. The remedy ladder.* Profit gain Δ over the last 20 of 100 rounds, for Claude Haiku 5.5 (n = 20 per arm) and DeepSeek V4.1 Flash (n = 3–8). Dots are runs; bars are 95% t-intervals.
+*Figure 1. The remedy ladder.* Profit gain Δ over the last 20 of 100 rounds, for Claude Haiku 5.5 (n = 20 per arm), DeepSeek V4.1 Flash (n = 3–8) and GPT-5.4 mini (n = 5). Grey dots are Haiku runs; bars are 95% t-intervals.
 
 ### 4.2 Data limits help unevenly *(Haiku confirmatory; other models exploratory; Figures 1 and 2)*
 
@@ -99,7 +99,7 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 *Figure 2. Data limits across models.* Price index over the last 20 of 100 rounds: 0 is Nash and 1 is joint monopoly. Bars are 95% t-intervals where n ≥ 4. The dashed line is a scripted rational joint-profit hub with no rival data.
 
 - **Aggregation.** In the triopoly (n = 10), a market-average feed removes nothing: Δ 0.98 vs 0.92 with per-firm data.
-- **Rational benchmark.** A scripted joint-profit hub reaches Δ 1.00 with current or stale data, and 0.82 with none (price index 0.60, the dashed line in Figure 2). Under a joint objective, raising one's own price is profitable even without information about the rival.
+- **Rational benchmark.** A scripted hub that maximises this round's combined profit reaches Δ 1.00 with current or stale data, and 0.82 with none, where it assumes the rival stays at Nash (price index 0.60, the dashed line in Figure 2). Under a joint objective, raising one's own price is profitable even without information about the rival.
 - **A hypothesis for the spread.** The data ban binds hubs that hesitate to act on their objective blind: Haiku's no-data hub writes "deviating upward risks losing volume to a competitor", while the DeepSeek and Gemini Flash-Lite hubs price at or above p_M within a few rounds. It does not track reasoning budget (DeepSeek's hub thinks as much as Haiku's: 928 vs 778 tokens).
 
 ### 4.3 Guardrails and partial adherence keep the harm *(Haiku; guardrails also on Qwen)*
@@ -134,7 +134,7 @@ On Qwen3.8 Flash, the ±3% band retains 88% of the harm (Δ 0.87 vs 0.97 under p
 
 \*Share of the ratchet's 1–2-cent recommended increases that the firm matched exactly (`tools/ratchet_curve.py`). Firms that do not match often move part of the way.
 
-*Controls:* a one-step jump to p_M, on Haiku, gives Δ 0.07 (n = 5). The +1 cent ratchet on auto-accept gives Δ 1.00 (n = 10).
+*Controls:* recommending p_M every round (a one-step jump), on Haiku, gives Δ 0.07 (n = 5). The +1 cent ratchet on auto-accept gives Δ 1.00 (n = 10).
 
 ![Figure 3](figures/fig3_ratchet.png)
 
@@ -142,13 +142,13 @@ On Qwen3.8 Flash, the ±3% band retains 88% of the harm (Δ 0.87 vs 0.97 under p
 
 **How far the ratchet gets tracks how often the firm model accepts small nudges** (Figure 3):
 - **Haiku firms refuse even a patient 1-cent ratchet.** Every Haiku ratchet arm sits at or below the no-advisor baseline (Δ 0.03–0.05 vs 0.06). The result holds over 200 rounds: Δ 0.03 for both the LLM hub and the ratchet in rounds 181–200 (n = 5).
-- **Gemini Flash-Lite firms follow nudges of any size.** They reach p_M at the pace of the step (Figure 3a).
+- **Gemini Flash-Lite firms follow nudges of any size.** They reach p_M at the pace of the step (Figure 3).
 - **GPT-5.4 mini firms defer too** (prediction P14 held): the ratchet reaches Δ 0.93, though GPT-5.4 mini's own hub reaches monopoly in only 2 of 5 runs.
 - **Qwen firms show why step size matters.** They refuse the LLM hub's large jumps and remove all of its harm. A patient 1-cent ratchet still takes 7 of 8 Qwen markets most of the way to monopoly (Δ 0.55–1.00; the eighth stays at 0.05).
 
 **Is it reasoning? No.** At our settings Gemini Flash-Lite does not think (35 output tokens per call). With thinking on (408 tokens per firm call, comparable to Haiku's 557; n = 6), its firms accept *more* of the ratchet's 1–2-cent increases (84% vs 61%) and of the LLM hub's 3–5-cent steps (71% vs 46%; Table F2). The ratchet still reaches monopoly, and discretion against the LLM hub removes none of the harm (Δ 1.00 vs 0.41 without thinking; B0 0.05, auto-accept 0.98, n = 3). Pushing back is a matter of the firm model's disposition, not its reasoning budget.
 
-**Two candidate fixes did not help** on Gemini Flash-Lite: stacking the data ban on discretion, and showing the firm the cumulative drift (Table F5).
+**Two candidate fixes did not help** on Gemini Flash-Lite: stacking the data ban on discretion, and telling the firm how far the recommendation is from its own price 10 rounds earlier (Table F5).
 
 ### 4.5 Without a coordination instruction *(exploratory)*
 
@@ -162,16 +162,16 @@ The data-limit ranking holds under demand noise, without the price-ceiling cue, 
 
 **Why data limits work on some models and not others.** Data limits are written for software whose behaviour depends on the data it sees. An LLM hub's behaviour depends mainly on its objective, and data mostly confirms that the rival has followed. So a data limit binds only if the model hesitates to pursue its objective blind. We call the harm that survives the data rules **data-compliant coordination**.
 
-**Why guardrails miss.** The ratchet lives inside the band: a per-round limit bounds each step, not where the steps lead. On Haiku a ±1% band delayed monopoly by about 15 rounds and changed nothing else. On Qwen a ±3% band retained 88% of the harm.
+**Why guardrails miss.** Under a band the hub's climb becomes a ratchet: a per-round limit bounds each step, not where the steps lead. On Haiku a ±1% band delayed monopoly by about 15 rounds and changed nothing else. On Qwen a ±3% band retained 88% of the harm.
 
 **Why discretion is not a remedy by itself.** Firm discretion works the way a human in the loop works: only if whoever is in the loop has their own interest and acts on it. A deciding firm that refuses small nudges breaks the ratchet; one that defers is auto-accept with an extra step. Which kind a firm is depends on the model, not on the rule.
 
-**Can anyone tell, before approving a remedy, whether discretion is real?** Yes. The Final Judgment's monitor sees recommendation logs, so it can compute what we compute: the share of small recommended increases that users accept. Where users accept most small nudges, discretion is nominal. Real-world acceptance (40–50% of leases within 1% of the recommendation, per the DOJ complaint; 80–90% by former employees' accounts) sits where most of the harm remains in our model (Figure A1).
+**Can anyone tell, before approving a remedy, whether discretion is real?** Yes. The Final Judgment's monitor sees recommendation logs, so it can compute what we compute: the share of small recommended increases that users accept. Where users accept most small nudges, discretion is nominal. Former employees' 80–90% acceptance sits where most of the harm remains in our model (Figure A1); the DOJ complaint's 40–50% (leases within 1% of the recommendation) lies below the partial-adherence rates we tested.
 
 **Implications for remedies on LLM pricing software.** (1) **Regulate and audit the advisor's objective:** the same data and authority are harmless under a client-only objective. (2) **Measure acceptance, not just permission:** the acceptance of small recommended increases, with price outcomes from an ablation audit like ours, tests whether discretion is real. (3) **Treat data limits as model-dependent and per-round bands as delays:** a court cannot rely on either without testing the vendor's model.
 
 **Beyond antitrust.** Per-step approval by a deferential overseer is a general weakness of AI oversight. An agent that moves in small, individually plausible steps can drive an outcome no single approval would allow. This is the temporal analogue of attacks split across agents, which defeat per-instance monitors (Makins et al., 2026) and per-action defences (Hagag et al., 2026).
-- **In our runs, a monitor of single price moves points the wrong way** (Table F6). It ranks the hub's guardrailed, ratcheting and discretionary climbs as *less* suspicious than honest play (AUROC 0.05–0.27), because honest firms experiment in bigger steps. So does the classic variance screen (Abrantes-Metz et al., 2006; AUROC 0.36). **Only where prices settle separates the two at a 1% false-alarm rate.**
+- **In our runs, a monitor of single price moves points the wrong way** (Table F6). It ranks the guardrailed and discretionary hubs' climbs, and the scripted ratchet's, as *less* suspicious than honest play (AUROC 0.05–0.27), because honest firms experiment in bigger steps. So does the classic variance screen (Abrantes-Metz et al., 2006; AUROC 0.36). **Only where prices settle separates the two at a 1% false-alarm rate.**
 
 ### Limitations
 
@@ -222,7 +222,7 @@ No remedy in the RealPage Final Judgment reliably stops an LLM pricing hub with 
 ### A. Prompts (verbatim)
 
 <!-- include: appendix-prompts.md -->
-*Verbatim prompts for every arm are in `report/appendix-prompts.md`.*
+*Verbatim prompts for every duopoly arm are in `report/appendix-prompts.md`; triopoly prompts list two competitors, or their aggregate.*
 
 ### B. Per-arm tables
 
@@ -243,7 +243,7 @@ An estimated $2–5 more went on unlogged calls: the detection monitor, probes a
 
 - No code predates the sprint, and no starter-repo file is included or modified.
 - The market is re-implemented in `advisor/market.py`. `tests/test_market.py` checks its duopoly benchmarks (Nash 1.4729, monopoly 1.9250) against the values from the llm-cartel code in the sprint's starter repository (`OligopolyGame`). Two benchmark bugs found in that starter code are documented in `SPRINT_LOG.md`.
-- The firm's system prompt is llm-cartel's P0 (Fish et al., 2024), used verbatim. The history-table format follows the starter code's `generate_prompt`, and the price parsing follows its `split_thoughts_and_price`.
+- The firm's system prompt is llm-cartel's P0 (Fish et al., 2024) verbatim, plus a one-line request for a stated reason. The history-table format follows the starter code's `generate_prompt`, and the price parsing follows its `split_thoughts_and_price`.
 - Concurrent-work boundaries and every pre-registration are in `SPRINT_LOG.md`.
 
 ### E. Limitations and Dual-Use / Ethical Considerations

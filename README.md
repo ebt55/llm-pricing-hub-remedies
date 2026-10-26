@@ -16,19 +16,19 @@
    - 69% for Haiku;
    - ≤ 10% for DeepSeek V4.1 Flash and Gemini 3.5 Flash-Lite.
 
-   Stale data removes 21% for Haiku, and a market average removes none. A scripted rational hub with no data still raises prices.
+   Stale data removes 21% for Haiku, and showing only the rivals' average price and total sales (triopoly) removes none. A scripted rational hub with no data still raises prices.
 3. **Guardrails and partial adherence keep the harm.** Auto-accept within ±1–3% per round, the Final Judgment's "user-set parameters", retains all of it on Haiku and 88% on Qwen, and only delays monopoly (Haiku: round 4 → 8–19). At 50–90% acceptance, 73–94% remains.
 4. **Firm discretion works only when firms refuse small nudges.** We swap in a scripted recommender that adds 1 cent per round:
    - Haiku firms stay competitive (Δ 0.05).
    - Gemini Flash-Lite firms follow it to monopoly (Δ 1.00), with or without thinking.
 
-   With an LLM hub, discretion removes 95% of the harm for Haiku and 57% for Gemini Flash-Lite. Stacking the data ban on top, or showing firms the cumulative drift, doesn't fix the Gemini case.
+   With an LLM hub, discretion removes 95% of the harm for Haiku and 57% for Gemini Flash-Lite. Stacking the data ban on top, or telling firms how far the recommendation is from their price 10 rounds earlier, doesn't fix the Gemini case.
 
    ![Replay of two logged runs: the same scripted 1-cent ratchet recommends each firm its own last price plus one cent every round. Claude Haiku 5.5 firms refuse and prices stay near the competitive level (profit gain 0.03); Gemini 3.5 Flash-Lite firms accept and walk to joint monopoly by round 41 (profit gain 1.00).](report/figures/ratchet_replay.gif)
 
    *The ratchet, replayed from two logged runs (Haiku seed 100, Gemini Flash-Lite seed 1000; `tools/replay_gif.py`). The recommender is the same script on both sides; only the firm model that decides differs.*
 5. **Coordination needs no joint instruction.** Advice to "avoid a race to the bottom" also raises prices (Δ 0.45 without rival data, n = 10).
-6. **Detection.** The price-level screen catches outcomes (AUROC 0.90). Two classic instruments point the wrong way: the variance screen (0.36), and a monitor of single price moves, which ranks the hub's guardrailed and ratcheting climbs as *less* suspicious than honest play (0.05–0.27). A reasoning monitor catches the hub's *stated* intent, but also flags honest advisors that watch rivals.
+6. **Detection.** The price-level screen catches outcomes (AUROC 0.90). Two classic instruments point the wrong way: the variance screen (0.36), and a monitor of single price moves, which ranks the guardrailed hub's and the scripted ratchet's climbs as *less* suspicious than honest play (0.05–0.27). A reasoning monitor catches the hub's *stated* intent, but also flags honest advisors that watch rivals.
 
 ## Repository
 
