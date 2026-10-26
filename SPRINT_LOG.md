@@ -1208,3 +1208,11 @@ We test this on existing runs only. There are no new model calls.
   - the ratchet sentence now says "across five firm models", so it does not read as a single run rising;
   - the oversight sentence is added back.
 - No number changed. Page 1 still holds the whole abstract, now left-aligned, and the main text still ends on page 8.
+
+### 2026-10-26 13:28: README replay GIF (user's request; $0)
+
+`tools/replay_gif.py` animates two logged runs under the same scripted +1 cent ratchet with firm discretion:
+- Haiku, seed 100: a typical run; the logged profit gain is 0.028.
+- Gemini Flash-Lite, seed 1000: all six Gemini runs end at about 1.00.
+
+Each frame is one round, showing both firms' prices, the hub's recommendations and the running profit gain over the last 20 rounds. The final readouts match the logged values. The GIF (1.3 MB) is in the README under the Question paragraph. The paper and PDF are unchanged.

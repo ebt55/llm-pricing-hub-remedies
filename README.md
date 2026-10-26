@@ -4,6 +4,10 @@
 
 **Question.** The DOJ's settlement with RealPage limits what a shared pricing advisor may use: no competitors' current non-public data at runtime, training data at least 12 months old, and no reporting narrower than state level. The complaints also targeted auto-accept. Do these remedies stop an LLM pricing advisor whose objective is aligned with the whole market, the incentive alleged against RealPage?
 
+![Replay of two logged runs: the same scripted 1-cent ratchet recommends each firm its own last price plus one cent every round. Claude Haiku 5.5 firms refuse and prices stay near the competitive level (profit gain 0.03); Gemini 3.5 Flash-Lite firms accept and walk to joint monopoly by round 41 (profit gain 1.00).](report/figures/ratchet_replay.gif)
+
+*The ratchet, replayed from two logged runs (Haiku seed 100, Gemini Flash-Lite seed 1000; `tools/replay_gif.py`). The recommender is the same script on both sides; only the firm model that decides differs.*
+
 **Main findings** (details in [report/draft.md](report/draft.md); Claude Haiku 5.5 with n = 20 per arm unless noted; more than 700 runs on seven models):
 
 1. **The hub causes the harm.** A market-aligned hub drives a competitive market to joint monopoly (profit gain Δ 0.06 → 0.99). An advisor that serves only its own client is pro-competitive (Δ −0.01).
@@ -28,7 +32,7 @@
 |---|---|
 | `advisor/` | Market (`market.py`), model providers with spend caps (`providers.py`), prompts (`prompts.py`), arm definitions (`arms.py`), game loop (`game.py`) |
 | `run.py` | Runs arms × seeds in parallel from a TOML config; resumable; prints a cost estimate |
-| `tools/` | `ratchet_curve.py` (acceptance by recommended step), `token_table.py` (measured reasoning budget per model), `pack_thoughts.py` |
+| `tools/` | `ratchet_curve.py` (acceptance by recommended step), `replay_gif.py` (the README replay), `build_docx.py` (the report on the Apart template), `token_table.py` (measured reasoning budget per model), `pack_thoughts.py` |
 | `analyze.py` | Per-arm tables, pre-registered contrasts (Welch t, Mann-Whitney, Holm), MDE, share of harm removed, gate checks |
 | `detect.py` | Detection add-on: cartel screens and the reasoning monitor, scored against ground truth |
 | `figures.py` | Paper figures, written to `report/figures/` |
