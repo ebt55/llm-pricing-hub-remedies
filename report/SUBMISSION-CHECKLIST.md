@@ -10,7 +10,7 @@
 3. **The report is built on the official template:** `report/submission.docx` (editable) and `report/submission.pdf` (to submit).
    - Rebuild after any edit to `report/draft.md` or an appendix file: `python tools/build_docx.py "../Copy of Apart Research hackathon submission template.docx"`, then convert with LibreOffice or Word.
    - Main text (title to Code and Data) ends on page 8 with about 5 lines to spare; References start on page 9, the Appendix (A–F) on page 11, and the LLM Usage Statement is last.
-   - **Read the LLM Usage Statement and edit it to your own words.** The template asks that the final report be primarily written by the team, and the statement says plainly how much Claude wrote.
+   - The LLM Usage Statement is in your words (first person): your idea and direction; design and code by Claude Opus 5.5 agents in Claude Code; reviews from Claude Fable 5.1.
    - If you open the .docx in Google Docs or Word, check that the Code and Data section still ends on page 8.
 4. **Make the repo public, then check the link in a private window:**
    ```bash

@@ -1191,3 +1191,8 @@ We test this on existing runs only. There are no new model calls.
 - The Conclusion kept to three sentences.
 
 **Result.** The main text ends on page 8 with about 5 lines to spare.
+
+### 2026-10-26 12:43: report font and LLM Usage Statement (user's request)
+
+- **Font.** The template's sample text used Old Standard TT, which the user found hard to read. The document now uses Arial 11pt, the template's own default, at 1.08 line spacing. The main text still ends on page 8, now with about 1.5 inches to spare.
+- **LLM Usage Statement**, rewritten in first person to the user's description: the idea and direction were the author's; the design and all of the code were by Claude Opus 5.5 agents in Claude Code; Claude Fable 5.1 gave adversarial reviews and second opinions. It also states that Claude Opus 5.5 drafted the report and slides.

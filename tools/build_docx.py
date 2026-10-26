@@ -19,7 +19,8 @@ from xml.sax.saxutils import escape
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPORT = os.path.join(HERE, "report")
-FONT = "Old Standard TT"
+FONT = "Arial"  # the template's default font; its sample text used Old Standard TT, which reads poorly in body text
+TEMPLATE_FONT = "Old Standard TT"
 MONO = "Courier New"
 TEXT_W = 9360  # 6.5 in in DXA
 FIG_WIDTH_IN = {"fig1_remedy_ladder.png": 3.7, "fig2_cross_model.png": 3.8, "fig3_ratchet.png": 5.6,
@@ -113,7 +114,7 @@ def inline(text: str, sz=None, b=False, i=False, color=None) -> str:
 
 # ---------- blocks ----------
 
-def para(content: str, style=None, jc=None, ind=None, after=80, before=0, line=240, num=None, keep_next=False,
+def para(content: str, style=None, jc=None, ind=None, after=80, before=0, line=259, num=None, keep_next=False,
          shade=None, page_break=False) -> str:
     p = ""
     if style:
@@ -365,7 +366,9 @@ def main(template: str, out_path: str):
     sect = next(doc[s:e] for s, e, t in spans if t == "sectPr")
     new_body = (doc[p0s:p0e] + title_block(doc[t1s:t1e], title, subtitle, author, affil, abstract) + doc[p2s:p2e]
                 + generated + sect)
-    files["word/document.xml"] = (doc[:b0] + new_body + doc[b1:]).encode("utf-8")
+    files["word/document.xml"] = (doc[:b0] + new_body + doc[b1:]).replace(TEMPLATE_FONT, FONT).encode("utf-8")
+    for part in ("word/footnotes.xml", "word/styles.xml"):
+        files[part] = files[part].decode("utf-8").replace(TEMPLATE_FONT, FONT).encode("utf-8")
 
     r = files["word/_rels/document.xml.rels"].decode("utf-8")
     files["word/_rels/document.xml.rels"] = r.replace("</Relationships>", "".join(rels) + "</Relationships>").encode("utf-8")
