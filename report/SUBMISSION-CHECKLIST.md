@@ -30,7 +30,7 @@
 
 ## Done (check if you like)
 
-- [x] Abstract: 238 words, with numbers, n and CIs.
+- [x] Abstract: 248 words, written for a quick read (numbers trimmed; n and CIs are in the body).
 - [x] Variance, seeds and baselines reported; positive and mechanical controls in §4.1.
 - [x] Pre-registration: freeze commit `5aa9f79` for the main batch; every later batch is logged with a prediction before its run.
 - [x] Appendix "Limitations and Dual Use" (E).

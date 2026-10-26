@@ -1196,3 +1196,15 @@ We test this on existing runs only. There are no new model calls.
 
 - **Font.** The template's sample text used Old Standard TT, which the user found hard to read. The document now uses Arial 11pt, the template's own default, at 1.08 line spacing. The main text still ends on page 8, now with about 1.5 inches to spare.
 - **LLM Usage Statement**, rewritten in first person to the user's description: the idea and direction were the author's; the design and all of the code were by Claude Opus 5.5 agents in Claude Code; Claude Fable 5.1 gave adversarial reviews and second opinions. It also states that Claude Opus 5.5 drafted the report and slides.
+
+### 2026-10-26 12:56: abstract rewritten for a quick read (user's request; Fable 5.1 second opinion)
+
+**Why.** The user worried the abstract was too dense with numbers for judges skimming many papers. Fable 5.1 agreed: about 30 numbers and 5 model version strings in 250 words read like a results table. It also pointed out that the most quotable finding was missing: with a per-client objective, the same hub with the same rival data is pro-competitive.
+
+**New abstract** (248 words; digits down from 82 to 35). It now reads as a short story: problem, method, harm, cause (objective not data), each remedy's result in words, the ratchet mechanism and the oversight result, then the takeaway.
+- Dropped: sample sizes, the CI and model version strings. They remain in the body.
+- My fixes to Fable's draft:
+  - its gloss "leaving other prices to firm discretion" became "protects users' overrides" (§V.A.5, §V.C);
+  - the ratchet sentence now says "across five firm models", so it does not read as a single run rising;
+  - the oversight sentence is added back.
+- No number changed. Page 1 still holds the whole abstract, now left-aligned, and the main text still ends on page 8.

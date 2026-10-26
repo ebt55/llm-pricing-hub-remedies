@@ -343,7 +343,7 @@ def title_block(tbl: str, title: str, subtitle: str, author: str, affil: str, ab
     s = tbl.index("Summarize your project")
     p0 = tbl.rfind("<w:p ", 0, s)
     p1 = tbl.index("</w:tc>", s)
-    abs_p = para(inline(abstract), jc="both", after=120, line=240)
+    abs_p = para(inline(abstract), after=120, line=250)
     return tbl[:p0] + abs_p + tbl[p1:]
 
 
