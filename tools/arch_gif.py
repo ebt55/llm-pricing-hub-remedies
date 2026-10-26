@@ -55,8 +55,13 @@ STAMP = {"auto": "auto", "band": "±3% cap"}  # how the hub's price is applied w
 STEP3 = {"auto": "Hub's price applied", "band": "Hub's price applied (capped ±3%)", "disc": "Each firm's LLM decides",
          "alone": "Each firm's LLM decides"}
 STEPS = ["Hub reads data", "Recommends a price", None, "Customers buy"]  # step 3 depends on the adherence
-STEP_FRAMES, STEP_MS, STEP_PAUSE_MS = 6, 50, 100  # token frames per step; the last one lingers
-GROW_FRAMES, GROW_MS, HOLD_MS = 5, 40, 1400  # outcome bar grows, then holds
+# Pacing (ms; GIF delays are whole centiseconds). The first TEACH scenes (baseline, no remedy) play each step slowly
+# (~0.8 s) to teach the flow; later scenes play steps at ~0.45 s but hold the outcome ~3 s so the note can be read.
+# Each scene opens on a still frame (SCENE_PAUSE_MS) so the viewer sees which switch flipped.
+TEACH = 2
+STEP_FRAMES = 6  # token frames per step; the last one lingers
+STEP_MS, STEP_PAUSE_MS, HOLD_MS = {True: 80, False: 50}, {True: 320, False: 150}, {True: 2800, False: 3000}
+GROW_FRAMES, GROW_MS, SCENE_PAUSE_MS = 5, 40, 300  # the outcome bar grows, then holds
 
 # the game, laid out as a hub-and-spoke diamond in the left column (x 24-512)
 HUB, FIRM_A, FIRM_B, CROWD = (268, 308), (96, 204), (440, 204), (268, 90)
@@ -333,10 +338,13 @@ def plan():
     """(scenario, step, progress 0-1, duration in ms) for every frame; step 4 is the outcome."""
     out = []
     for s in range(len(SCENARIOS)):
+        slow, first = s < TEACH, len(out)
         for step in range(4) if SCENARIOS[s][1] else (2, 3):  # without a hub, steps 1-2 do not happen
-            out += [(s, step, k / (STEP_FRAMES - 1), STEP_MS + (STEP_PAUSE_MS if k == STEP_FRAMES - 1 else 0))
-                    for k in range(STEP_FRAMES)]
-        out += [(s, 4, k / GROW_FRAMES, HOLD_MS if k == GROW_FRAMES else GROW_MS) for k in range(1, GROW_FRAMES + 1)]
+            out += [(s, step, k / (STEP_FRAMES - 1),
+                     STEP_MS[slow] + (STEP_PAUSE_MS[slow] if k == STEP_FRAMES - 1 else 0)) for k in range(STEP_FRAMES)]
+        out[first] = out[first][:3] + (out[first][3] + SCENE_PAUSE_MS,)  # a still beat as the scene opens
+        out += [(s, 4, k / GROW_FRAMES, HOLD_MS[slow] if k == GROW_FRAMES else GROW_MS)
+                for k in range(1, GROW_FRAMES + 1)]
     return out
 
 
