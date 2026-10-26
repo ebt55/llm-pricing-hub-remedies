@@ -1274,3 +1274,15 @@ The other six numbers are unchanged. The GIF is 0.43 MB with a 21 s loop. The RE
 The replay is kept because it is evidence, not a schematic: two real logged runs under the same scripted recommender, where only the firm's AI differs (finding 4).
 - Re-rendered at 2× (1680×880) with the same shared-palette writer as the architecture GIF: 0.39 MB, down from 1.33 MB.
 - The subtitle and legend now say "script" instead of "hub", because the ratchet is a script, not the LLM hub. That is what makes it a causal test.
+
+### 2026-10-26 15:01: uploadable slides with a working animation; guardrails slide corrected
+
+- **`report/slides.pptx`** (1.7 MB, 9 slides). Each slide is the deck's own HTML rendered at 1920×1080 by Edge. On the setup slide, the animated architecture GIF is placed as its own picture over a still of the same diagram:
+  - PowerPoint plays the GIF in slideshow;
+  - viewers that cannot play GIFs show the still.
+  - It was built without new packages: Pillow made a PDF of the slide images, LibreOffice converted it to PPTX, and the pictures were inserted directly.
+  - The slides are images, so their text is not editable, and the speaker notes are not included (they are in the web deck and `report/video-script.md`).
+- **The guardrails slide had two claims the fact-check had already fixed in the paper.** Now corrected there and in the web deck and video script:
+  - "Accept 50–90% of the time" is now "hub's price auto-set 50–90% of rounds".
+  - It no longer places the DOJ's 40–50% acceptance where most harm remains (that is below the tested range).
+  - The footnote no longer calls the harm figures "medians".
