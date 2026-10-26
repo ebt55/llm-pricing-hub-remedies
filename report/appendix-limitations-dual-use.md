@@ -24,6 +24,7 @@
 | Nemotron | 20% | Partial |
 | Qwen | 52% | Fails |
 | Gemini Flash-Lite | 61% | Fails |
+| GPT-5.4 mini | 72% | Fails |
 
 Our firm models stand in for human or AI deciders whose deference we do not measure. Real landlords' acceptance is reported as 40–50% within 1% of the recommendation (DOJ complaint) and 80–90% (former employees, private plaintiffs).
 
@@ -39,7 +40,7 @@ Our firm models stand in for human or AI deciders whose deference we do not meas
   - The data ban removes 69–92% of the harm for three models and ≤ 10% for two.
   - Replications are small (n = 3–12), and most robustness checks are on Haiku.
   - Gemini 3.8 Flash's no-advisor baseline is unstable (two of four runs reach monopoly unaided), so its harm shares cannot be estimated.
-- **Reasoning budgets differ and were not all honoured.** Measured median output tokens per call range from 35 (Gemini 3.5 Flash-Lite at low effort, no thinking) to 6,376 (Nemotron, whose 1,024-token budget was not enforced). We report measured tokens. One batch (Gemini Flash-Lite at high effort, n = 6) shows that a Haiku-like budget does not make Gemini firms push back. Its baselines stayed at n = 3 when the batch reached our spending cap.
+- **Reasoning budgets differ and were not all honoured.** Measured median output tokens per call range from 35 (Gemini 3.5 Flash-Lite at low effort, no thinking) to 6,695 (Nemotron, whose 1,024-token budget was not enforced). We report measured tokens. One batch (Gemini Flash-Lite at high effort, n = 6) shows that a Haiku-like budget does not make Gemini firms push back. Its baselines stayed at n = 3 when the batch reached our spending cap.
 - **Prompts.** We use one firm prompt (P0 from Fish et al. 2024, plus one neutral sentence about the competitor) and one advisor prompt per objective. LLM pricing is known to be sensitive to prompts.
 - **No sampling control.** Haiku's API rejects sampling parameters, and the thinking modes of the other models ignore them. Runs are independent stochastic samples, not reproducible seeds.
 - **Logging and pinning.** Model IDs are logged on every call, and OpenRouter models were pinned to one provider each.

@@ -25,7 +25,7 @@
    - **Title image:** `report/figures/fig3_ratchet.png`.
    - **Video (optional):** read `report/video-script.md` (about 4 minutes) over the slides.
 
-## Monday morning (Claude, after the 05:30 GPT-5.4 mini runs)
+## Monday morning (Claude, after the 05:30 GPT-5.4 mini runs): done 05:48 IST, see SPRINT_LOG
 
 1. `uv run python tools/gpt_ratchet_patch.py` prints the GPT ratchet row and the P14 check.
 2. Insert the row into `report/draft.md` §4.4, re-render Fig 3, and add a GPT chip on the deck's ratchet slide (re-upload `fig3_ratchet.png`).
@@ -46,7 +46,7 @@
 
 - **Total cost:** filled in (about $115; $112.50 logged per call). The GPT-5.4 mini calls are $0 (free tier).
 - **References:** verified against primary or public sources (Crossref, arXiv, the court opinions, CourtListener) at ~05:50 Sun. Corrections are applied. Only the page range of Berger et al. (2025) is unverified, because the ABA page returned 403. A quick look in your browser would settle it.
-- **GPT-5.4 mini:** n = 3 is in the draft. Its ratchet test (n = 4), then seeds 203–204, run automatically at the Mon 05:30 IST allowance reset (see "Monday morning" above).
+- **GPT-5.4 mini:** n = 5 and its ratchet test (n = 4) are in the draft (P14 held: 72% acceptance, Δ 0.93).
 
 ## Form summary (short)
 
@@ -56,4 +56,4 @@
 > - **Auto-accept within ±1–3% per round** keeps 88–101% of it (Haiku, Qwen).
 > - **Firm discretion** works only when firms refuse small nudges.
 >
-> A scripted 1-cent-per-round ratchet leaves Haiku firms competitive but walks Qwen and Gemini firms most or all of the way to monopoly. Remedies should target the advisor's objective and audit acceptance and outcomes. Code, logs and every pre-registration: https://github.com/ebt55/llm-pricing-hub-remedies
+> A scripted 1-cent-per-round ratchet leaves Haiku firms competitive but walks Qwen, GPT-5.4 mini and Gemini firms most or all of the way to monopoly. Remedies should target the advisor's objective and audit acceptance and outcomes. Code, logs and every pre-registration: https://github.com/ebt55/llm-pricing-hub-remedies

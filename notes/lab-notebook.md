@@ -362,3 +362,9 @@ Data limits remove 84–85% (wide CI, 54–130%). Together with Haiku, this make
 - Seeds 203–204 run at the Monday 05:30 reset.
 
 **~05:04 Draft v5.** The title was set by a Fable 5.1 review: "An LLM Pricing Hub Survives Data Limits on Some Models; Firm Discretion Works Only When Firms Refuse Small Nudges". About 7.8 pages. Checklist: `report/SUBMISSION-CHECKLIST.md`.
+
+## 2026-10-26 05:48: GPT-5.4 mini, final
+
+- **Ratchet (K1-d, n = 4):** firms accept 72% of 1–2-cent nudges and Δ is 0.93. P14 held.
+- **Hub:** still weak at n = 5 (Δ 0.54; monopoly in 2 of 5 runs). The data ban removes 82% (36–100) and stale data 60% (−32 to 90), superseding the n = 3 figures above.
+- **What this adds:** a weak hub model does not mean deferential firms are safe. The same firms walk to near-monopoly when a patient recommender nudges them.

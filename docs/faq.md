@@ -52,7 +52,7 @@ That connects the paper to the sprint's detection track as well as the markets t
 
 **An LLM Pricing Hub Survives Data Limits on Some Models; Firm Discretion Works Only When Firms Refuse Small Nudges** states the two findings that held up across models:
 - **Data limits on some models.** A ban on rival data removes most of the hub's harm for three models (Nemotron 92%, Qwen 85%, Haiku 69%), but almost none for two (DeepSeek 10%, Gemini Flash-Lite 8%). So the rule's effect depends on the model, not the rule.
-- **Firm discretion only when firms refuse small nudges.** The hub raises prices in small steps (a "ratchet"). Discretion stops it only if the shop's AI says no to small nudges. Haiku's shops do. Qwen's refuse big jumps but let a patient 1-cent ratchet through. Gemini Flash-Lite's accept nudges of any size, even with thinking switched on.
+- **Firm discretion only when firms refuse small nudges.** The hub raises prices in small steps (a "ratchet"). Discretion stops it only if the shop's AI says no to small nudges. Haiku's shops do. Qwen's refuse big jumps but let a patient 1-cent ratchet through. Gemini Flash-Lite's accept nudges of any size, even with thinking switched on, and so do GPT-5.4 mini's.
 
 **Guardrails** (auto-accept within ±1–3% per round) are not in the title, because we tested them on two models only. On Haiku they removed none of the harm, and on Qwen 12%. In both they only delayed monopoly.
 

@@ -18,7 +18,7 @@ Our question: if the hub is an AI model whose goal is the whole market's profit,
 
 **6. The ratchet.** Third and main finding: why this happens. Under discretion, the AI hub anchors on the shop's current price and steps up from it. To test whether small steps are what gets past a deciding shop, we replaced the AI hub with a script that recommends last round's price plus one cent, and gave every shop model full discretion. The outcome tracks one thing: how readily each shop model accepts small nudges.
 - Haiku accepts 12 percent and stays competitive.
-- Gemini Flash-Lite accepts 61 percent and walks all the way to monopoly, even when it is allowed to think.
+- Gemini Flash-Lite accepts 61 percent and walks all the way to monopoly, even when it is allowed to think. GPT-5.4 mini, tested on the last morning, accepts 72 percent and nearly gets there too.
 - Qwen is the telling case. It refuses the AI hub's big jumps, so discretion works against that hub, but a patient one-cent ratchet gets through.
 
 **7. The lesson.** Firm discretion works the way a human in the loop works: only if whoever is in the loop has their own interest and acts on it. A decider that refuses small nudges breaks the ratchet; one that defers is auto-accept with an extra step. Which kind a decider is depends on the model, not on the rule. Thinking longer did not make Gemini's shops push back, and neither did showing them the total drift. The same blind spot hits monitors: on our runs, a monitor that checks one price move at a time ranks the hub's small-step climbs as less suspicious than honest firms, which experiment in bigger steps. Only looking at where prices settle gives the hub away.

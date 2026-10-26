@@ -1145,3 +1145,27 @@ We test this on existing runs only. There are no new model calls.
 - The main text renders within 8 pages (Letter, 11pt Arial) even with figure-placement gaps.
 
 **Also updated:** deck (lesson slide), video script and README (finding 6).
+
+### 2026-10-26 05:48: GPT-5.4 mini ratchet result (P14) and seeds 203–204; numbers frozen
+
+**Run.** Both batches ran at the 00:00 UTC allowance reset (05:32 IST) on the free data-sharing allowance: $0, 800 + 866 calls, 0 parse retries.
+
+**P14 held.** GPT-5.4 mini firms matched 72% of the scripted ratchet's 1–2-cent increases (n = 499 decisions). Δ(K1-d) = 0.93 (runs 0.99, 0.73, 1.00, 1.00; n = 4). The band rule was "> 40% acceptance → Δ > 0.5".
+- The ratchet claim now rests on five firm models from five labs.
+- At the top, Δ does not rise strictly with acceptance: Gemini Flash-Lite 61% → 1.00, GPT-5.4 mini 72% → 0.93. Both are near the ceiling.
+- GPT-5.4 mini's own hub is weak, but its firms defer. A weak hub model does not make its firms safe against a different recommender.
+
+**Seeds 203–204** (B0, M2-a, M1-a, M0-a; now n = 5 per arm):
+- The hub is still weak: M2-a Δ 0.54 (runs 1.00, 0.23, 0.31, 1.00, 0.17); the positive control passes in 2 of 5 runs.
+- Share of harm removed: the data ban 82% (36–100), stale data 60% (−32 to 90). With n = 3 these were 87% (56–99) and 41%.
+- The paper's footnote still flags the shares as imprecise.
+
+**Knock-on updates, all $0:**
+- **Table F6 (oversight)**, re-run including these runs: 134 negatives, 340 harmful runs. Per-step AUROC for the scripted ratchet goes from 0.22 to 0.27, so the quoted range is now 0.05–0.27. Other cells move by ≤ 0.01. Conclusions are unchanged.
+- **Table F1**, refreshed from `tools/token_table.py`: Qwen 608 / 918; Nemotron 2,140 / 6,695 (the ratchet runs added since F1 was written lower the firm median); GPT-5.4 mini 156 / 183.
+- **Figures.** Fig 3 re-rendered with the GPT series; its reference lines now stop before the end labels. Fig 2 re-rendered (GPT n = 5). Table F4 (detection) uses only Haiku batches and is unchanged.
+- **Paper, appendices and docs.** The abstract (250 words), contribution 2, the §4.2 row, the §4.4 table and bullet, Appendix E, the README, FAQ, video script and checklist.
+- **Deck.** A GPT chip on the ratchet slide (chips now in one format), new Fig 2 and Fig 3 assets, and the statement slide's AUROC range.
+- **Page limit.** The main text ran 2 lines over, so three repeated sentences were trimmed (§4.4, Discussion). The main text renders in 8 pages with about 5 lines to spare.
+
+**Numbers are frozen from here.**

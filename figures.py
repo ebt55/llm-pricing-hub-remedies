@@ -301,7 +301,7 @@ def fig_ratchet():
         ax.plot([100.5, 102.5], [y, y], color=color, lw=2)
         ax.text(103.5, y, label, color=INK2, fontsize=6.8, va="center")
     for y, lab in ((p_n, "Nash"), (p_m, "monopoly")):
-        ax.axhline(y, color=MUTED, lw=0.8, ls=":")
+        ax.plot([0, 100], [y, y], color=MUTED, lw=0.8, ls=":")  # stop short of the end labels
         ax.text(1, y + 0.008, lab, color=INK2, fontsize=6.8)
     ax.set_xlim(0, 140)
     ax.set_ylim(1.40, 2.0)
@@ -337,7 +337,7 @@ def fig_ratchet():
     bx.grid(axis="y", color=GRID, lw=0.6)
     bx.set_axisbelow(True)
     h, l = bx.get_legend_handles_labels()
-    fig.legend(h, l, frameon=False, fontsize=7.5, loc="upper center", ncol=5, bbox_to_anchor=(0.5, 0.0))
+    fig.legend(h, l, frameon=False, fontsize=7.5, loc="upper center", ncol=3, bbox_to_anchor=(0.5, 0.0))
     fig.tight_layout()
     save(fig, "fig3_ratchet")
 

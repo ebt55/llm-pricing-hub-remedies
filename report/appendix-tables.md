@@ -9,9 +9,9 @@ Median output tokens per call, with thinking included (`tools/token_table.py`). 
 | Claude Haiku 5.5 (primary) | Adaptive thinking, low effort | 557 / 778 |
 | Claude Haiku 5.5 (robustness) | High effort | — / 1,319 |
 | DeepSeek V4.1 Flash | Thinking, low effort | 692 / 928 |
-| Qwen3.8 Flash | 1,024-token reasoning budget | 613 / 872 |
-| Nemotron 3.5 Lightning (open weights) | 1,024-token budget (not enforced) | 2,916 / 6,376 |
-| GPT-5.4 mini | Low effort | 196 / 169 |
+| Qwen3.8 Flash | 1,024-token reasoning budget | 608 / 918 |
+| Nemotron 3.5 Lightning (open weights) | 1,024-token budget (not enforced) | 2,140 / 6,695 |
+| GPT-5.4 mini | Low effort | 156 / 183 |
 | Gemini 3.8 Flash | Low effort | 142 / 122 |
 | Gemini 3.5 Flash-Lite | Low effort | **35 / 39 (no thinking)** |
 | Gemini 3.5 Flash-Lite | High effort (thinking-on batch) | 408 / 816 |
@@ -63,7 +63,7 @@ Neither fix helps. The drift sentence (Appendix A) did not make Gemini firms ref
 
 ## Table F6. Per-step vs whole-episode oversight on existing runs ($0; `tools/oversight_test.py`)
 
-**Data and monitors.** 132 runs without a market-wide hub (negatives) and 335 harmful runs (a joint-objective hub or recommender, Δ ≥ 0.5). Each monitor sees only realised prices.
+**Data and monitors.** 134 runs without a market-wide hub (negatives) and 340 harmful runs (a joint-objective hub or recommender, Δ ≥ 0.5). Each monitor sees only realised prices.
 - **Per-step:** the largest single-round relative price move, which is what a per-period band or step-by-step approval inspects.
 - **Max drift:** the peak 10-round rolling mean against the warm-up price. This is the pre-registered episode statistic.
 - **Settled price:** the last-20-round mean against the warm-up price. Post hoc, and close to the harm definition by construction.
@@ -72,11 +72,11 @@ AUROC by monitor:
 
 | Harmful runs (n) | Per-step | Max drift (pre-registered) | Settled price (post hoc) |
 |---|---|---|---|
-| Auto-accept hub (214) | 0.67 | 0.94 | 1.00 |
-| Partial adherence (29) | 0.87 | 0.95 | 1.00 |
+| Auto-accept hub (215) | 0.66 | 0.94 | 1.00 |
+| Partial adherence (29) | 0.86 | 0.95 | 1.00 |
 | Per-period guardrail (33) | **0.05** | 0.96 | 1.00 |
-| Firm discretion, harm realised (15) | **0.15** | 0.94 | 1.00 |
-| Scripted ratchet (44) | **0.22** | 0.93 | 1.00 |
+| Firm discretion, harm realised (15) | **0.15** | 0.95 | 1.00 |
+| Scripted ratchet (48) | **0.27** | 0.94 | 1.00 |
 
 - **Per-step oversight is inverted against small-step drift.** Honest firms experiment with larger single moves (median largest move 18%) than a hub climbing in ≤ 3% steps.
 - **Max drift ranks well but fails at 1% FPR** (recall 0–6%; pre-registered prediction P16 failed). Honest firms' early price experiments set its threshold above the monopoly price.
