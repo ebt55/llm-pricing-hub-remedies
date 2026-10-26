@@ -31,6 +31,7 @@ BG, CARD, WHITE = "#fcfcfb", "#f4f3ef", "#ffffff"
 INK, INK2, MUTED, GRID = "#0b0b0b", "#52514e", "#8a8984", "#e6e5e1"  # as in figures.py
 BLUE, ORANGE = "#2a78d6", "#eb6834"  # SLOT[0]: firms and active switches; SLOT[1]: the flow and highlights
 BLUE_LT, LINE = "#d4e4f7", "#c3c2bd"  # light tint of BLUE; idle arrows
+DONE = "#aac8ee"  # a mid tint of BLUE: scenes already shown in the progress bar
 LW = 1.3  # one stroke width (pt) for every icon outline
 NO_ADVISOR = 0.06
 # (name, hub goal, rival data, adherence, Haiku profit gain, note); see report/draft.md §4 (Haiku, n = 20 per arm).
@@ -62,6 +63,7 @@ TEACH = 2
 STEP_FRAMES = 6  # token frames per step; the last one lingers
 STEP_MS, STEP_PAUSE_MS, HOLD_MS = {True: 80, False: 50}, {True: 320, False: 150}, {True: 2800, False: 3000}
 GROW_FRAMES, GROW_MS, SCENE_PAUSE_MS = 5, 40, 300  # the outcome bar grows, then holds
+HOLD_SPLIT = 4  # the hold is cut into this many frames so the scene-progress bar keeps moving (tiny delta frames)
 
 # the game, laid out as a hub-and-spoke diamond in the left column (x 24-512)
 HUB, FIRM_A, FIRM_B, CROWD = (268, 308), (96, 204), (440, 204), (268, 90)
@@ -232,7 +234,22 @@ def switch(ax, y, label, options, active, changed, dim=False):
                 color=WHITE if on else (LINE if dim else INK2), weight="bold" if on else "normal")
 
 
-def draw(ax, s, step, u):
+def scene_progress(ax, s, prog, y=441):
+    """Top right, level with the title: "Scene k of n" and one segment per scene; the current one fills in orange
+    over the scene's duration, earlier ones are a blue tint, later ones grey. Right-aligned to the panel's edge."""
+    n, seg, gap = len(SCENARIOS), 16, 3
+    x0 = 816 - n * seg - (n - 1) * gap
+    ax.text(x0 - 10, y, f"Scene {s + 1} of {n}", fontsize=7.5, color=INK2, va="center", ha="right")
+    for i in range(n):
+        x = x0 + i * (seg + gap)
+        ax.add_patch(FancyBboxPatch((x, y - 2.5), seg, 5, boxstyle="round,pad=0,rounding_size=2.5",
+                                    fc=DONE if i < s else GRID, ec="none", zorder=3))
+        if i == s and prog > 0:
+            ax.add_patch(FancyBboxPatch((x, y - 2.5), max(seg * min(prog, 1), 5), 5,
+                                        boxstyle="round,pad=0,rounding_size=2.5", fc=ORANGE, ec="none", zorder=4))
+
+
+def draw(ax, s, step, u, prog=0.0):
     name, goal, data, adh, gain, note = SCENARIOS[s]
     hub = goal is not None  # the baseline has no hub
     changed = [a != b for a, b in zip((goal, data, adh), BASE)] if hub else [False] * 3
@@ -244,6 +261,7 @@ def draw(ax, s, step, u):
     ax.add_patch(Rectangle((0, 0), W, H, fc=BG, ec="none", zorder=0))
     ax.text(24, 441, "The game: one LLM pricing hub advises both firms", fontsize=13.5, weight="bold", color=INK,
             va="center")
+    scene_progress(ax, s, prog)
     stepper(ax, step, adh, skipped=() if hub else (0, 1))
     for i, (on, text) in enumerate(((True, "deciding"), (False, "idle"))):  # legend for the LLM badges
         x = 24 + 96 * i
@@ -343,8 +361,19 @@ def plan():
             out += [(s, step, k / (STEP_FRAMES - 1),
                      STEP_MS[slow] + (STEP_PAUSE_MS[slow] if k == STEP_FRAMES - 1 else 0)) for k in range(STEP_FRAMES)]
         out[first] = out[first][:3] + (out[first][3] + SCENE_PAUSE_MS,)  # a still beat as the scene opens
-        out += [(s, 4, k / GROW_FRAMES, HOLD_MS[slow] if k == GROW_FRAMES else GROW_MS)
-                for k in range(1, GROW_FRAMES + 1)]
+        out += [(s, 4, k / GROW_FRAMES, GROW_MS) for k in range(1, GROW_FRAMES)]
+        out += [(s, 4, 1.0, HOLD_MS[slow] // HOLD_SPLIT)] * HOLD_SPLIT
+    return out
+
+
+def progress(frames):
+    """For each frame, the share of its scene's duration elapsed by the frame's end (the progress-bar fill)."""
+    total, done, out = {}, {}, []
+    for s, *_, d in frames:
+        total[s] = total.get(s, 0) + d
+    for s, *_, d in frames:
+        done[s] = done.get(s, 0) + d
+        out.append(done[s] / total[s])
     return out
 
 
@@ -352,8 +381,8 @@ def main(out=os.path.join(HERE, "report", "figures", "arch_playground.gif")):
     fig = plt.figure(figsize=(W / 100, H / 100), dpi=100, facecolor=BG)
     ax = fig.add_axes([0, 0, 1, 1])
 
-    def render(s, step, u):
-        draw(ax, s, step, u)
+    def render(s, step, u, prog=0.5):
+        draw(ax, s, step, u, prog)
         fig.canvas.draw()
         return Image.fromarray(np.asarray(fig.canvas.buffer_rgba())[..., :3].copy())
 
@@ -364,7 +393,8 @@ def main(out=os.path.join(HERE, "report", "figures", "arch_playground.gif")):
     for i, im in enumerate(sample):
         sheet.paste(im, (0, H * i))
     palette = sheet.quantize(colors=256, method=Image.Quantize.MEDIANCUT)
-    images = [render(s, step, u).quantize(palette=palette, dither=Image.Dither.NONE) for s, step, u, _ in frames]
+    images = [render(s, step, u, prog).quantize(palette=palette, dither=Image.Dither.NONE)
+              for (s, step, u, _), prog in zip(frames, progress(frames))]
     images[0].save(out, save_all=True, append_images=images[1:], duration=[d for *_, d in frames], loop=0)
     plt.close(fig)
     total = sum(d for *_, d in frames) / 1000
