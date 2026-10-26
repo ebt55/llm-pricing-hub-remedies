@@ -1268,3 +1268,9 @@ The other six numbers are unchanged. The GIF is 0.43 MB with a 21 s loop. The RE
 **Result.** The main text still ends on page 8, and the abstract is unchanged at 248 words.
 
 **Also:** the architecture GIF is rendered at 2× (1680×940, 0.92 MB) for crisp text, and the deck's setup slide now shows it.
+
+### 2026-10-26 14:27: ratchet replay GIF sharpened and relabelled (user's question)
+
+The replay is kept because it is evidence, not a schematic: two real logged runs under the same scripted recommender, where only the firm's AI differs (finding 4).
+- Re-rendered at 2× (1680×880) with the same shared-palette writer as the architecture GIF: 0.39 MB, down from 1.33 MB.
+- The subtitle and legend now say "script" instead of "hub", because the ratchet is a script, not the LLM hub. That is what makes it a causal test.

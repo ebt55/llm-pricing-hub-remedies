@@ -18,7 +18,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
-from matplotlib.animation import FuncAnimation, PillowWriter  # noqa: E402
+from PIL import Image  # noqa: E402
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, HERE)
@@ -27,7 +27,8 @@ from figures import GRID, INK, INK2, MUTED, SLOT  # noqa: E402
 RUNS = [("results/ratchet/K1-d/s100.jsonl", "Claude Haiku 5.5 firms", SLOT[0]),
         ("results/ladder-gem-lite/K1-d/s1000.jsonl", "Gemini 3.5 Flash-Lite firms", SLOT[1])]
 P_N, P_M = 1.4729, 1.9250
-HOLD = 30  # frames to hold the last round
+HOLD_MS, STEP_MS, WARM_MS = 3000, 80, 60  # last-round hold; per-round frame times
+SCALE = 2  # render at 2x for crisp text
 
 
 def load(path: str) -> dict:
@@ -46,10 +47,10 @@ def main(out=os.path.join(HERE, "report", "figures", "ratchet_replay.gif")):
     n_warm = int(runs[0][0]["warm"].sum())
     x = np.arange(1, n + 1) - n_warm  # warm-up rounds are <= 0
 
-    fig, axes = plt.subplots(1, 2, figsize=(8.4, 4.4), dpi=100, sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(8.4, 4.4), dpi=100 * SCALE, sharey=True)
     fig.subplots_adjust(left=0.08, right=0.98, top=0.78, bottom=0.2, wspace=0.08)
     fig.text(0.5, 0.95, "Same scripted ratchet, two firm models", ha="center", fontsize=13, color=INK, weight="bold")
-    fig.text(0.5, 0.885, "Each round the hub recommends each firm its own last price + 1¢; the firm's AI decides its price.",
+    fig.text(0.5, 0.885, "Each round a script recommends each firm its own last price + 1¢; the firm's own AI decides whether to follow.",
              ha="center", fontsize=9, color=INK2)
     fig.text(0.5, 0.025, "Replay of logged runs (seeds 100 and 1000), github.com/ebt55/llm-pricing-hub-remedies",
              ha="center", fontsize=7.5, color=MUTED)
@@ -79,7 +80,7 @@ def main(out=os.path.join(HERE, "report", "figures", "ratchet_replay.gif")):
     axes[0].set_ylabel("price", fontsize=8, color=INK2)
     handles = [plt.Line2D([], [], color=INK2, lw=2), plt.Line2D([], [], color=INK2, lw=1.4, alpha=0.5),
                plt.Line2D([], [], ls="none", marker="o", ms=4, mfc="none", mec=INK2)]
-    fig.legend(handles, ["firm A price", "firm B price", "hub's recommendation"], loc="lower center",
+    fig.legend(handles, ["firm A price", "firm B price", "scripted recommendation"], loc="lower center",
                bbox_to_anchor=(0.5, 0.06), ncol=3, frameon=False, fontsize=8)
 
     def frame(i):
@@ -105,9 +106,24 @@ def main(out=os.path.join(HERE, "report", "figures", "ratchet_replay.gif")):
             out += [rec, a, b, dot, txt]
         return out
 
-    frames = list(range(0, n_warm, 2)) + list(range(n_warm, n)) + [n - 1] * HOLD
-    anim = FuncAnimation(fig, frame, frames=frames, blit=False)
-    anim.save(out, writer=PillowWriter(fps=12))
+    def grab(i):
+        frame(i)
+        fig.canvas.draw()
+        return Image.fromarray(np.asarray(fig.canvas.buffer_rgba())[..., :3].copy())
+
+    frames = list(range(0, n_warm, 2)) + list(range(n_warm, n))
+    durations = [WARM_MS if i < n_warm else STEP_MS for i in frames]
+    durations[-1] = HOLD_MS
+    # one shared palette, so colours do not shimmer between frames (the same writer as tools/arch_gif.py)
+    sample = [grab(i) for i in (n_warm + 20, n_warm + 45, n - 1)]
+    w, h = sample[0].size
+    sheet = Image.new("RGB", (w, h * len(sample)))
+    for k, im in enumerate(sample):
+        sheet.paste(im, (0, h * k))
+    palette = sheet.quantize(colors=256, method=Image.Quantize.MEDIANCUT)
+    images = [grab(i).quantize(palette=palette, dither=Image.Dither.NONE) for i in frames]
+    images[0].save(out, save_all=True, append_images=images[1:], duration=durations, loop=0)
+    plt.close(fig)
     for run, label, _ in runs:
         print(f"{label}: logged profit gain {run['delta']:.3f}")
     print(f"wrote {out} ({os.path.getsize(out) / 1e6:.2f} MB, {len(frames)} frames)")
