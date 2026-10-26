@@ -12,7 +12,7 @@
    - Main text (title to Code and Data) ends on page 8 with about 5 lines to spare; References start on page 9, the Appendix (A–F) on page 11, and the LLM Usage Statement is last.
    - The LLM Usage Statement is in your words (first person): your idea and direction; design and code by Claude Opus 5.5 agents in Claude Code; reviews from Claude Fable 5.1.
    - If you open the .docx in Google Docs or Word, check that the Code and Data section still ends on page 8.
-4. **Make the repo public, then check the link in a private window:**
+4. **Repo is public** (done Mon 26 Oct 13:15 IST; repo page, PDF and raw files return 200 when signed out). The command used:
    ```bash
    gh repo edit ebt55/llm-pricing-hub-remedies --visibility public --accept-visibility-change-consequences
    ```
