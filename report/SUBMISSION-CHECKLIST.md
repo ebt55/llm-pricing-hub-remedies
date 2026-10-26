@@ -6,16 +6,12 @@
    - the ratchet tests;
    - the final title;
    - the draft-v5 edits.
-2. **Your name and affiliation.** Line 5 of `report/draft.md` currently says "Ebin [full name and affiliation: author to confirm]".
-3. **Copy the draft into the official template** and place the figures so they fill each page. The renderer leaves gaps because figures jump to the next page. Without the gaps, the main text is about 7.8 pages.
-   - Template: https://docs.google.com/document/d/1Y5wd3VRbXU5N08BvAGiJUQTaWbMCSPjhzXsR-ozuehg/copy?usp=sharing
-   - **Paste-ready:** run `python tools/render_pdf.py` (it writes `report/draft.html` and `report/draft.pdf`). Open `draft.html` in Chrome, select from the title to the end of References, copy, and paste into the template. Headings, bold, lists and tables survive the paste. Insert the three figures by hand at their captions. `draft.pdf` is a preview: the whole draft, references included, comes to 8 pages.
-   - Main text: title to Limitations in `report/draft.md`.
-   - Figures: `report/figures/fig1_remedy_ladder.png`, `fig2_cross_model.png`, `fig3_ratchet.png`.
-   - Appendices:
-     - A: `appendix-prompts.md`;
-     - E: `appendix-limitations-dual-use.md`;
-     - F: `appendix-tables.md`, with `figA1_adherence_dose.png`.
+2. **Your name and affiliation:** done (Ebin Babu Thomas, Independent AI Engineer & Researcher).
+3. **The report is built on the official template:** `report/submission.docx` (editable) and `report/submission.pdf` (to submit).
+   - Rebuild after any edit to `report/draft.md` or an appendix file: `python tools/build_docx.py "../Copy of Apart Research hackathon submission template.docx"`, then convert with LibreOffice or Word.
+   - Main text (title to Code and Data) ends on page 8 with about 5 lines to spare; References start on page 9, the Appendix (A–F) on page 11, and the LLM Usage Statement is last.
+   - **Read the LLM Usage Statement and edit it to your own words.** The template asks that the final report be primarily written by the team, and the statement says plainly how much Claude wrote.
+   - If you open the .docx in Google Docs or Word, check that the Code and Data section still ends on page 8.
 4. **Make the repo public, then check the link in a private window:**
    ```bash
    gh repo edit ebt55/llm-pricing-hub-remedies --visibility public --accept-visibility-change-consequences

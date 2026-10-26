@@ -1169,3 +1169,25 @@ We test this on existing runs only. There are no new model calls.
 - **Page limit.** The main text ran 2 lines over, so three repeated sentences were trimmed (§4.4, Discussion). The main text renders in 8 pages with about 5 lines to spare.
 
 **Numbers are frozen from here.**
+
+### 2026-10-26 12:34: report on the official template; author named
+
+**Author line.** Ebin Babu Thomas, Independent AI Engineer & Researcher (given by the user). It is in the paper and on the deck cover.
+
+**Template.** `tools/build_docx.py` builds `report/submission.docx` from the user's copy of the Apart template, and LibreOffice converts it to `report/submission.pdf`.
+- The template's title block is kept, collapsed to one author; the abstract box is widened from 4.9 to 5.8 in.
+- The body comes from `report/draft.md`, and the appendix files are pulled in through include markers.
+
+**Sections renamed or added to match the template:**
+- "Setup" is now "3. Methods".
+- "Discussion" is now "5. Discussion and Limitations", with Limitations and Future Work as subsections.
+- New: "6. Conclusion", "Code and Data" and an "LLM Usage Statement" (drafted by Claude; the user should review and own it).
+- The appendix now inlines A (prompts), E (limitations and dual use) and F (tables).
+
+**Fitting 8 pages in the template font** (Old Standard TT 11pt, single spacing). The first build ran to about 9.5 pages. No numbers changed; the changes were:
+- Figures shrunk.
+- Lists that held a sentence each merged into paragraphs (Models, Statistics, Implications, Figure 3 caption, "Is it reasoning?").
+- Repeated sentences cut (the sprint-question quote, the discretion recap in §4.4).
+- The Conclusion kept to three sentences.
+
+**Result.** The main text ends on page 8 with about 5 lines to spare.

@@ -2,7 +2,7 @@
 
 *Pre-registered tests of the RealPage Final Judgment's remedies (data bans, stale data, parameterised auto-accept, firm discretion) on LLM pricing advisors from six labs*
 
-**Author:** Ebin [full name and affiliation: author to confirm]
+**Author:** Ebin Babu Thomas, Independent AI Engineer & Researcher
 **Track:** 1, Markets and Collusion
 **Sprint question:** 1.5, "Which single restriction removes the most collusion at the least cost?"
 **Code and logs:** https://github.com/ebt55/llm-pricing-hub-remedies
@@ -24,7 +24,7 @@ Shared pricing software can align competitors' prices without any agreement, the
 - We instruct this objective, so we measure capability under instruction, not unprompted propensity. §4.5 tests a softer, realistic version.
 - "Collusion" here means sustained supracompetitive prices, measured as profit gain Δ (Calvano et al., 2020).
 
-We ask a policy question conditional on the premise: if such a hub exists, do the remedies regulators imposed stop it? This is the sprint's question 1.5, "Which single restriction removes the most collusion at the least cost?", asked of the restrictions a court actually imposed.
+We ask a conditional policy question (sprint question 1.5): if such a hub exists, do the remedies a court actually imposed stop it?
 
 **The remedies.** The DOJ–RealPage Final Judgment (M.D.N.C. 1:24-cv-710, entered 19 May 2026) bans competitors' non-public data from runtime pricing. It allows non-public training data only if it is at least 12 months old, and forbids sub-state geographic models. It allows auto-accept only if each user sets its parameters (§V.A.1), and bars features that impede overriding a recommendation (§V.A.5) or reward accepting one (§V.C). Landlord consent decrees bar software that *requires* acceptance. The stakes are measurable: in US multifamily rentals, higher penetration of the same pricing software goes with higher rents and lower occupancy (Calder-Wang & Kim, 2026), and in German retail gasoline, margins rose where competing stations all adopted algorithmic pricing (Assad et al., 2024).
 
@@ -39,9 +39,9 @@ We ask a policy question conditional on the premise: if such a hub exists, do th
 
 **Shared algorithms and the law.** Sellers sharing one AI model can price supracompetitively when its recommendations are correlated enough (Cao and Hu, 2026). Liability turns on pooled non-public data and on adherence (Berger et al., 2025). *Gibson v. Cendyn* (9th Cir. 2025) upheld dismissal where recommendations were optional. *Cornish-Adebiyi v. Caesars* (3d Cir. 2026) revived a claim that cited pooled data and about 90% acceptance.
 
-**Interventions.** In LLM markets, the evidence is model-specific: anti-collusion prompts (Riemer et al., 2026), announced price caps (Dhanda, 2026), a damages regulator or a new entrant (Garra, 2026), regulator review modes, whose best mode is model-specific (Anto & Vazquez, 2026), enforced governance (Bracale Syrnikov et al., 2026), and untested mappings of human remedies (Idowu et al., 2026). These act on firms' prompts, rules or rivals; ours act on a third-party advisor's information and authority. To our knowledge, no prior work tests the RealPage remedies on LLM advisors. On detection, price-level audits can be blind by construction (Xu et al., 2026). Concurrent sprint work (zerocommcartel, 2026) varies what firms are told about rivals' advisors in a one-shot Cournot game. We vary the advisor's data access and the firms' adherence in a repeated Bertrand market.
+**Interventions.** In LLM markets, the evidence is model-specific: anti-collusion prompts (Riemer et al., 2026), announced price caps (Dhanda, 2026), a damages regulator or a new entrant (Garra, 2026), regulator review modes, whose best mode is model-specific (Anto & Vazquez, 2026), enforced governance (Bracale Syrnikov et al., 2026), and untested mappings of human remedies (Idowu et al., 2026). These act on firms' prompts, rules or rivals; ours act on a third-party advisor's information and authority. To our knowledge, no prior work tests the RealPage remedies on LLM advisors. On detection, price-level audits can be blind by construction (Xu et al., 2026). Concurrent sprint work (zerocommcartel, 2026) varies what firms are told about rivals' advisors in one-shot Cournot; we vary the advisor's data and the firms' adherence.
 
-## 3. Setup
+## 3. Methods
 
 **Market.** A logit Bertrand duopoly with Calvano et al.'s (2020) parameters (a = 2, μ = 0.25, c = 1), with Nash price p_N = 1.473 and joint-monopoly price p_M = 1.925. Every run starts from 10 rounds of competitive history (Nash ± 5 cents).
 - **Profit gain** Δ = (π − π_N)/(π_M − π_N), averaged over the last 20 of 100 rounds: 0 is competitive and 1 is joint monopoly. The unit of analysis is the run.
@@ -61,13 +61,9 @@ We ask a policy question conditional on the premise: if such a hub exists, do th
 
 **Scripted recommenders** (no LLM): a static monopoly price, best-response dynamics, a rational joint-profit hub, and a **ratchet**. The ratchet recommends the client's own last price plus 1, 3 or 10 cents, capped at p_M. It re-anchors after a rejection, and the firm sees only the number.
 
-**Models.**
-- **Primary:** Claude Haiku 5.5, with adaptive thinking at low effort.
-- **Replications:** DeepSeek V4.1 Flash, Qwen3.8 Flash, Nemotron 3.5 Lightning (open weights), GPT-5.4 mini, Gemini 3.8 Flash and Gemini 3.5 Flash-Lite. Model IDs are logged on every call, and OpenRouter models are pinned to one provider.
-- **Measured reasoning budgets** (Table F1), because settings were not honoured uniformly. Median output tokens per call range from 35 (Gemini Flash-Lite at low effort, which does not think) to 6,695 (Nemotron, whose 1,024-token budget was not enforced).
+**Models.** Primary: Claude Haiku 5.5, with adaptive thinking at low effort. Replications: DeepSeek V4.1 Flash, Qwen3.8 Flash, Nemotron 3.5 Lightning (open weights), GPT-5.4 mini, Gemini 3.8 Flash and Gemini 3.5 Flash-Lite; model IDs are logged on every call. Settings were not honoured uniformly, so we report measured reasoning budgets (Table F1): median output tokens per call range from 35 (Gemini Flash-Lite at low effort, which does not think) to 6,695 (Nemotron, whose 1,024-token budget was not enforced).
 
-**Statistics.**
-- Welch t tests and intervals, plus Mann-Whitney, with Holm correction within each pre-registered stage.
+**Statistics.** Welch t tests and intervals, plus Mann-Whitney, with Holm correction within each pre-registered stage.
 - Share of harm removed = (Δ_hub − Δ_remedy)/(Δ_hub − Δ_no advisor), where "hub" is the market-aligned hub with current data on auto-accept, with a bootstrap 95% CI. The MDE for every contrast is in the per-arm tables (Appendix B).
 - n = 20 per primary Haiku arm (raised from 10 after the pilot), and n = 3–12 for the other models. The main batch's arms, contrasts and seed lists were frozen before it ran (commit `5aa9f79`); every later batch was logged with a prediction before launch (`SPRINT_LOG.md`).
 
@@ -96,7 +92,7 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 
 †GPT-5.4 mini's hub reaches monopoly in only 2 of 5 runs (Δ 1.00, 1.00, 0.31, 0.23, 0.17), so the shares are imprecise.
 
-**Gemini 3.8 Flash is excluded from this table.** Its firms reach monopoly without any advisor in 2 of 4 baseline runs (B0: 0.98, 1.00, 0.02, 0.02), so its harm-removed shares cannot be estimated. Its hub reaches monopoly under every data regime (Figure 2).
+**Gemini 3.8 Flash is excluded:** its firms reach monopoly without any advisor in 2 of 4 baseline runs, so shares cannot be estimated; its hub reaches monopoly under every data regime (Figure 2).
 
 ![Figure 2](figures/fig2_cross_model.png)
 
@@ -104,7 +100,7 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 
 - **Aggregation.** In the triopoly (n = 10), a market-average feed removes nothing: Δ 0.98 vs 0.92 with per-firm data.
 - **Rational benchmark.** A scripted joint-profit hub reaches Δ 1.00 with current or stale data, and 0.82 with none (price index 0.60, the dashed line in Figure 2). Under a joint objective, raising one's own price is profitable even without information about the rival.
-- **A hypothesis for the spread.** The data ban binds hubs that hesitate to act on their objective without information. Haiku's no-data hub writes "deviating upward risks losing volume to a competitor", while the DeepSeek and Gemini Flash-Lite hubs price at or above p_M within a few rounds. The spread does not track reasoning budget: DeepSeek's hub thinks as much as Haiku's (928 vs 778 output tokens). With six models, this stays a hypothesis.
+- **A hypothesis for the spread.** The data ban binds hubs that hesitate to act on their objective blind: Haiku's no-data hub writes "deviating upward risks losing volume to a competitor", while the DeepSeek and Gemini Flash-Lite hubs price at or above p_M within a few rounds. It does not track reasoning budget (DeepSeek's hub thinks as much as Haiku's: 928 vs 778 tokens).
 
 ### 4.3 Guardrails and partial adherence keep the harm *(Haiku; guardrails also on Qwen)*
 
@@ -142,9 +138,7 @@ On Qwen3.8 Flash, the ±3% band retains 88% of the harm (Δ 0.87 vs 0.97 under p
 
 ![Figure 3](figures/fig3_ratchet.png)
 
-*Figure 3. The ratchet.*
-- *(a) Mean market price when a scripted hub recommends the client's last price + 1 cent each round and firms decide. Thin lines are runs; the dashed line is the same ratchet under auto-accept.*
-- *(b) Δ by recommender and firm model. Large dots are means and small dots are runs.*
+*Figure 3. The ratchet.* (a) Mean market price when a scripted hub recommends the client's last price + 1 cent each round and firms decide; thin lines are runs, and the dashed line is the same ratchet under auto-accept. (b) Δ by recommender and firm model; large dots are means, small dots are runs.
 
 **How far the ratchet gets tracks how often the firm model accepts small nudges** (Figure 3):
 - **Haiku firms refuse even a patient 1-cent ratchet.** Every Haiku ratchet arm sits at or below the no-advisor baseline (Δ 0.03–0.05 vs 0.06). The result holds over 200 rounds: Δ 0.03 for both the LLM hub and the ratchet in rounds 181–200 (n = 5).
@@ -152,14 +146,7 @@ On Qwen3.8 Flash, the ±3% band retains 88% of the harm (Δ 0.87 vs 0.97 under p
 - **GPT-5.4 mini firms defer too** (prediction P14 held): the ratchet reaches Δ 0.93, though GPT-5.4 mini's own hub reaches monopoly in only 2 of 5 runs.
 - **Qwen firms show why step size matters.** They refuse the LLM hub's large jumps and remove all of its harm. A patient 1-cent ratchet still takes 7 of 8 Qwen markets most of the way to monopoly (Δ 0.55–1.00; the eighth stays at 0.05).
 
-So whether discretion protects depends on the deciding firm and on how patient the hub is, not on the rule.
-
-**Is it reasoning?** At our settings Gemini Flash-Lite does not think at all (35 output tokens per call). With thinking switched on (408 tokens per firm call, comparable to Haiku's 557):
-- the 1-cent ratchet still reaches monopoly (Δ 1.00 in 6/6 runs);
-- the firms accept *more* of the ratchet's 1–2-cent increases (84% vs 61%) and more of the LLM hub's 3–5-cent steps (71% vs 46%; Table F2);
-- discretion against the LLM hub removes none of the harm (Δ 1.00 in 6/6 runs, against 0.41 without thinking; the baselines are B0 0.05 and auto-accept 0.98, n = 3).
-
-Pushing back is a matter of the firm model's disposition, not its reasoning budget.
+**Is it reasoning? No.** At our settings Gemini Flash-Lite does not think (35 output tokens per call). With thinking on (408 tokens per firm call, comparable to Haiku's 557; n = 6), its firms accept *more* of the ratchet's 1–2-cent increases (84% vs 61%) and of the LLM hub's 3–5-cent steps (71% vs 46%; Table F2). The ratchet still reaches monopoly, and discretion against the LLM hub removes none of the harm (Δ 1.00 vs 0.41 without thinking; B0 0.05, auto-accept 0.98, n = 3). Pushing back is a matter of the firm model's disposition, not its reasoning budget.
 
 **Two candidate fixes did not help** on Gemini Flash-Lite: stacking the data ban on discretion, and showing the firm the cumulative drift (Table F5).
 
@@ -171,7 +158,7 @@ An advisor that maximises its client's profit but follows "avoid a race to the b
 
 The data-limit ranking holds under demand noise, without the price-ceiling cue, at higher effort and over 200 rounds (so 100-round shares are upper bounds). With one firm on the hub, its client loses: the harm needs both firms on it.
 
-## 5. Discussion
+## 5. Discussion and Limitations
 
 **Why data limits work on some models and not others.** Data limits are written for software whose behaviour depends on the data it sees. An LLM hub's behaviour depends mainly on its objective, and data mostly confirms that the rival has followed. So a data limit binds only if the model hesitates to pursue its objective blind. We call the harm that survives the data rules **data-compliant coordination**.
 
@@ -181,23 +168,29 @@ The data-limit ranking holds under demand noise, without the price-ceiling cue, 
 
 **Can anyone tell, before approving a remedy, whether discretion is real?** Yes. The Final Judgment's monitor sees recommendation logs, so it can compute what we compute: the share of small recommended increases that users accept. Where users accept most small nudges, discretion is nominal. Real-world acceptance (40–50% of leases within 1% of the recommendation, per the DOJ complaint; 80–90% by former employees' accounts) sits where most of the harm remains in our model (Figure A1).
 
-**Implications for remedies on LLM pricing software:**
-1. **Regulate and audit the advisor's objective.** The same data and authority are harmless under a client-only objective.
-2. **Measure acceptance, not just permission.** The acceptance of small recommended increases, together with price outcomes from an ablation audit like ours, tests whether discretion is real.
-3. **Treat data limits as model-dependent and per-round bands as delays.** Neither is a remedy a court can rely on without testing the vendor's model.
+**Implications for remedies on LLM pricing software.** (1) **Regulate and audit the advisor's objective:** the same data and authority are harmless under a client-only objective. (2) **Measure acceptance, not just permission:** the acceptance of small recommended increases, with price outcomes from an ablation audit like ours, tests whether discretion is real. (3) **Treat data limits as model-dependent and per-round bands as delays:** a court cannot rely on either without testing the vendor's model.
 
 **Beyond antitrust.** Per-step approval by a deferential overseer is a general weakness of AI oversight. An agent that moves in small, individually plausible steps can drive an outcome no single approval would allow. This is the temporal analogue of attacks split across agents, which defeat per-instance monitors (Makins et al., 2026) and per-action defences (Hagag et al., 2026).
-- **In our runs, a monitor of single price moves points the wrong way** (Table F6). It ranks the hub's guardrailed, ratcheting and discretionary climbs as *less* suspicious than honest play (AUROC 0.05–0.27), because honest firms experiment in bigger steps. So does the classic variance screen (Abrantes-Metz et al., 2006; AUROC 0.36).
-- **Only where prices settle separates the two at a 1% false-alarm rate.**
+- **In our runs, a monitor of single price moves points the wrong way** (Table F6). It ranks the hub's guardrailed, ratcheting and discretionary climbs as *less* suspicious than honest play (AUROC 0.05–0.27), because honest firms experiment in bigger steps. So does the classic variance screen (Abrantes-Metz et al., 2006; AUROC 0.36). **Only where prices settle separates the two at a 1% false-alarm rate.**
 
-A natural next step is mechanistic: is deference to a recommendation a steerable direction inside open-weight models, and could steering deciders toward scepticism serve as a remedy?
+### Limitations
 
-## 6. Limitations
-
-*The full list is in Appendix E.*
 - **The hub's objective is a premise.** We instruct it, and §4.5 is our only test without it.
 - **The discretion result depends on firm models' deference,** which stands in for human or AI deciders we did not measure. Replications are small (n = 3–12), reasoning budgets differ by model, guardrails were tested on two models, and Gemini 3.8 Flash's baseline is unstable.
-- **Remedy mappings are analogues:** rounds stand for months, and a runtime lag for a training-data rule. There is one market model, and harm can rise after round 100, so our shares are upper bounds. The mechanism tests were designed after the Gemini result and pre-registered before they ran.
+- **Remedy mappings are analogues:** rounds stand for months, and a runtime lag for a training-data rule. There is one market model, and harm can rise after round 100, so our shares are upper bounds. The mechanism tests were designed after the Gemini result and pre-registered before they ran. Appendix E has the full list.
+
+### Future Work
+
+A natural next step is mechanistic: is deference to a recommendation a steerable direction inside open-weight models, and could steering deciders toward scepticism serve as a remedy? Cumulative auto-accept limits, human deciders and richer markets (more firms, asymmetric costs, entry) remain untested.
+
+## 6. Conclusion
+
+No remedy in the RealPage Final Judgment reliably stops an LLM pricing hub with a joint-profit objective. Data bans work on some models only, per-round guardrails delay monopoly, and firm discretion works only where deciders refuse small nudges, which a patient ratchet exploits and a per-step monitor misses. Remedies should target the advisor's objective and audit acceptance and where prices settle.
+
+## Code and Data
+
+- **Code repository:** https://github.com/ebt55/llm-pricing-hub-remedies (harness, analysis scripts, tests and figures).
+- **Data:** every run's per-round log (prices, recommendations and model reasoning) is in `results/`; every pre-registration and batch prediction is in `SPRINT_LOG.md`.
 
 ## References
 
@@ -226,27 +219,43 @@ A natural next step is mechanistic: is deference to a recommendation a steerable
 
 ## Appendix
 
-- **A. Prompts (verbatim):** `appendix-prompts.md`.
-- **B. Per-arm tables:** `results/*/summary.md`.
-- **C. Costs.** $112.50 logged per call across five providers:
-  - Anthropic: $66.80;
-  - Google Gemini: $29.42, from credits;
-  - DeepSeek: $7.87;
-  - OpenRouter: $8.41;
-  - OpenAI: $0, on the free data-sharing tier.
+### A. Prompts (verbatim)
 
-  An estimated $2–5 more went on unlogged calls: the detection monitor, probes and discarded partial runs. In all, about 170,000 model calls.
-- **D. Provenance, independence and pre-existing code.**
-  - No code predates the sprint, and no starter-repo file is included or modified.
-  - The market is re-implemented in `advisor/market.py`. `tests/test_market.py` checks its duopoly benchmarks (Nash 1.4729, monopoly 1.9250) against the values from the llm-cartel code in the sprint's starter repository (`OligopolyGame`). Two benchmark bugs found in that starter code are documented in `SPRINT_LOG.md`.
-  - The firm's system prompt is llm-cartel's P0 (Fish et al., 2024), used verbatim. The history-table format follows the starter code's `generate_prompt`, and the price parsing follows its `split_thoughts_and_price`.
-  - Concurrent-work boundaries and every pre-registration are in `SPRINT_LOG.md`.
-- **E. Limitations and Dual-Use / Ethical Considerations:** `appendix-limitations-dual-use.md`.
-- **F. Supplementary tables and figures:** `appendix-tables.md`. It contains:
-  - F1: measured reasoning budgets;
-  - F2: acceptance by recommended step;
-  - F3: robustness;
-  - F4: detection;
-  - F5: two candidate fixes for discretion;
-  - F6: per-step vs whole-episode oversight;
-  - Figure A1: partial adherence and guardrail price paths.
+<!-- include: appendix-prompts.md -->
+*Verbatim prompts for every arm are in `report/appendix-prompts.md`.*
+
+### B. Per-arm tables
+
+Per-arm means, SDs, CIs, follow rates and contrasts for every batch are in `results/*/summary.md`.
+
+### C. Costs
+
+$112.50 logged per call across five providers:
+- Anthropic: $66.80;
+- Google Gemini: $29.42, from credits;
+- DeepSeek: $7.87;
+- OpenRouter: $8.41;
+- OpenAI: $0, on the free data-sharing tier.
+
+An estimated $2–5 more went on unlogged calls: the detection monitor, probes and discarded partial runs. In all, about 170,000 model calls.
+
+### D. Provenance, independence and pre-existing code
+
+- No code predates the sprint, and no starter-repo file is included or modified.
+- The market is re-implemented in `advisor/market.py`. `tests/test_market.py` checks its duopoly benchmarks (Nash 1.4729, monopoly 1.9250) against the values from the llm-cartel code in the sprint's starter repository (`OligopolyGame`). Two benchmark bugs found in that starter code are documented in `SPRINT_LOG.md`.
+- The firm's system prompt is llm-cartel's P0 (Fish et al., 2024), used verbatim. The history-table format follows the starter code's `generate_prompt`, and the price parsing follows its `split_thoughts_and_price`.
+- Concurrent-work boundaries and every pre-registration are in `SPRINT_LOG.md`.
+
+### E. Limitations and Dual-Use / Ethical Considerations
+
+<!-- include: appendix-limitations-dual-use.md -->
+*In `report/appendix-limitations-dual-use.md`.*
+
+### F. Supplementary tables and figures
+
+<!-- include: appendix-tables.md -->
+*In `report/appendix-tables.md`: F1 measured reasoning budgets; F2 acceptance by recommended step; F3 robustness; F4 detection; F5 two candidate fixes for discretion; F6 per-step vs whole-episode oversight; Figure A1 partial adherence and guardrail price paths.*
+
+## LLM Usage Statement
+
+LLM assistance was extensive. Claude (Claude Code with Claude Opus 5.5) wrote most of the experiment harness and analysis code, ran the batches, drafted this report and the slides, and checked the references against their sources. While the author was away, Claude Fable 5.1 subagents reviewed drafts and made some design and wording decisions; each is logged with its time in `SPRINT_LOG.md`. The author chose the question and the remedies to test, set the budgets and constraints, made the main calls during the sprint, and reviewed the results and this text. Every number in the report is computed by the open code from logged runs, and every batch's prediction was logged before it ran. The models tested in Section 3 were experimental subjects, not writing aids.
