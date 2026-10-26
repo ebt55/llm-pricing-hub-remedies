@@ -1286,3 +1286,12 @@ The replay is kept because it is evidence, not a schematic: two real logged runs
   - "Accept 50–90% of the time" is now "hub's price auto-set 50–90% of rounds".
   - It no longer places the DOJ's 40–50% acceptance where most harm remains (that is below the tested range).
   - The footnote no longer calls the harm figures "medians".
+
+### 2026-10-26 15:12: submitted
+
+The user submitted the project through the Apart form:
+- the PDF `report/submission.pdf`, the code link and `report/slides.pptx`;
+- Track 1 (Markets and Collusion), with Track 2 recommended;
+- the project image `report/figures/project_image.png`.
+
+The repository stays public at https://github.com/ebt55/llm-pricing-hub-remedies. Numbers have been frozen since Mon 12:00 IST.
