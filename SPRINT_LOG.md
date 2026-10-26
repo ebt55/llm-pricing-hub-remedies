@@ -1229,3 +1229,19 @@ Each of the four steps of a round is animated: the hub reads data, recommends a 
 Process: a first version had boxes, then a dark version with icons. At the user's request, a Claude Opus 5.5 design subagent redesigned it on a white theme (0.38 MB, 19 s loop), and I checked its frames. In the data-ban scene the hub still receives its clients' own data; only rival data is banned, as in §3.
 
 README: the animation sits under the Question, and the ratchet replay moved into finding 4.
+
+### 2026-10-26 14:06: architecture animation corrected to match the code (user's question)
+
+**The user's question:** does a firm auto-accept all the time, or only when the hub sends a price? The code (`advisor/game.py`, lines 216–263) says:
+- Under auto-accept and the ±3% clip band, the firm's LLM is never called; the hub's price, clipped in the band case, is applied every round.
+- Under firm discretion, each firm's LLM is called every round, sees the recommendation, and sets its own price.
+- With no hub (B0), each firm's LLM prices alone.
+
+**The earlier animation was wrong:** it showed an "accept" bubble from the firm under auto-accept.
+
+**Fixed by the design subagent, frames checked by me:**
+- Firm LLM badges are black only when the firm's model decides, and grey when idle; a legend explains this.
+- The step-3 label and animation change with the setting.
+- A first scene shows the market with the hub switched off (Haiku B0 profit gain 0.06, n = 20).
+
+The other six numbers are unchanged. The GIF is 0.43 MB with a 21 s loop. The README caption explains the badge states.

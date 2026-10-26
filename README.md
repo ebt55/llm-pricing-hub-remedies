@@ -4,9 +4,9 @@
 
 **Question.** The DOJ's settlement with RealPage limits what a shared pricing advisor may use: no competitors' current non-public data at runtime, training data at least 12 months old, and no reporting narrower than state level. The complaints also targeted auto-accept. Do these remedies stop an LLM pricing advisor whose objective is aligned with the whole market, the incentive alleged against RealPage?
 
-![How the game works: one LLM pricing hub reads market data and recommends a price to each of two firms, whose own LLMs set prices; customers buy by price. The RealPage remedies appear as switches (the hub's goal, rival data, firm adherence), each with its measured profit gain for Claude Haiku 5.5.](report/figures/arch_playground.gif)
+![How the game works. First, a baseline with no pricing hub: each firm's own LLM sets its price and the market stays competitive (profit gain 0.06). Then one LLM pricing hub reads market data and recommends a price to both firms. Under auto-accept or a ±3% band the hub's price is applied and the firms' LLMs are idle; under firm discretion each firm's LLM decides after seeing the recommendation. The RealPage remedies appear as switches, each with its measured profit gain for Claude Haiku 5.5.](report/figures/arch_playground.gif)
 
-*How the game works, and what each remedy does to the outcome. Numbers are measured profit gains for Claude Haiku 5.5 (n = 20 per setting; `tools/arch_gif.py`); other models differ, as the findings below show.*
+*How the game works, starting from a market with no hub. A black LLM badge means that model is deciding; grey means it is idle (under auto-accept, the hub's price is applied without asking the firm). Numbers are measured profit gains for Claude Haiku 5.5 (n = 20 per setting; `tools/arch_gif.py`); other models differ, as the findings below show.*
 
 **Main findings** (details in [report/draft.md](report/draft.md); Claude Haiku 5.5 with n = 20 per arm unless noted; more than 700 runs on seven models):
 
