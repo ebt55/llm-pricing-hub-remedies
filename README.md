@@ -1,6 +1,13 @@
 # An LLM Pricing Hub Survives Data Limits on Some Models; Firm Discretion Works Only When Firms Refuse Small Nudges
 
-*Pre-registered tests of the RealPage Final Judgment's remedies (data bans, stale data, parameterised auto-accept, firm discretion) on LLM pricing advisors from six labs. Apart Research AI Collusion Research Sprint, October 2026.*
+*Tests of the RealPage Final Judgment's remedies (data bans, stale data, parameterised auto-accept, firm discretion) on LLM pricing advisors from six labs (main batch pre-registered). Apart Research AI Collusion Research Sprint, October 2026.*
+
+**Corrections (4 Nov 2026).** A post-sprint review and an audit that recomputed the numbers from `results/` found errors in the submitted version. The text here and in `report/draft.md` is corrected; the submitted version is at git tag `sprint-submission-2026-10-26`, and `report/submission.pdf`, `report/submission.docx` and `report/slides.pptx` keep the old numbers. The full list is [Appendix G](report/draft.md#g-corrections-after-the-sprint-4-nov-2026). The main ones:
+- Gemini Flash-Lite firms accept 83% of 1–2-cent ratchet nudges, not 61%; the old figure pooled in the +3 and +10 cent runs.
+- On Gemini Flash-Lite the data ban did not remove 8% of the harm; it raised prices above the monopoly level.
+- "Thinking makes Gemini firms accept more" is withdrawn (84% vs 83% like for like); thinking did not make them push back.
+- Step size made no reliable difference, so "small" in the title is not isolated by the data; the title is kept to match the submission.
+- Only the main Haiku batch was pre-registered; later batches were logged with predictions but are exploratory.
 
 **Question.** The DOJ's settlement with RealPage limits what a shared pricing advisor may use: no competitors' current non-public data at runtime, training data at least 12 months old, and no reporting narrower than state level. The complaints also targeted auto-accept. Do these remedies stop an LLM pricing advisor whose objective is aligned with the whole market, the incentive alleged against RealPage?
 
@@ -14,21 +21,21 @@
 2. **Data limits help unevenly.** A competitor-data ban removes:
    - 85% of the harm for Qwen3.8 Flash (n = 4);
    - 69% for Haiku;
-   - ≤ 10% for DeepSeek V4.1 Flash and Gemini 3.5 Flash-Lite.
+   - 10% for DeepSeek V4.1 Flash.
 
-   Stale data removes 21% for Haiku, and showing only the rivals' average price and total sales (triopoly) removes none. A scripted rational hub with no data still raises prices.
+   On Gemini 3.5 Flash-Lite (n = 5) the ban and the stale-data rule raised prices above the monopoly level (price index 1.32 and 1.47, against 0.88 for the hub with current data). Stale data removes 21% for Haiku, and showing only the rivals' average price and total sales (triopoly) removes none. A scripted rational hub with no data still raises prices.
 3. **Guardrails and partial adherence keep the harm.** Auto-accept within ±1–3% per round, the Final Judgment's "user-set parameters", retains all of it on Haiku and 88% on Qwen, and only delays monopoly (Haiku: round 4 → 8–19). At 50–90% acceptance, 73–94% remains.
 4. **Firm discretion works only when firms refuse small nudges.** We swap in a scripted recommender that adds 1 cent per round:
    - Haiku firms stay competitive (Δ 0.05).
    - Gemini Flash-Lite firms follow it to monopoly (Δ 1.00), with or without thinking.
 
-   With an LLM hub, discretion removes 95% of the harm for Haiku and 57% for Gemini Flash-Lite. Stacking the data ban on top, or telling firms how far the recommendation is from their price 10 rounds earlier, doesn't fix the Gemini case.
+   With an LLM hub, discretion removes 95% of the harm for Haiku and 57% for Gemini Flash-Lite. Stacking the data ban on top, or telling firms how far the recommendation is from their price 10 rounds earlier, doesn't fix the Gemini case. Two caveats: step size made no reliable difference (Haiku Δ 0.05 at +1 cent vs 0.03 at +10; Gemini 1.00 vs 0.93), so the data show that discretion fails where firms accept the ratchet, not that small steps get through where large ones would not; and both firms receive the ratchet at once, so acceptance may reflect their rising profits as well as deference.
 
    ![Replay of two logged runs: the same scripted 1-cent ratchet recommends each firm its own last price plus one cent every round. Claude Haiku 5.5 firms refuse and prices stay near the competitive level (profit gain 0.03); Gemini 3.5 Flash-Lite firms accept and walk to joint monopoly by round 41 (profit gain 1.00).](report/figures/ratchet_replay.gif)
 
    *The ratchet, replayed from two logged runs (Haiku seed 100, Gemini Flash-Lite seed 1000; `tools/replay_gif.py`). The recommender is the same script on both sides; only the firm model that decides differs.*
 5. **Coordination needs no joint instruction.** Advice to "avoid a race to the bottom" also raises prices (Δ 0.45 without rival data, n = 10).
-6. **Detection.** The price-level screen catches outcomes (AUROC 0.90). Two classic instruments point the wrong way: the variance screen (0.36), and a monitor of single price moves, which ranks the guardrailed hub's and the scripted ratchet's climbs as *less* suspicious than honest play (0.05–0.27). A reasoning monitor catches the hub's *stated* intent, but also flags honest advisors that watch rivals.
+6. **Detection.** The price-level screen catches outcomes (AUROC 0.90). Two classic instruments point the wrong way: the variance screen (0.36), and a monitor of single price moves, which ranks the guardrailed hub's and the scripted ratchet's climbs as *less* suspicious than honest play (0.05–0.27). A reasoning monitor catches the hub's *stated* intent, but also flags honest advisors that watch rivals. These scores have limits: the harmful sets include scripted arms, positives are filtered on Δ ≥ 0.5 while negatives are not, the LLM-hub discretion group is n = 15 (all Gemini Flash-Lite), and the settled-price monitor is close to the harm label by construction.
 
 ## Repository
 
@@ -64,5 +71,5 @@ Every run prints a cost estimate and asks before spending (`-y` skips the prompt
 ## Attribution and provenance
 
 - **Built on:** the market parametrisation (Calvano et al. 2020), the P0 firm prompt (Fish et al. 2024) and the history-table format, all via the sprint's `llm-cartel` starter code (Riemer et al. 2026). The market is re-implemented and tested against it. `SPRINT_LOG.md` lists exactly what was reused, and the two benchmark bugs we found in the starter code.
-- **Concurrent sprint work:** zerocommcartel (2026) studies a different variable (what firms are told about rivals' advisors) in a one-shot Cournot game. We used none of its code or prompts; see `SPRINT_LOG.md`.
+- **Concurrent sprint work:** Carver and Redfern (2026), "Four Levers of LLM Collusion", studies a different variable (what firms are told about rivals' advisors) in a one-shot Cournot game. We used none of its code or prompts; see `SPRINT_LOG.md`.
 - **Tooling:** written with Claude Code (Claude Opus 5.5). Reviews by independent Claude Fable 5.1 subagents are logged in `SPRINT_LOG.md`.

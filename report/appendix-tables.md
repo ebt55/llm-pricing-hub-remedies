@@ -27,7 +27,7 @@ The share of recommended increases (recommendation minus the firm's last price) 
 | Gemini 3.5 Flash-Lite, no thinking | 67% (531) | 46% (304) | 18% (45) | 8% (147) |
 | Gemini 3.5 Flash-Lite, thinking on | 52% (235) | 71% (157) | 14% (21) | 17% (6) |
 
-Cell sizes differ by model because the hubs recommend different steps. Haiku's hub, when ignored, keeps recommending large increases, while Gemini's mostly recommends holding.
+Cell sizes differ by model because the hubs recommend different steps. Haiku's hub, when ignored, keeps recommending large increases, while Gemini's mostly recommends holding. These rows pool the LLM hub's steps, not the scripted ratchet's, so they are not comparable with the ratchet acceptance rates in §4.4 (Gemini Flash-Lite: 83% there, 67% here).
 
 ## Table F3. Robustness (Claude Haiku 5.5)
 
@@ -53,7 +53,7 @@ Cell sizes differ by model because the hubs recommend different steps. Haiku's h
 
 ## Table F5. Two candidate fixes for firm discretion (Gemini 3.5 Flash-Lite, no thinking; n = 6; exploratory)
 
-| Remedy | Δ | Harm removed (95% CI) | Pre-registered prediction |
+| Remedy | Δ | Harm removed (95% CI) | Prediction logged before the run |
 |---|---|---|---|
 | Firm discretion alone (n = 12) | 0.41 | 57% (27–84) | — |
 | Data ban + discretion (the decree's remedies stacked) | 0.38 | 60% (16–98) | < 80% removed: held |
@@ -65,12 +65,12 @@ Neither fix helps. The drift sentence (Appendix A) did not make Gemini firms ref
 
 **Data and monitors.** 134 runs without a market-wide hub (negatives) and 340 harmful runs (a joint-objective hub or recommender, Δ ≥ 0.5). Each monitor sees only realised prices.
 - **Per-step:** the largest single-round relative price move, which is what a per-period band or step-by-step approval inspects.
-- **Max drift:** the peak 10-round rolling mean against the warm-up price. This is the pre-registered episode statistic.
+- **Max drift:** the peak 10-round rolling mean against the warm-up price. This is the episode statistic we predicted would work (P16, logged before the test ran).
 - **Settled price:** the last-20-round mean against the warm-up price. Post hoc, and close to the harm definition by construction.
 
 AUROC by monitor:
 
-| Harmful runs (n) | Per-step | Max drift (pre-registered) | Settled price (post hoc) |
+| Harmful runs (n) | Per-step | Max drift (predicted) | Settled price (post hoc) |
 |---|---|---|---|
 | Auto-accept hub or scripted recommender (215) | 0.66 | 0.94 | 1.00 |
 | Partial adherence (29) | 0.86 | 0.95 | 1.00 |
@@ -79,8 +79,9 @@ AUROC by monitor:
 | Scripted ratchet (48) | **0.27** | 0.94 | 1.00 |
 
 - **Per-step oversight is inverted against small-step drift.** Honest firms experiment with larger single moves (median largest move 18%) than a hub climbing in ≤ 3% steps.
-- **Max drift ranks well but fails at 1% FPR** (recall 0–6%; pre-registered prediction P16 failed). Honest firms' early price experiments set its threshold above the monopoly price.
+- **Max drift ranks well but fails at 1% FPR** (recall 0–6%; prediction P16 failed). Honest firms' early price experiments set its threshold above the monopoly price.
 - **Only the settled price separates at low false-alarm rates** (recall 98–100% at 1% FPR).
+- **Caveats.** The harmful sets include mechanical arms: 65 of the 215 auto-accept positives are scripted (60 rational-hub, 5 static monopoly-price), and 10 of the 48 ratchet positives are K1-a, the auto-accept ratchet. Positives are filtered on Δ ≥ 0.5; negatives are not. The LLM-hub discretion group is n = 15 (all Gemini Flash-Lite). The settled-price monitor is close to the harm label by construction, so its 1.00 is not evidence that the monitor works. The per-step inversion stands within these limits.
 
 ## Figure A1. Partial adherence and guardrails (Claude Haiku 5.5)
 

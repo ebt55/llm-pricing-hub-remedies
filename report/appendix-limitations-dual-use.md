@@ -23,10 +23,10 @@
 | Haiku | 12% | Works |
 | Nemotron | 20% | Partial |
 | Qwen | 52% | Fails |
-| Gemini Flash-Lite | 61% | Fails |
+| Gemini Flash-Lite | 83% | Fails |
 | GPT-5.4 mini | 72% | Fails |
 
-Our firm models stand in for human or AI deciders whose deference we do not measure. Real landlords' acceptance is reported as 40–50% within 1% of the recommendation (DOJ complaint) and 80–90% (former employees, private plaintiffs).
+Rates are from the +1 cent runs for every model. Both firms receive the ratchet at the same time, so when both follow, each sees its own profit rise; acceptance may reflect this shared profit signal as well as deference. A one-sided ratchet against a scripted rival at the Nash price, and a −1 cent ratchet, would separate the two and are the first follow-up. Our firm models stand in for human or AI deciders whose deference we do not measure. Real landlords' acceptance is reported as 40–50% within 1% of the recommendation (DOJ complaint) and 80–90% (former employees, private plaintiffs).
 
 **4. Simulated market.**
 - One stylised logit Bertrand market with symmetric costs, one product and no entry.
@@ -37,11 +37,13 @@ Our firm models stand in for human or AI deciders whose deference we do not meas
 
 **5. Models and prompts.**
 - **Results depend on the model.**
-  - The data ban removes 69–92% of the harm for three models and ≤ 10% for two.
+  - The data ban removes 69–92% of the harm for three models and 10% for DeepSeek. On Gemini Flash-Lite the ban and the stale rule raised prices above the monopoly level (price index 1.32 and 1.47, against 0.88 for the hub).
   - Replications are small (n = 3–12), and most robustness checks are on Haiku.
+  - The hub and the firms are always the same model.
+  - Under partial adherence, auto-set prices appear to the firm as "My price".
   - Gemini 3.8 Flash's no-advisor baseline is unstable (two of four runs reach monopoly unaided), so its harm shares cannot be estimated.
-- **Reasoning budgets differ and were not all honoured.** Measured median output tokens per call range from 35 (Gemini 3.5 Flash-Lite at low effort, no thinking) to 6,695 (Nemotron, whose 1,024-token budget was not enforced). We report measured tokens. One batch (Gemini Flash-Lite at high effort, n = 6) shows that a Haiku-like budget does not make Gemini firms push back. Its baselines stayed at n = 3 when the batch reached our spending cap.
-- **Prompts.** We use one firm prompt (P0 from Fish et al. 2024, plus a one-line reason request and one neutral sentence about the competitor) and one advisor prompt per objective. LLM pricing is known to be sensitive to prompts.
+- **Reasoning budgets differ and were not all honoured.** Measured median output tokens per call range from 35 (Gemini 3.5 Flash-Lite at low effort, no thinking) to 6,695 (Nemotron, whose 1,024-token budget was not enforced). We report measured tokens. One batch (Gemini Flash-Lite at high effort, n = 6) shows that a Haiku-like budget does not make Gemini firms push back; against the scripted ratchet only the firms changed, while in the LLM-hub arms the setting switches thinking on for the hub as well, so those compare a joint change. Its baselines stayed at n = 3 when the batch reached our spending cap.
+- **Prompts.** We use one firm prompt (P0 from Fish et al. 2024, plus a one-line reason request and one neutral sentence about the competitor) and one advisor prompt per objective. LLM pricing is known to be sensitive to prompts. The firm and hub prompts' line "No customer would pay more than $2.89" is 1.5 × p_M, inherited from llm-cartel; a hub that assumes linear demand can read the monopoly price off it. The check without that line ran on Haiku only, and the Gemini stale-data run with price index 2.87 has one firm at exactly $2.89 for all of its last 20 rounds.
 - **No sampling control.** Haiku's API rejects sampling parameters, and the thinking modes of the other models ignore them. Runs are independent stochastic samples, not reproducible seeds.
 - **Logging and pinning.** Model IDs are logged on every call, and OpenRouter models were pinned to one provider each.
 
@@ -51,14 +53,15 @@ Our firm models stand in for human or AI deciders whose deference we do not meas
 - **The ratchet tests were designed post hoc**, after the Gemini discretion result, and logged with predictions before they ran.
 - N for the primary arms was raised from 10 to 20 after the pilot.
 - Δ is not monotone above the monopoly price, so cross-model comparisons use the price index.
+- Per-decision acceptance rates are not clustered by run, and some share CIs pass 100% with n = 4–5.
 
-**7. Detection.** The reasoning monitor's near-perfect score reflects a hub that writes its joint objective into its notes. A hub with an implicit objective (for example, one learned from pooled outcomes) would not announce it, and we did not test that case.
+**7. Detection.** The reasoning monitor's near-perfect score reflects a hub that writes its joint objective into its notes, and chain-of-thought faithfulness need not track collusion (Lee & Park, 2026). A hub with an implicit objective (for example, one learned from pooled outcomes) would not announce it, and we did not test that case.
 
 ## Dual use
 
 **Risk.**
 - These results describe which data feeds and adherence settings let an LLM pricing advisor raise prices while complying with data restrictions. A vendor could in principle use them to design software that softens competition and stays formally compliant.
-- The ratchet result adds a second risk: it shows that small, patient increases get past deciders who refuse large ones.
+- The ratchet result adds a second risk: it shows that patient increases get past deciders who accept them; only Qwen suggests that small steps pass where large ones would not.
 
 **Mitigations.**
 - **No optimisation.** We report the effects of remedies, not optimised prompts, data formats or step schedules. The only advisor told to raise joint profit uses the obvious instruction, as the harm case. We did not search for prompts that maximise prices.

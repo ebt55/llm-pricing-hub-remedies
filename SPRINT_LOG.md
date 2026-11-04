@@ -1295,3 +1295,25 @@ The user submitted the project through the Apart form:
 - the project image `report/figures/project_image.png`.
 
 The repository stays public at https://github.com/ebt55/llm-pricing-hub-remedies. Numbers have been frozen since Mon 12:00 IST.
+
+### 2026-11-04: post-sprint corrections (review by a Fable 5.1 judge and an Opus 5.5 audit)
+
+A blind review by Claude Fable 5.1 and a rigour audit by Claude Opus 5.5 that recomputed the numbers from `results/` found errors in the submitted text. The orchestrator re-verified every number from the logs, and an Opus 5.5 reference agent verified every new citation against its primary source. `tools/corrections_check.py` (read-only, no model calls) reproduces every corrected number: acceptance on the +1 cent runs only, profit-gain and price-index shares with bootstrap CIs (4,000 draws, seed 0), and the clip-band arithmetic. Otherwise text only; no code, config, result, figure or submitted file changed.
+
+- **Tag `sprint-submission-2026-10-26`** marks commit `a3ccb43`, the version as submitted. `report/submission.pdf`, `report/submission.docx`, `report/slides.pptx` and `report/video-script.md` stay as submitted and keep the old numbers.
+- **Edited:** `README.md`, `report/draft.md` (now v6), `report/appendix-limitations-dual-use.md`, `report/appendix-tables.md`, `report/related-work.md`, `docs/faq.md`. **Added:** `tools/corrections_check.py` (read-only, $0). The full list is Appendix G of the draft.
+- **What changed:**
+  1. Gemini Flash-Lite's acceptance of 1–2 cent ratchet nudges is 83% (505/609, +1 cent runs), not 61%; the old figure pooled in the +3 and +10 cent runs. Abstract range 12–72% → 12–83%; acceptance and outcome now rise together across all five models.
+  2. "Thinking makes Gemini firms accept more" withdrawn (84% vs 83% like for like on the scripted ratchet, where only the firms changed; mixed against the LLM hub). In the LLM-hub arms thinking was on for hub and firms together. "Thinking did not make Gemini firms push back" stands.
+  3. On Gemini Flash-Lite the data ban and stale rule raised prices above the monopoly level (price index 1.32 and 1.47 vs 0.88); the old 8% came from Δ, which falls again above p_M. Shares on the price index: −51% and −69%.
+  4. Price-index shares for the other models are close to the Δ-based table; only Gemini changes sign.
+  5. The "$2.89" willingness-to-pay line, in the firm and hub prompts, is 1.5 × p_M and can leak the monopoly price; the no-cue check ran on Haiku only.
+  6. "Small" is not isolated: step size made no reliable difference; the jump-to-p_M control ran only on Haiku. Title kept to match the submission.
+  7. The ratchet is also a shared profit signal; one-sided and −1 cent ratchets are the first follow-up.
+  8. Guardrail delays follow from arithmetic (6–9 rounds to 0.95·p_M at ±3%, 15–24 at ±1% with prices rounded to the cent).
+  9. Detection caveats (scripted arms in the positives, Δ ≥ 0.5 filter, n = 15 for LLM-hub discretion, settled-price monitor close to the label) added to §5 and Table F6.
+  10. Pre-registered H4c (+0.083, Holm p = .029) and H5 (+0.017, p = .821) reported in §4.1.
+  11. Subtitle: "Pre-registered tests" → "Tests of … (main batch pre-registered)".
+  12. Threat model stated in §1 and Limitations (Bernheim & Whinston 1985; Harrington 2026a, 2026b; Harrington & Ortner 2025).
+  13. Four limitations added: same model for hub and firms; "My price" under partial adherence; unclustered acceptance rates and CIs past 100%; the reasoning monitor relies on the written objective.
+- **References added:** Bernheim & Whinston 1985; Bisconti et al. 2026; Garcia et al. 2026; Harrington 2026a, 2026b; Harrington & Ortner 2025; Hills et al. 2026; Kumar 2026; Schwartz 2026; Zhang & Gao 2026. "zerocommcartel (2026)" is now Carver & Redfern (2026), "Four Levers of LLM Collusion", same URL.

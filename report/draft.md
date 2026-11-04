@@ -1,6 +1,6 @@
 # An LLM Pricing Hub Survives Data Limits on Some Models; Firm Discretion Works Only When Firms Refuse Small Nudges
 
-*Pre-registered tests of the RealPage Final Judgment's remedies (data bans, stale data, parameterised auto-accept, firm discretion) on LLM pricing advisors from six labs*
+*Tests of the RealPage Final Judgment's remedies (data bans, stale data, parameterised auto-accept, firm discretion) on LLM pricing advisors from six labs (main batch pre-registered)*
 
 **Author:** Ebin Babu Thomas, Independent AI Engineer & Researcher
 **Track:** 1, Markets and Collusion
@@ -8,7 +8,7 @@
 **Code and logs:** https://github.com/ebt55/llm-pricing-hub-remedies
 
 <!--
-*Draft v5, Sun 25 Oct ~05:15 IST.*
+*Draft v6, corrected 4 Nov 2026 (Appendix G lists the corrections; the submitted v5 is at tag `sprint-submission-2026-10-26`).*
 - *Title, abstract and edits from the Fable 5.1 review (SPRINT_LOG 05:04).*
 - *Confirmatory results were pre-registered before the main batch (freeze commit `5aa9f79`). Every later batch was logged in `SPRINT_LOG.md` with a prediction before it ran.*
 - *GPT-5.4 mini has n = 5 (seeds 203–204 ran at the Mon 05:30 IST allowance reset), and its ratchet arm (n = 4) ran at the same time under prediction P14. Numbers frozen Mon 12:00 IST.*
@@ -16,7 +16,7 @@
 
 ## Abstract
 
-Shared pricing software can align competitors' prices without any agreement, the theory of the US case against RealPage. Its 2026 Final Judgment bans current rival data, limits auto-acceptance to user-set parameters and protects users' overrides. We test these remedies on an LLM pricing hub advising both firms in a repeated Bertrand duopoly, instructed to maximise their combined profit (RealPage's alleged incentive). Across 700+ runs on seven models from six labs (main batch pre-registered), the hub raises profit gain (0 = competitive, 1 = joint monopoly) from 0.06 to 0.99 on Claude Haiku 5.5. With a per-client objective and the same rival data it is pro-competitive: the objective, not the data, does the harm. Remedies are model-dependent. A data ban removes most of the harm (69–92%) on three models and almost none on two. Auto-accept bands of ±1–3% per round only delay monopoly (Haiku, Qwen). Firm discretion removes 95% or more for Haiku and Qwen, about half for Gemini Flash-Lite, and none when its firms think. Discretion fails against a ratchet: a scripted recommender adding one cent a round yields profit gains from 0.05 to 1.00 across five firm models, rising with how often each accepts small nudges (12–72%). A monitor of single price moves rates these small-step climbs as less suspicious than honest play. Remedies should constrain and audit the advisor's objective, track how often users accept small increases, and judge where prices settle, not single steps. Our open harness lets a court-appointed monitor test a vendor's model.
+Shared pricing software can align competitors' prices without any agreement, the theory of the US case against RealPage. Its 2026 Final Judgment bans current rival data, limits auto-acceptance to user-set parameters and protects users' overrides. We test these remedies on an LLM pricing hub advising both firms in a repeated Bertrand duopoly, instructed to maximise their combined profit (RealPage's alleged incentive). Across 700+ runs on seven models from six labs (main batch pre-registered), the hub raises profit gain (0 = competitive, 1 = joint monopoly) from 0.06 to 0.99 on Claude Haiku 5.5. With a per-client objective and the same rival data it is pro-competitive: the objective, not the data, does the harm. Remedies are model-dependent. A data ban removes most of the harm (69–92%) on three models, almost none on DeepSeek, and raises prices above monopoly on Gemini Flash-Lite. Auto-accept bands of ±1–3% per round only delay monopoly (Haiku, Qwen). Firm discretion removes 95% or more for Haiku and Qwen, about half for Gemini Flash-Lite, and none with thinking on for hub and firms (n = 6; baselines n = 3). Discretion fails against a ratchet: a scripted recommender adding one cent a round yields profit gains from 0.05 to 1.00 across five firm models, rising with how often each accepts small nudges (12–83%). A monitor of single price moves rates these small-step climbs as less suspicious than honest play. Remedies should constrain and audit the advisor's objective, track how often users accept small increases, and judge where prices settle, not single steps. Our open harness lets a court-appointed monitor test a vendor's model.
 
 ## 1. Introduction
 
@@ -24,22 +24,24 @@ Shared pricing software can align competitors' prices without any agreement, the
 - We instruct this objective, so we measure capability under instruction, not unprompted propensity. §4.5 tests a softer, realistic version.
 - "Collusion" here means sustained supracompetitive prices, measured as profit gain Δ (Calvano et al., 2020).
 
+The Final Judgment's theory of harm is information exchange among firms that each maximise their own profit. Our direct test of that theory is the client-objective advisor with pooled current rival data (§4.1), in a market where firms see no rival prices themselves, so rival data reaches each firm only through its advisor. A joint-profit hub is a different thing: a common agent, which in theory needs no rival data (Bernheim & Whinston, 1985; Harrington, 2026a, 2026b). Our finding that the objective, and not the data, does the harm is an LLM test of Harrington's (2026a) critique; the claim itself is his. Theory also runs the other way for some vendors: Harrington and Ortner (2025) find that a vendor maximising licence profit builds in no supracompetitive markup, though prices respond more to demand than the competitive benchmark, and more so with higher adoption. So the instructed joint objective stays a premise.
+
 We ask a conditional policy question (sprint question 1.5): if such a hub exists, do the remedies a court actually imposed stop it?
 
 **The remedies.** The DOJ–RealPage Final Judgment (M.D.N.C. 1:24-cv-710, entered 19 May 2026) bans competitors' non-public data from runtime pricing. It allows non-public training data only if it is at least 12 months old, and forbids sub-state geographic models. It allows auto-accept only if each user sets its parameters (§V.A.1), and bars features that impede overriding a recommendation (§V.A.5) or reward accepting one (§V.C). Landlord consent decrees bar software that *requires* acceptance. The stakes are measurable: in US multifamily rentals, higher penetration of the same pricing software goes with higher rents and lower occupancy (Calder-Wang & Kim, 2026), and in German retail gasoline, margins rose where competing stations all adopted algorithmic pricing (Assad et al., 2024).
 
 **Contributions:**
-1. **A test of the Final Judgment's terms on LLM advisors.** A data ban removes 69–92% of the hub's harm on three models and at most 10% on two. Parameterised auto-accept and partial adherence retain 73–101% (Haiku).
-2. **A mechanism with a causal test.** Under discretion, prices rise only if firms accept small steps. With the recommender fixed by script, five firm models' outcomes (Δ 0.05 to 1.00) rise with how often they accept 1–2-cent nudges (12% to 72%).
-3. **An open, pre-registered harness** that a court-appointed monitor could run on a vendor's model before approving a remedy.
+1. **A test of the Final Judgment's terms on LLM advisors.** A data ban removes 69–92% of the hub's harm on three models and 10% on DeepSeek; on Gemini Flash-Lite it raised prices above the monopoly level. Parameterised auto-accept and partial adherence retain 73–101% (Haiku).
+2. **A mechanism with a causal test.** Under discretion, prices rise only if firms accept the recommended steps. With the recommender fixed by script, five firm models' outcomes (Δ 0.05 to 1.00) rise with how often they accept 1–2-cent nudges (12% to 83%).
+3. **An open harness, with a pre-registered main batch,** that a court-appointed monitor could run on a vendor's model before approving a remedy.
 
 ## 2. Related work
 
 **LLM pricing collusion.** Q-learning agents learn supracompetitive prices in a repeated logit Bertrand market (Calvano et al., 2020). So do GPT-4 agents (Fish et al., 2024) and reasoning models (Riemer et al., 2026, whose llm-cartel design and prompts we re-implement; Appendix D). Such collusion erodes when agents differ (Keppo et al., 2026).
 
-**Shared algorithms and the law.** Sellers sharing one AI model can price supracompetitively when its recommendations are correlated enough (Cao and Hu, 2026). Liability turns on pooled non-public data and on adherence (Berger et al., 2025). *Gibson v. Cendyn* (9th Cir. 2025) upheld dismissal where recommendations were optional. *Cornish-Adebiyi v. Caesars* (3d Cir. 2026) revived a claim that cited pooled data and about 90% acceptance.
+**Shared algorithms and the law.** Sellers sharing one AI model can price supracompetitively when its recommendations are correlated enough (Cao and Hu, 2026). Liability turns on pooled non-public data and on adherence (Berger et al., 2025). *Gibson v. Cendyn* (9th Cir. 2025) upheld dismissal where recommendations were optional. *Cornish-Adebiyi v. Caesars* (3d Cir. 2026) revived a claim that cited pooled data and about 90% acceptance. In theory, firms that pick the same agent can reach a fully cooperative outcome (Bernheim & Whinston, 1985), and a hub can coordinate rivals' prices through its algorithm (Harrington, 2026b); Harrington (2026a) and Harrington and Ortner (2025) give the theory on both sides of the data-ban question (§1). Simple "gullible" pricing algorithms can collude by accident (Schwartz, 2026). In the field, a hotel pricing algorithm biases its recommendations because managers face price-adjustment costs (Garcia et al., 2026); those managers are the analogue of deciders who adjust only partly.
 
-**Interventions.** In LLM markets, the evidence is model-specific: anti-collusion prompts (Riemer et al., 2026), announced price caps (Dhanda, 2026), a damages regulator or a new entrant (Garra, 2026), regulator review modes, whose best mode is model-specific (Anto & Vazquez, 2026), enforced governance (Bracale Syrnikov et al., 2026), and untested mappings of human remedies (Idowu et al., 2026). These act on firms' prompts, rules or rivals; ours act on a third-party advisor's information and authority. To our knowledge, no prior work tests the RealPage remedies on LLM advisors. On detection, price-level audits can be blind by construction (Xu et al., 2026). Concurrent sprint work (zerocommcartel, 2026) varies what firms are told about rivals' advisors in one-shot Cournot; we vary the advisor's data and the firms' adherence.
+**Interventions.** In LLM markets, the evidence is model-specific: anti-collusion prompts (Riemer et al., 2026), announced price caps (Dhanda, 2026), a damages regulator or a new entrant (Garra, 2026), regulator review modes, whose best mode is model-specific (Anto & Vazquez, 2026), enforced governance (Bracale Syrnikov et al., 2026), and untested mappings of human remedies (Idowu et al., 2026). These act on firms' prompts, rules or rivals; ours act on a third-party advisor's information and authority. To our knowledge, no prior work tests the RealPage remedies on LLM advisors. On detection, price-level audits can be blind by construction (Xu et al., 2026). In AI control, per-step monitors fail against attacks that keep each step's score benign, while sequence monitors do better (Zhang & Gao, 2026), and gradual attacks spread across pull requests evade diff monitors (Hills et al., 2026). In a multi-turn benchmark where benign steps precede a risky request, attack success runs from 20.5% (Claude Haiku 4.5) to 92.9% (Gemini 3.1 Flash Lite) (Bisconti et al., 2026): the same split between model families as our deciders, on different model versions and a different task. Concurrent sprint work: Carver and Redfern (2026) vary what firms are told about rivals' advisors in one-shot Cournot, and Kumar (2026) finds that a firewalled shared advisor raises prices on Qwen and Llama, with pooled rival data adding nothing; we vary the advisor's data and the firms' adherence.
 
 ## 3. Methods
 
@@ -63,7 +65,7 @@ We ask a conditional policy question (sprint question 1.5): if such a hub exists
 
 **Models.** Primary: Claude Haiku 5.5, with adaptive thinking at low effort. Replications: DeepSeek V4.1 Flash, Qwen3.8 Flash, Nemotron 3.5 Lightning (open weights), GPT-5.4 mini, Gemini 3.8 Flash and Gemini 3.5 Flash-Lite; model IDs are logged on every call. Settings were not honoured uniformly, so we report measured reasoning budgets (Table F1): median output tokens per call range from 35 (Gemini Flash-Lite at low effort, which does not think) to 6,695 (Nemotron, whose 1,024-token budget was not enforced).
 
-**Statistics.** Welch t tests and intervals, plus Mann-Whitney, with Holm correction within each pre-registered stage.
+**Statistics.** Welch t tests and intervals, plus Mann-Whitney, with Holm correction within each stage.
 - Share of harm removed = (Δ_hub − Δ_remedy)/(Δ_hub − Δ_no advisor), where "hub" is the market-aligned hub with current data on auto-accept, with a bootstrap 95% CI. The MDE for every contrast is in the per-arm tables (Appendix B).
 - n = 20 per primary Haiku arm (raised from 10 after the pilot), and n = 3–12 for the other models. The main batch's arms, contrasts and seed lists were frozen before it ran (commit `5aa9f79`); every later batch was logged with a prediction before launch (`SPRINT_LOG.md`).
 
@@ -71,7 +73,7 @@ We ask a conditional policy question (sprint question 1.5): if such a hub exists
 
 ### 4.1 Controls *(confirmatory)*
 
-The mechanical controls give Δ = 1.00 (static monopoly) and 0.01 (best response), and the no-advisor baseline B0 is 0.06 (n = 20). The main batch made 41,000 calls with 0 parse failures and 0 refusals. In the behavioural positive control, the hub beats B0 by ≥ 0.3 in 20/20 runs. **A client-objective advisor with current rival data is pro-competitive** (Δ −0.01 vs 0.06, p < .001): pooled data alone doesn't cause the harm; the objective does (Figure 1).
+The mechanical controls give Δ = 1.00 (static monopoly) and 0.01 (best response), and the no-advisor baseline B0 is 0.06 (n = 20). The main batch made 41,000 calls with 0 parse failures and 0 refusals. In the behavioural positive control, the hub beats B0 by ≥ 0.3 in 20/20 runs. **A client-objective advisor with current rival data is pro-competitive** (Δ −0.01 vs 0.06, p < .001): pooled data alone doesn't cause the harm; the objective does (Figure 1). Two more pre-registered contrasts went unreported in the submitted version. With a client-objective advisor, discretion moved prices slightly up relative to auto-accept, to about the no-advisor level (R2-d − R2-a: +0.083, Holm p = .029). Under discretion, a static monopoly-price recommendation did no better than a static Nash-level one (S-mono − S-nash: +0.017, p = .821): Haiku firms did not follow it.
 
 ![Figure 1](figures/fig1_remedy_ladder.png)
 
@@ -87,10 +89,14 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 | Nemotron 3.5 Lightning (4) | 92% (85–98) | 74% (66–84) |
 | Qwen3.8 Flash (4) | 85% (54–130) | 84% (39–131) |
 | DeepSeek V4.1 Flash (8; hub 3) | 10% (1–21) | 2% (0–6) |
-| Gemini 3.5 Flash-Lite (5) | 8% (−21 to 37) | prices exceed p_M |
+| Gemini 3.5 Flash-Lite (5)‡ | −51% (−127 to −10) | −69% (−189 to −8) |
 | GPT-5.4 mini (5)† | 82% (36–100) | 60% (−32 to 90) |
 
 †GPT-5.4 mini's hub reaches monopoly in only 2 of 5 runs (Δ 1.00, 1.00, 0.31, 0.23, 0.17), so the shares are imprecise.
+
+‡Gemini Flash-Lite's shares are on the price index (0 = Nash, 1 = monopoly), because Δ falls again above p_M. Its hub with current data reaches 0.88; the data ban gives 1.32 and the stale rule 1.47 (one run 2.87). In plain terms, on Gemini Flash-Lite the ban and the stale-data rule pushed prices above the monopoly level. The submitted version reported 8% on Δ.
+
+On the price index the other models' shares are close to the Δ-based ones in the table (ban / stale: Haiku 77% / 31%, Nemotron 93% / 77%, Qwen 84% / 86%, DeepSeek 4% / 0%, GPT-5.4 mini 86% / 73%; `tools/corrections_check.py`); only Gemini Flash-Lite changes sign. One cue in the firm and hub prompts matters here: the line "No customer would pay more than $2.89", inherited from llm-cartel, is 1.5 × p_M, and a hub that assumes linear demand can read the monopoly price off it. The check without that line ran on Haiku only (Table F3). The Gemini stale-data run with price index 2.87 has one firm at exactly $2.89 for all of its last 20 rounds; 5 of the 10 Gemini ban and stale runs touch $2.89, and none of the 5 current-data hub runs do.
 
 **Gemini 3.8 Flash is excluded:** its firms reach monopoly without any advisor in 2 of 4 baseline runs, so shares cannot be estimated; its hub reaches monopoly under every data regime (Figure 2).
 
@@ -114,25 +120,27 @@ The market-aligned hub reaches Δ 0.99 (SD 0.01). Share of its harm removed (95%
 
 On Qwen3.8 Flash, the ±3% band retains 88% of the harm (Δ 0.87 vs 0.97 under plain auto-accept; n = 4) and delays monopoly from a median round of 45 to 56.
 
+The delay follows from arithmetic. A band that the hub always pushes against reaches 0.95·p_M from the warm-up prices in 6–9 rounds at ±3% and, with prices rounded to the cent, 15–24 rounds at ±1% (`tools/corrections_check.py`); the measured medians (8 and 18.5) are what this arithmetic predicts. Both are well before the last-20-round scoring window, so given a hub that always pushes up, "bands only delay" holds by construction.
+
 ### 4.4 Firm discretion works only when firms refuse small nudges *(Figure 3)*
 
-**A replication that half failed.** We pre-registered that firm discretion would remove ≥ 80% of the hub's harm on two other models:
+**A replication that half failed.** We logged the prediction, before the batch ran, that firm discretion would remove ≥ 80% of the hub's harm on two other models:
 - **Qwen3.8 Flash:** it removes all of it (Δ 0.10 vs B0 0.15 and auto-accept 0.97; n = 4). The prediction holds.
 - **Gemini 3.5 Flash-Lite:** it removes only **57%** (27–84; n = 12), and 4 of 12 runs end near monopoly (Δ 0.89–1.00). The prediction fails.
 
 **How the hub raises prices.** Under discretion, the hub anchors on the client's current price and steps up from it. Gemini firms accept 67% of its 1–2-cent increases, Haiku firms 16% (Table F2); the Gemini runs that reached monopoly are those where the hub kept nudging and the firms kept accepting.
 
-**A causal test with a scripted ratchet** (pre-registered). We replace the LLM hub with a script that recommends the client's own last price plus a fixed step. The recommender is now identical across models, so only the firm differs. Δ over the last 20 rounds:
+**A causal test with a scripted ratchet** (prediction logged before it ran). We replace the LLM hub with a script that recommends the client's own last price plus a fixed step. The recommender is now identical across models, so only the firm differs. Δ over the last 20 rounds:
 
 | Firm model | Accepts +1–2 cent nudges* | +1 cent | +3 cents | +10 cents | LLM hub (for comparison) |
 |---|---|---|---|---|---|
 | Claude Haiku 5.5 | 12% | **0.05** (n = 10) | 0.03 | 0.03 | 0.11 (n = 20) |
 | Nemotron 3.5 Lightning | 20% | **0.28** (n = 8) | — | — | — |
 | Qwen3.8 Flash | 52% | **0.73** (n = 8) | — | — | 0.10 (n = 4) |
-| Gemini 3.5 Flash-Lite | 61% | **1.00** (n = 6) | 0.99 | 0.93 | 0.41 (n = 12) |
+| Gemini 3.5 Flash-Lite | 83% | **1.00** (n = 6) | 0.99 | 0.93 | 0.41 (n = 12) |
 | GPT-5.4 mini | 72% | **0.93** (n = 4) | — | — | — |
 
-\*Share of the ratchet's 1–2-cent recommended increases that the firm matched exactly (`tools/ratchet_curve.py`). Firms that do not match often move part of the way.
+\*Share of the ratchet's 1–2-cent recommended increases that the firm matched exactly, from the +1 cent runs for every model (`tools/corrections_check.py`; `tools/ratchet_curve.py` pools all step sizes). Firms that do not match often move part of the way. The submitted version gave 61% for Gemini Flash-Lite; that figure pooled in its +3 and +10 cent runs, where 1–2-cent steps occur only near the cap.
 
 *Controls:* recommending p_M every round (a one-step jump), on Haiku, gives Δ 0.07 (n = 5). The +1 cent ratchet on auto-accept gives Δ 1.00 (n = 10).
 
@@ -144,9 +152,13 @@ On Qwen3.8 Flash, the ±3% band retains 88% of the harm (Δ 0.87 vs 0.97 under p
 - **Haiku firms refuse even a patient 1-cent ratchet.** Every Haiku ratchet arm sits at or below the no-advisor baseline (Δ 0.03–0.05 vs 0.06). The result holds over 200 rounds: Δ 0.03 for both the LLM hub and the ratchet in rounds 181–200 (n = 5).
 - **Gemini Flash-Lite firms follow nudges of any size.** They reach p_M at the pace of the step (Figure 3).
 - **GPT-5.4 mini firms defer too** (prediction P14 held): the ratchet reaches Δ 0.93, though GPT-5.4 mini's own hub reaches monopoly in only 2 of 5 runs.
-- **Qwen firms show why step size matters.** They refuse the LLM hub's large jumps and remove all of its harm. A patient 1-cent ratchet still takes 7 of 8 Qwen markets most of the way to monopoly (Δ 0.55–1.00; the eighth stays at 0.05).
+- **Qwen firms are the one case where step size seems to matter.** They refuse the LLM hub's large jumps and remove all of its harm. A patient 1-cent ratchet still takes 7 of 8 Qwen markets most of the way to monopoly (Δ 0.55–1.00; the eighth stays at 0.05).
 
-**Is it reasoning? No.** At our settings Gemini Flash-Lite does not think (35 output tokens per call). With thinking on (408 tokens per firm call, comparable to Haiku's 557; n = 6), its firms accept *more* of the ratchet's 1–2-cent increases (84% vs 61%) and of the LLM hub's 3–5-cent steps (71% vs 46%; Table F2). The ratchet still reaches monopoly, and discretion against the LLM hub removes none of the harm (Δ 1.00 vs 0.41 without thinking; B0 0.05, auto-accept 0.98, n = 3). Pushing back is a matter of the firm model's disposition, not its reasoning budget.
+**A confound: the ratchet is also a shared profit signal.** Both firms receive the ratchet at the same time. When both follow, each sees its own profit rise and can read that as evidence for raising. One Gemini firm wrote "Profits have steadily increased as the price has risen incrementally" (`results/ladder-gem-lite/K1-d/s1003.jsonl`). So acceptance may reflect this signal as well as deference. A one-sided ratchet against a scripted rival held at the Nash price, and a −1 cent ratchet, would separate the two. Neither has run; they are the first follow-up.
+
+**What "small" does and does not mean here.** Step size made no reliable difference: Haiku gives Δ 0.053 at +1 cent and 0.028 at +10 cents, Gemini Flash-Lite 0.999 and 0.933. The jump-to-p_M control (recommending p_M every round) ran only on Haiku (Δ 0.07, n = 5). So the paper shows that discretion fails where firms accept the ratchet's recommendations. It does not show that small steps get through where large ones would not, except suggestively on Qwen.
+
+**Does thinking make firms push back? No.** At our settings Gemini Flash-Lite does not think (35 output tokens per call). With thinking on (408 tokens per firm call, comparable to Haiku's 557; n = 6), its firms accept the ratchet's 1–2-cent increases at the same rate (84% vs 83%); the ratchet is a script, so in that comparison only the firms changed. Against the LLM hub the picture is mixed: fewer 1–2-cent steps (52% vs 67%) and more 3–5-cent steps (71% vs 46%; Table F2). The ratchet still reaches monopoly, and discretion against the LLM hub removes none of the harm (Δ 1.00, n = 6, vs 0.41 without thinking; B0 0.05 and auto-accept 0.98, each n = 3). In the LLM-hub arms the effort setting switches thinking on for the hub as well as the firms (`run.py:121–122`), so those compare a joint change. Thinking did not make Gemini firms push back. The submitted version said it made them accept more; the like-for-like comparison does not support that.
 
 **Two candidate fixes did not help** on Gemini Flash-Lite: stacking the data ban on discretion, and telling the firm how far the recommendation is from its own price 10 rounds earlier (Table F5).
 
@@ -172,12 +184,14 @@ The data-limit ranking holds under demand noise, without the price-ceiling cue, 
 
 **Beyond antitrust.** Per-step approval by a deferential overseer is a general weakness of AI oversight. An agent that moves in small, individually plausible steps can drive an outcome no single approval would allow. This is the temporal analogue of attacks split across agents, which defeat per-instance monitors (Makins et al., 2026) and per-action defences (Hagag et al., 2026).
 - **In our runs, a monitor of single price moves points the wrong way** (Table F6). It ranks the guardrailed and discretionary hubs' climbs, and the scripted ratchet's, as *less* suspicious than honest play (AUROC 0.05–0.27), because honest firms experiment in bigger steps. So does the classic variance screen (Abrantes-Metz et al., 2006; AUROC 0.36). **Only where prices settle separates the two at a 1% false-alarm rate.**
+- **These numbers have limits.** The harmful sets include mechanical arms: 65 of the 215 auto-accept positives are scripted (60 rational-hub, 5 static monopoly-price), and 10 of the 48 ratchet positives are the auto-accept ratchet. Positives are filtered on Δ ≥ 0.5; negatives are not. The LLM-hub discretion group is n = 15 (all Gemini Flash-Lite). The settled-price monitor is close to the harm label by construction, so its 1.00 is not evidence that it works, and the episode statistic we predicted would work (max drift) failed at 1% FPR. The per-step inversion stands, and AI-control work reports the same per-step failure (Zhang & Gao, 2026; Hills et al., 2026).
 
 ### Limitations
 
-- **The hub's objective is a premise.** We instruct it, and §4.5 is our only test without it.
-- **The discretion result depends on firm models' deference,** which stands in for human or AI deciders we did not measure. Replications are small (n = 3–12), reasoning budgets differ by model, guardrails were tested on two models, and Gemini 3.8 Flash's baseline is unstable.
-- **Remedy mappings are analogues:** rounds stand for months, and a runtime lag for a training-data rule. There is one market model, and harm can rise after round 100, so our shares are upper bounds. The mechanism tests were designed after the Gemini result and pre-registered before they ran. Appendix E has the full list.
+- **The hub's objective is a premise.** We instruct it, and §4.5 is our only test without it. The settlement's own theory of harm is information exchange among own-profit maximisers; our joint-profit hub is a common agent, so our test of the data rules speaks to Harrington's (2026a) critique, and the direct test of the settlement's theory is the client-objective advisor in §4.1.
+- **The discretion result depends on firm models' deference,** which stands in for human or AI deciders we did not measure. Replications are small (n = 3–12), reasoning budgets differ by model, guardrails were tested on two models, and Gemini 3.8 Flash's baseline is unstable. The hub and the firms are always the same model. Under partial adherence, auto-set prices appear to the firm as "My price". Per-decision acceptance rates are not clustered by run, and some share CIs pass 100% with n = 4–5.
+- **The reasoning monitor works because the joint objective is written in the hub's prompt.** Chain-of-thought faithfulness need not track collusion (Lee & Park, 2026).
+- **Remedy mappings are analogues:** rounds stand for months, and a runtime lag for a training-data rule. There is one market model, and harm can rise after round 100, so our shares are upper bounds. The mechanism tests were designed after the Gemini result, and their predictions were logged before they ran. Appendix E has the full list.
 
 ### Future Work
 
@@ -195,24 +209,34 @@ No remedy in the RealPage Final Judgment reliably stops an LLM pricing hub with 
 ## References
 
 - Abrantes-Metz, R. M., Froeb, L. M., Geweke, J., & Taylor, C. T. (2006). A variance screen for collusion. *International Journal of Industrial Organization*, 24(3), 467–486. https://doi.org/10.1016/j.ijindorg.2005.10.003
-- Berger, L. F., Weiner, M. L., & Jiang, W. (2025). Coordination by Code: Rethinking Antitrust Liability in the Age of AI Pricing. *Antitrust* (ABA Section of Antitrust Law), 40(1). https://www.americanbar.org/groups/antitrust_law/resources/magazine/2025-fall/coordination-code-rethinking-antitrust-liability-age-ai-pricing/
 - Anto, M., & Vazquez, J. (2026). Oversight is Not Compliance: Tacit Collusion in LLM Pricing Agents Under Antitrust Regulation. ICML 2026 Workshop on Agents in the Wild (poster). https://openreview.net/forum?id=aPnAkoXjF2
 - Assad, S., Clark, R., Ershov, D., & Xu, L. (2024). Algorithmic Pricing and Competition: Empirical Evidence from the German Retail Gasoline Market. *Journal of Political Economy*, 132(3), 723–771. https://doi.org/10.1086/726906
+- Berger, L. F., Weiner, M. L., & Jiang, W. (2025). Coordination by Code: Rethinking Antitrust Liability in the Age of AI Pricing. *Antitrust* (ABA Section of Antitrust Law), 40(1). https://www.americanbar.org/groups/antitrust_law/resources/magazine/2025-fall/coordination-code-rethinking-antitrust-liability-age-ai-pricing/
+- Bernheim, B. D., & Whinston, M. D. (1985). Common Marketing Agency as a Device for Facilitating Collusion. *RAND Journal of Economics*, 16(2), 269–281. https://doi.org/10.2307/2555414
+- Bisconti, P., Prandi, M., Pierucci, F., et al. (2026). Boiling the Frog: A Multi-Turn Benchmark for Agentic Safety. arXiv:2605.22643. https://arxiv.org/abs/2605.22643
 - Bracale Syrnikov, M., Pierucci, F., Galisai, M., Prandi, M., Bisconti, P., Giarrusso, F., Sorokoletova, O., Suriani, V., & Nardi, D. (2026). Institutional AI: Governing LLM Collusion in Multi-Agent Cournot Markets via Public Governance Graphs. arXiv:2601.11369. https://arxiv.org/abs/2601.11369
-- Calvano, E., Calzolari, G., Denicolò, V., & Pastorello, S. (2020). Artificial Intelligence, Algorithmic Pricing, and Collusion. *American Economic Review*, 110(10), 3267–3297. https://doi.org/10.1257/aer.20190623
 - Calder-Wang, S., & Kim, G. H. (2026). Algorithmic Pricing in Multifamily Rentals: Efficiency Gains or Price Coordination? Working paper, 18 Feb 2026. SSRN 4403058. https://www.ftc.gov/system/files/ftc_gov/pdf/calder-wangkim.pdf
+- Calvano, E., Calzolari, G., Denicolò, V., & Pastorello, S. (2020). Artificial Intelligence, Algorithmic Pricing, and Collusion. *American Economic Review*, 110(10), 3267–3297. https://doi.org/10.1257/aer.20190623
 - Cao, S., & Hu, M. (2026). Supracompetitive Pricing Under AI Monoculture. arXiv:2601.01279. https://arxiv.org/abs/2601.01279
+- Carver, J., & Redfern, T. (2026). Four Levers of LLM Collusion. Apart Research AI Collusion Research Sprint project (code and report v1.0). https://github.com/carver/apart-research-collusion-sprint-2026 (README and issues #31–#34 read on 24 Oct 2026).
 - Dhanda, K. (2026). A Price Cap Can Act as a Focal Point for LLM Pricing Agents: Evidence from a Repeated Bertrand Duopoly (Revised). Research Square preprint. https://doi.org/10.21203/rs.3.rs-10183486/v1
 - Fish, S., Gonczarowski, Y. A., & Shorrer, R. (2024). Algorithmic Collusion by Large Language Models. arXiv:2404.00806 (accepted to EC 2026). https://arxiv.org/abs/2404.00806
+- Garcia, D., Tolvanen, J., & Wagner, A. K. (2026). Strategic Responses to Algorithmic Recommendations: Evidence from Hotel Pricing. *Management Science*, 72(1), 609–626. https://doi.org/10.1287/mnsc.2022.03740
 - Garra, A. (2026). Mitigating Emergent Collusion in LLM Pricing Agents. arXiv:2609.13037. https://arxiv.org/abs/2609.13037
 - Hagag, B., Anderson, W. L., Chakraborty, S., & Schroeder de Witt, C. (2026). ORBIT: A Framework for Multi-Agent Security Evaluations. NeurIPS 2026 (poster). https://neurips.cc/virtual/2026/poster/139033
+- Harrington, J. E., Jr. (2026a). A Critique of Recent Remedies for Third-Party Pricing Algorithms and Why the Solution Is Not Restrictions On Data Sharing. *Journal of Competition Law & Economics*, 22(1), 114–137. https://doi.org/10.1093/joclec/nhaf022
+- Harrington, J. E., Jr. (2026b). Hub-and-Spoke Collusion With a Third-Party Pricing Algorithm. *Journal of Industrial Economics*, 74(2), 181–196. https://doi.org/10.1111/joie.70017
+- Harrington, J. E., Jr., & Ortner, J. (2025). The Equilibrium Design of a Third-Party's Pricing Algorithm. Working paper, 8 December 2025. https://people.bu.edu/jortner/static/algorithm_pricing.pdf
+- Hills, J., Caspary, I., & Cooper Stickland, A. (2026). Distributed Attacks in Persistent-State AI Control. arXiv:2607.02514. https://arxiv.org/abs/2607.02514
 - Idowu, J., Almasoud, A., & Alfahid, A. (2026). Mapping Human Anti-collusion Mechanisms to Multi-agent AI Systems. *Knowledge-Based Systems*, 344, 116067. arXiv:2601.00360. https://arxiv.org/abs/2601.00360
 - Keppo, J., Li, Y., Tsoukalas, G., & Yuan, N. (2026). On the Fragility of AI Agent Collusion. arXiv:2603.20281. https://arxiv.org/abs/2603.20281
+- Kumar, S. (2026). Advice, Not Data: Can a shared AI pricing advisor make competing agents collude without talking? Apart Research AI Collusion Research Sprint project. https://apartresearch.com/sprints/projects/advice-not-data-can-a-shared-ai-pricing-advisor-make-competing-agents-collude-without-talking-ez87 (code: https://github.com/sidthebuilder/Hubspoke)
 - Lee, D., & Park, H. (2026). Faithful yet Collusive. Findings of EMNLP 2026. arXiv:2609.18346. https://arxiv.org/abs/2609.18346
 - Makins, O., Angelini, O., Shams, Z., & Phuong, M. (2026). Multi-Agent AI Control: Distributed Attacks Hamper Per-Instance Monitors. arXiv:2607.07368. https://arxiv.org/abs/2607.07368
 - Riemer, M., Tosato, T., Memarian, A., Puelma Touzel, M., Berseth, G., Rish, I., & Dumas, G. (2026). Position: Collusion Risks Among AI Reasoning Agents Justify Certification Requirements for Making Market Decisions. ICML 2026 (position track). arXiv:2608.18078. Code (llm-cartel): https://github.com/mattriemer/LLMCartel
+- Schwartz, G. D. (2026). Anticompetitive Interdependence in "Gullible" Pricing Algorithms. *Stanford Law Review*, 78(1), 191–240. https://review.law.stanford.edu/wp-content/uploads/sites/3/2026/01/Schwartz-78-Stan.-L.-Rev.-191.pdf
 - Xu, X., Wu, C., Lu, J., Tan, K., Tao, S., & Hong, H. (2026). Collusion with Competitive Marginals: Price-Level Audits Are Blind by Construction. arXiv:2607.26385. https://arxiv.org/abs/2607.26385
-- zerocommcartel (2026). Concurrent Apart Research collusion-sprint project. https://github.com/carver/apart-research-collusion-sprint-2026 (README and issues #31–#34 read on 24 Oct 2026).
+- Zhang, Q., & Gao, Y. (2026). The Distributed Detectability Band Against Marginal-Preserving Attacks. arXiv:2606.10456. https://arxiv.org/abs/2606.10456
 - *United States et al. v. RealPage, Inc. et al.*, No. 1:24-cv-00710 (M.D.N.C.), Final Judgment entered 19 May 2026 (Doc. 194). https://storage.courtlistener.com/recap/gov.uscourts.ncmd.99417/gov.uscourts.ncmd.99417.194.0.pdf (case page: https://www.justice.gov/atr/case/us-and-plaintiff-states-v-realpage-inc)
 - *Gibson v. Cendyn Group, LLC*, No. 24-3576, 148 F.4th 1069 (9th Cir. 2025), cert. denied, No. 25-1109 (U.S. Apr. 20, 2026).
 - *Cornish-Adebiyi v. Caesars Entertainment, Inc.*, No. 24-3006 (3d Cir. July 29, 2026) (precedential).
@@ -255,6 +279,26 @@ An estimated $2–5 more went on unlogged calls: the detection monitor, probes a
 
 <!-- include: appendix-tables.md -->
 *In `report/appendix-tables.md`: F1 measured reasoning budgets; F2 acceptance by recommended step; F3 robustness; F4 detection; F5 two candidate fixes for discretion; F6 per-step vs whole-episode oversight; Figure A1 partial adherence and guardrail price paths.*
+
+### G. Corrections after the sprint (4 Nov 2026)
+
+A blind review and an independent audit that recomputed the numbers from `results/` found the errors below. Each is fixed in this draft, the README, the appendices and the FAQ. The submitted version is preserved at git tag `sprint-submission-2026-10-26`; `report/submission.pdf`, `report/submission.docx` and `report/slides.pptx` are as submitted and keep the old numbers, and `report/video-script.md` is the recorded script, so its "61 percent" and "almost nothing" lines stand as recorded. The corrected numbers (acceptance rates, price-index shares with bootstrap CIs, band arithmetic) are reproduced by `tools/corrections_check.py`, which is read-only and makes no model calls.
+
+1. Gemini Flash-Lite's acceptance of 1–2-cent ratchet nudges is 83% (505/609, +1 cent runs), not 61%; the old figure pooled in the +3 and +10 cent runs. The abstract range is now 12–83%, and acceptance and outcome rise together across all five firm models.
+2. "Thinking makes Gemini firms accept more" is withdrawn: like for like on the ratchet (a script, so only the firms changed) it is 84% vs 83%, and against the LLM hub the picture is mixed. In the LLM-hub arms thinking was switched on for hub and firms together. What stands: thinking did not make Gemini firms push back.
+3. On Gemini Flash-Lite the data ban and the stale rule raised prices above the monopoly level (price index 1.32 and 1.47 vs 0.88 for the hub). The old "8% removed" came from Δ, which falls again above p_M. Shares are now −51% and −69% on the price index.
+4. The other models' shares on the price index are close to the Δ-based ones in §4.2; only Gemini changes sign.
+5. The firm and hub prompts' "No customer would pay more than $2.89" is 1.5 × p_M and can leak the monopoly price to the hub; the check without it ran on Haiku only.
+6. "Small" is not isolated: step size made no reliable difference on Haiku or Gemini, and the jump-to-p_M control ran only on Haiku. The title keeps "small nudges" to match the submission; §4.4 says what the data support.
+7. The ratchet is also a shared profit signal, so acceptance may reflect that as well as deference; the one-sided and −1 cent ratchets are the first follow-up.
+8. The guardrail delays follow from arithmetic (6–9 rounds to 0.95·p_M at ±3%, 15–24 at ±1% with prices rounded to the cent); §4.3 says so.
+9. Detection caveats added to §5 and Table F6: scripted arms in the positives, the Δ ≥ 0.5 filter, n = 15 for LLM-hub discretion, and the settled-price monitor's closeness to the harm label.
+10. Two pre-registered contrasts that went unreported are now in §4.1: H4c (R2-d − R2-a: +0.083, Holm p = .029) and H5 (S-mono − S-nash: +0.017, p = .821).
+11. The subtitle no longer says "Pre-registered tests": only the main Haiku batch was frozen in advance; later batches were logged with predictions but are exploratory.
+12. §1 and the Limitations now state the threat model: the settlement targets information exchange among own-profit maximisers, while our hub is a common agent (Bernheim & Whinston, 1985; Harrington, 2026a, 2026b; Harrington & Ortner, 2025).
+13. Four limitations added: same model for hub and firms; auto-set prices shown as "My price"; acceptance rates not clustered by run and some CIs past 100%; the reasoning monitor relies on the objective being written in the prompt.
+
+Related work gained the references above plus Garcia et al. (2026), Bisconti et al. (2026), Zhang and Gao (2026), Hills et al. (2026), Schwartz (2026) and Kumar (2026), and "zerocommcartel (2026)" is now cited as Carver and Redfern (2026), "Four Levers of LLM Collusion".
 
 ## LLM Usage Statement
 
