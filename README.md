@@ -1,4 +1,4 @@
-# An LLM Pricing Hub Survives Data Limits on Some Models; Firm Discretion Works Only When Firms Refuse Small Nudges
+# An LLM Pricing Hub Survives Data Limits on Some Models; Firm Discretion Works Only When Firms Refuse the Hub's Nudges
 
 *Tests of the RealPage Final Judgment's remedies (data bans, stale data, parameterised auto-accept, firm discretion) on LLM pricing advisors from six labs (main batch pre-registered). Apart Research AI Collusion Research Sprint, October 2026.*
 
@@ -6,7 +6,7 @@
 - Gemini Flash-Lite firms accept 83% of 1–2-cent ratchet nudges, not 61%; the old figure pooled in the +3 and +10 cent runs.
 - On Gemini Flash-Lite the data ban did not remove 8% of the harm; it raised prices above the monopoly level.
 - "Thinking makes Gemini firms accept more" is withdrawn (84% vs 83% like for like); thinking did not make them push back.
-- Step size made no reliable difference, so "small" in the title is not isolated by the data; the title is kept to match the submission.
+- Step size made no reliable difference, so the data do not show that small nudges get through where large ones would not. The submitted paper's title ends "…Only When Firms Refuse Small Nudges" and is unchanged; this README's heading drops "small" (10 Nov 2026).
 - Only the main Haiku batch was pre-registered; later batches were logged with predictions but are exploratory.
 
 **Question.** The DOJ's settlement with RealPage limits what a shared pricing advisor may use: no competitors' current non-public data at runtime, training data at least 12 months old, and no reporting narrower than state level. The complaints also targeted auto-accept. Do these remedies stop an LLM pricing advisor whose objective is aligned with the whole market, the incentive alleged against RealPage?
@@ -17,23 +17,24 @@
 
 **Main findings** (details in [report/draft.md](report/draft.md); Claude Haiku 5.5 with n = 20 per arm unless noted; more than 700 runs on seven models):
 
-1. **The hub causes the harm.** A market-aligned hub drives a competitive market to joint monopoly (profit gain Δ 0.06 → 0.99). An advisor that serves only its own client is pro-competitive (Δ −0.01).
-2. **Data limits help unevenly.** A competitor-data ban removes:
+1. **Firm models differ widely in how readily they go along with a recommender.** We swap the hub for a script that recommends each firm its own last price plus 1 cent, every round. The script is the same for every model, so any difference comes from the firm model that decides.
+   - Claude Haiku 5.5 firms accept 12% of the nudges and stay competitive (Δ 0.05, n = 10).
+   - Nemotron 3.5 Lightning accepts 20% (Δ 0.28, n = 8) and Qwen3.8 Flash 52% (Δ 0.73, n = 8).
+   - GPT-5.4 mini accepts 72% (Δ 0.93, n = 4) and Gemini 3.5 Flash-Lite 83% (Δ 1.00, n = 6), with or without thinking. Both are walked to near-monopoly prices.
+
+   So firm discretion works only when firms refuse the nudges. With an LLM hub, discretion removes 95% of the harm for Haiku and 57% for Gemini Flash-Lite. Stacking the data ban on top, or telling firms how far the recommendation is from their price 10 rounds earlier, doesn't fix the Gemini case. Two caveats: step size made no reliable difference (Haiku Δ 0.05 at +1 cent vs 0.03 at +10; Gemini 1.00 vs 0.93), so the data show that discretion fails where firms accept the ratchet, not that small steps get through where large ones would not; and both firms receive the ratchet at once, so acceptance may reflect their rising profits as well as deference.
+
+   ![Replay of two logged runs: the same scripted 1-cent ratchet recommends each firm its own last price plus one cent every round. Claude Haiku 5.5 firms refuse and prices stay near the competitive level (profit gain 0.03); Gemini 3.5 Flash-Lite firms accept and walk to joint monopoly by round 41 (profit gain 1.00).](report/figures/ratchet_replay.gif)
+
+   *The ratchet, replayed from two logged runs (Haiku seed 100, Gemini Flash-Lite seed 1000; `tools/replay_gif.py`). The recommender is the same script on both sides; only the firm model that decides differs.*
+2. **The hub causes the harm.** A market-aligned hub drives a competitive market to joint monopoly (profit gain Δ 0.06 → 0.99). An advisor that serves only its own client is pro-competitive (Δ −0.01).
+3. **Data limits help unevenly.** A competitor-data ban removes:
    - 85% of the harm for Qwen3.8 Flash (n = 4);
    - 69% for Haiku;
    - 10% for DeepSeek V4.1 Flash.
 
    On Gemini 3.5 Flash-Lite (n = 5) the ban and the stale-data rule raised prices above the monopoly level (price index 1.32 and 1.47, against 0.88 for the hub with current data). Stale data removes 21% for Haiku, and showing only the rivals' average price and total sales (triopoly) removes none. A scripted rational hub with no data still raises prices.
-3. **Guardrails and partial adherence keep the harm.** Auto-accept within ±1–3% per round, the Final Judgment's "user-set parameters", retains all of it on Haiku and 88% on Qwen, and only delays monopoly (Haiku: round 4 → 8–19). At 50–90% acceptance, 73–94% remains.
-4. **Firm discretion works only when firms refuse small nudges.** We swap in a scripted recommender that adds 1 cent per round:
-   - Haiku firms stay competitive (Δ 0.05).
-   - Gemini Flash-Lite firms follow it to monopoly (Δ 1.00), with or without thinking.
-
-   With an LLM hub, discretion removes 95% of the harm for Haiku and 57% for Gemini Flash-Lite. Stacking the data ban on top, or telling firms how far the recommendation is from their price 10 rounds earlier, doesn't fix the Gemini case. Two caveats: step size made no reliable difference (Haiku Δ 0.05 at +1 cent vs 0.03 at +10; Gemini 1.00 vs 0.93), so the data show that discretion fails where firms accept the ratchet, not that small steps get through where large ones would not; and both firms receive the ratchet at once, so acceptance may reflect their rising profits as well as deference.
-
-   ![Replay of two logged runs: the same scripted 1-cent ratchet recommends each firm its own last price plus one cent every round. Claude Haiku 5.5 firms refuse and prices stay near the competitive level (profit gain 0.03); Gemini 3.5 Flash-Lite firms accept and walk to joint monopoly by round 41 (profit gain 1.00).](report/figures/ratchet_replay.gif)
-
-   *The ratchet, replayed from two logged runs (Haiku seed 100, Gemini Flash-Lite seed 1000; `tools/replay_gif.py`). The recommender is the same script on both sides; only the firm model that decides differs.*
+4. **Guardrails and partial adherence keep the harm.** Auto-accept within ±1–3% per round, the Final Judgment's "user-set parameters", retains all of it on Haiku and 88% on Qwen, and only delays monopoly (Haiku: round 4 → 8–19). At 50–90% acceptance, 73–94% remains.
 5. **Coordination needs no joint instruction.** Advice to "avoid a race to the bottom" also raises prices (Δ 0.45 without rival data, n = 10).
 6. **Detection.** The price-level screen catches outcomes (AUROC 0.90). Two classic instruments point the wrong way: the variance screen (0.36), and a monitor of single price moves, which ranks the guardrailed hub's and the scripted ratchet's climbs as *less* suspicious than honest play (0.05–0.27). A reasoning monitor catches the hub's *stated* intent, but also flags honest advisors that watch rivals. These scores have limits: the harmful sets include scripted arms, positives are filtered on Δ ≥ 0.5 while negatives are not, the LLM-hub discretion group is n = 15 (all Gemini Flash-Lite), and the settled-price monitor is close to the harm label by construction.
 
